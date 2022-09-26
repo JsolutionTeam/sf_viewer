@@ -1,0 +1,36 @@
+server:
+  port: 18080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+      force-response: true
+  tomcat:
+    accesslog:
+      directory: log
+      enabled: true
+      file-date-format: .yyyy-MM-dd
+      max-days: 14
+      pattern: '%h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"' #combined
+      prefix: access
+      rotate: true
+      suffix: .log
+    basedir: ./logs
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+#  datasource:
+#    url: jdbc:mariadb://59.25.177.42:3355/sangju_supp?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+#    username: sangju_supp
+#    password: tkdwn12#$
+#    driver-class-name: org.mariadb.jdbc.Driver
+
+logging:
+  pattern:
+    file: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"
+  level:
+    kr.co.jsol.mobileinfo: debug
