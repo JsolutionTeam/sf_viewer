@@ -1,4 +1,4 @@
-package kr.co.jsol.api
+package kr.co.jsol
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

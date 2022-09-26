@@ -1,6 +1,6 @@
-package site.dto.response
+package kr.co.jsol.api.site.dto.response
 
-import site.Site
+import kr.co.jsol.api.site.Site
 
 data class SearchResultResponse(
     val searchResponse: SearchResponse,

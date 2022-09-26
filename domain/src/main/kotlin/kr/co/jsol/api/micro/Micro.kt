@@ -1,6 +1,6 @@
-package micro
+package kr.co.jsol.api.micro
 
-import site.Site
+import kr.co.jsol.api.site.Site
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -36,11 +36,11 @@ class Micro(
     val windSpeed: Double = 0.0,
 
     // 정보 수집 시간
-    @Column(insertable = false, updatable = false)
+    @Column(name="reg_dtm", insertable = false, updatable = false)
     val regTime: LocalDateTime,
 
     // 마크 시간
-    @Column(insertable = false, updatable = false)
+    @Column(name="mark_tm", insertable = false, updatable = false)
     val markTime: LocalDateTime,
 
     // 농장 정보

@@ -1,5 +1,7 @@
 package kr.co.jsol.api.controller
 
+import micro.dto.request.SearchCondition
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -7,14 +9,46 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import kr.co.jsol.api.site.SiteService
+import kr.co.jsol.api.site.dto.response.SearchResponse
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/v1")
-class SiteController {
+class SiteController @Autowired constructor(
+    private val siteService: SiteService
+) {
 
     @GetMapping("/site/{siteSeq}/summary")
-    fun getSiteSummary(@PathVariable(required = true, name = "농장 번호") siteSeq: Long): ResponseEntity<Any>{
-        println("siteSeq = ${siteSeq}")
-        return ResponseEntity(siteSeq, HttpStatus.OK)
+    fun getSiteSummary(
+        @PathVariable(required = true) siteSeq: Long,
+        @RequestParam(required = false) startTime: LocalDateTime?,
+        @RequestParam(required = false) endTime: LocalDateTime?,
+    ): ResponseEntity<List<SearchResponse>>{
+        val condition = SearchCondition(
+            siteSeq = siteSeq,
+            startTime = startTime,
+            endTime = endTime,
+        )
+        println("contition = ${condition}")
+        val summaries: List<SearchResponse> = siteService.getByRegTime(condition)
+        println("summaries.size = ${summaries.size}")
+        return ResponseEntity(summaries, HttpStatus.OK)
     }
+
+    @GetMapping("/site/{siteSeq}/realtime")
+    fun getSiteSummary(
+        @PathVariable(required = true) siteSeq: Long,
+    ): ResponseEntity<List<SearchResponse>>{
+        val condition = SearchCondition(
+            siteSeq = siteSeq,
+            null,
+            null,
+        )
+        val realtime: List<SearchResponse> = siteService.getRealTime(condition)
+        println("realtime.size = ${realtime.size}")
+        return ResponseEntity(realtime, HttpStatus.OK)
+    }
+
+
 }

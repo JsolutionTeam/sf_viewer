@@ -1,4 +1,4 @@
-package com.group.libraryapp.config
+package kr.co.jsol.api.config
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.context.annotation.Bean

@@ -1,4 +1,4 @@
-package site
+package kr.co.jsol.api.site
 
 import javax.persistence.Column
 import javax.persistence.Entity

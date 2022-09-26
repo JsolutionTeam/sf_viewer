@@ -1,6 +1,6 @@
-package co2
+package kr.co.jsol.api.co2
 
-import site.Site
+import kr.co.jsol.api.site.Site
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -11,10 +11,13 @@ class Co2Logger(
     @Column(insertable = false, updatable = false)
     val co2: Double = 0.0, // 이산화탄소 농도 단위 ppm
 
-    @Column(insertable = false, updatable = false)
-    val regTime: LocalDateTime, // 정보 수집 시간
-    @Column(insertable = false, updatable = false)
-    val markTime: LocalDateTime, // 마크 시간
+    // 정보 수집 시간
+    @Column(name = "reg_dtm", insertable = false, updatable = false)
+    val regTime: LocalDateTime,
+
+    // 마크 시간
+    @Column(name = "mark_tm", insertable = false, updatable = false)
+    val markTime: LocalDateTime,
 
     @ManyToOne
     @JoinColumn(name = "site_seq")
