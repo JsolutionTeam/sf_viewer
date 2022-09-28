@@ -25,10 +25,13 @@ dependencies {
 
     val kapt by configurations
     api("org.springframework.boot:spring-boot-starter-data-jpa")
+    api("org.springframework.boot:spring-boot-starter-security")
     api("com.querydsl:querydsl-jpa:$querydslVersion")
     kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")
+
+    testApi("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.withType<Jar> {

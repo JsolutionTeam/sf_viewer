@@ -7,12 +7,10 @@ import javax.persistence.EntityManager
 
 @Configuration
 class QuerydslConfig(
-  private val em: EntityManager,
+    private val em: EntityManager,
 ) {
-
-  @Bean
-  fun querydsl(): JPAQueryFactory {
-    return JPAQueryFactory(em)
-  }
-
+    @Bean
+    fun querydsl(): JPAQueryFactory {
+        return JPAQueryFactory(em)
+    }
 }

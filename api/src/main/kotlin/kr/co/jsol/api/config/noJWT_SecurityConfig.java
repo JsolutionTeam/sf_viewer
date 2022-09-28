@@ -2,7 +2,6 @@ package kr.co.jsol.api.config;//package com.jsol.mcall.config;
 //
 //
 ////import com.jsol.mcall.Service.UserDetailsServiceImpl;
-//import com.jsol.mcall.config.oauth.PrincipalOauth2UserService;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;

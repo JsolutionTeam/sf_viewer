@@ -29,8 +29,15 @@ spring:
     password: qweR1234@!
     driver-class-name: org.mariadb.jdbc.Driver
 
+  jpa:
+      show-sql: true # sql log 보이게 설정
+      hibernate:
+          ddl-auto: update # ???? ?? ???(??? create??.)
 logging:
   pattern:
     file: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"
   level:
     kr.co.jsol.mobileinfo: debug
+
+jwt:
+    secret: asdfbjahdslfjh2edoiughdivjhsxlkjvcahxclksdfhieduwhgowieurhgoeirufhsdlfddjvkahlsxckvjhasdlkjvchlkj34htop23i4uythoiuerwjhgasdvdgouasyv987d6v987

@@ -36,16 +36,20 @@ allprojects {
     }
 
     dependencies {
-//        val implementation by configurations
-//        val testImplementation by configurations
+        // kotlin logger
+        implementation("io.github.microutils:kotlin-logging-jvm:3.0.0")
 
         implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
         implementation("org.springframework.boot:spring-boot-starter-data-jpa")
         implementation("org.springframework.boot:spring-boot-starter-jdbc")
         implementation("org.springframework.boot:spring-boot-starter-websocket")
         implementation("org.springframework.boot:spring-boot-starter-validation") // 파라미터 값 확인(인증, Bean Validation)을 위해
+        implementation("org.springframework.boot:spring-boot-starter-security")
+
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+        // databases
         runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 
         // swagger v3
@@ -55,12 +59,16 @@ allprojects {
         implementation("com.querydsl:querydsl-jpa:5.0.0")
         implementation("com.querydsl:querydsl-core:5.0.0")
 
+        // jwt
+        runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+        runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+        implementation("io.jsonwebtoken:jjwt-gson:0.11.5")
+
         annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jpa")
         annotationProcessor("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final")
         annotationProcessor("javax.annotation:javax.annotation-api:1.3.2")
 
         testImplementation("org.springframework.boot:spring-boot-starter-test")
-        testImplementation("org.springframework.security:spring-security-test")
     }
 
     configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
