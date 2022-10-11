@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     val kotlinVersion: String by System.getProperties() // 1.6.21
@@ -100,12 +101,12 @@ allprojects {
         useJUnitPlatform()
     }
 
-    // 메인에는 Root(SpringbootApplication) 이 없으므로 build 실행 x
+    // 실행 bootJar로 만들 필요가 없으므로...
     tasks.withType<Jar> {
         enabled = true
     }
 
-    tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+    tasks.withType<BootJar> {
         enabled = false
     }
 }

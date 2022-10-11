@@ -113,7 +113,7 @@ class UserService(
             ?: throw UserDisableException()
 
         val site: Site? = siteRepository.findByIdOrNull(userUpdateRequest.siteSeq) ?: user.site
-        val role = userUpdateRequest.role ?: user.role
+        val role = userUpdateRequest.role
 
         user.updateInfo(
             site = site,
