@@ -66,39 +66,40 @@ class SiteQuerydslRepository(
                     )
             )
             .where(site.id.eq(siteSeq))
-            .fetchJoin().limit(1).fetch();
+            .fetchJoin().limit(1).fetch()
     }
 
     fun getMicroList(condition: SearchCondition): List<SearchResponse> {
 
         /**
-        select
-        avg(co2logger1_.co2)           as col_0_0_,
-        avg(micro2_.temperature)       as col_1_0_,
-        avg(micro2_.relative_humidity) as col_2_0_,
-        avg(micro2_.solar_radiation)   as col_3_0_,
-        avg(micro2_.rainfall)          as col_4_0_,
-        avg(micro2_.earth_temperature) as col_5_0_,
-        avg(micro2_.wind_direction)    as col_6_0_,
-        avg(micro2_.wind_speed)        as col_7_0_,
-        micro2_.reg_dtm           as mtime,
-        co2logger1_.reg_dtm       as ctime
-        from tb_site site0_
-        left outer join tb_co2_logger co2logger1_ on (co2logger1_.site_seq = site0_.site_seq and
-        (co2logger1_.reg_dtm between '2022-09-23T00:00:00.000+0900' and '2022-10-01T00:00:00.000+0900'))
-        left outer join tb_micro_station micro2_ on (micro2_.site_seq = site0_.site_seq and
-        (micro2_.reg_dtm between '2022-09-23T00:00:00.000+0900' and '2022-10-01T00:00:00.000+0900'))
-        where site0_.site_seq=13
-        group by
-        date_format(micro2_.reg_dtm, '%Y %c %d %H')
-        ,date_format(co2logger1_.reg_dtm, '%Y %c %d %H');
+         select
+         avg(co2logger1_.co2)           as col_0_0_,
+         avg(micro2_.temperature)       as col_1_0_,
+         avg(micro2_.relative_humidity) as col_2_0_,
+         avg(micro2_.solar_radiation)   as col_3_0_,
+         avg(micro2_.rainfall)          as col_4_0_,
+         avg(micro2_.earth_temperature) as col_5_0_,
+         avg(micro2_.wind_direction)    as col_6_0_,
+         avg(micro2_.wind_speed)        as col_7_0_,
+         micro2_.reg_dtm           as mtime,
+         co2logger1_.reg_dtm       as ctime
+         from tb_site site0_
+         left outer join tb_co2_logger co2logger1_ on (co2logger1_.site_seq = site0_.site_seq and
+         (co2logger1_.reg_dtm between '2022-09-23T00:00:00.000+0900' and '2022-10-01T00:00:00.000+0900'))
+         left outer join tb_micro_station micro2_ on (micro2_.site_seq = site0_.site_seq and
+         (micro2_.reg_dtm between '2022-09-23T00:00:00.000+0900' and '2022-10-01T00:00:00.000+0900'))
+         where site0_.site_seq=13
+         group by
+         date_format(micro2_.reg_dtm, '%Y %c %d %H')
+         ,date_format(co2logger1_.reg_dtm, '%Y %c %d %H');
          */
         val microTime: DateTemplate<*> =
             Expressions.dateTemplate(
                 LocalDateTime::class.java,
                 "DATE_FORMAT({0}, {1})",
                 micro.regTime,
-                "%Y %c %d %H")
+                "%Y %c %d %H"
+            )
 
         val co2Time: DateTemplate<*> =
             Expressions.dateTemplate(
@@ -107,7 +108,6 @@ class SiteQuerydslRepository(
                 co2Logger.regTime,
                 "%Y %c %d %H"
             )
-
 
         val (siteSeq, startTime, endTime) = checkTime(condition)
         return queryFactory

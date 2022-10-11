@@ -1,7 +1,6 @@
 package kr.co.jsol.api.controller
 
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import micro.dto.request.SearchCondition
@@ -20,8 +19,7 @@ class SiteController(
     private val siteService: SiteService
 ) {
 
-
-    @Operation(summary = "농장 전체 정보 조회" )
+    @Operation(summary = "농장 전체 정보 조회")
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "성공"),
     )
@@ -31,7 +29,7 @@ class SiteController(
         return siteService.getSiteList()
     }
 
-    @Operation(summary = "농장 별 기간 수집 데이터 조회", description = "startTime은 기본 값이 금월 1일 endTime은 금월 마지막 일" )
+    @Operation(summary = "농장 별 기간 수집 데이터 조회", description = "startTime은 기본 값이 금월 1일 endTime은 금월 마지막 일")
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "성공"),
     )
@@ -55,7 +53,7 @@ class SiteController(
         return summaries
     }
 
-    @Operation(summary = "농장 별 실시간 수집 데이터 조회" )
+    @Operation(summary = "농장 별 실시간 수집 데이터 조회")
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "성공"),
     )

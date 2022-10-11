@@ -19,7 +19,7 @@ class User(
 
     @ManyToOne(
         fetch = FetchType.LAZY,
-        cascade =[CascadeType.ALL],
+        cascade = [CascadeType.ALL],
     )
     @JoinColumn(
         name = "site_seq",
@@ -44,7 +44,7 @@ class User(
     fun updateInfo(
         role: UserRoleType = this.role,
         site: Site? = this.site,
-    ){
+    ) {
         this.role = role
         this.site = site
     }

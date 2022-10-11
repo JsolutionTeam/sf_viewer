@@ -24,7 +24,7 @@ class JwtAuthenticationFilter(private val jwtTokenProvider: JwtTokenProvider) : 
         )
 
         val token: String? = jwtTokenProvider.resolveToken((request as HttpServletRequest))
-        println("token = ${token}")
+        println("token = $token")
         if (!token.isNullOrBlank() && jwtTokenProvider.validateToken(token)) {
             println("valid token임.")
             val authentication = jwtTokenProvider.getAuthentication(token)

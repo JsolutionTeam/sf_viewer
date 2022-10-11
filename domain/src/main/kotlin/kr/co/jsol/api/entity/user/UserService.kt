@@ -11,7 +11,6 @@ import kr.co.jsol.api.jwt.JwtTokenProvider
 import kr.co.jsol.api.entity.util.findByIdOrThrow
 import kr.co.jsol.api.exception.entities.user.UserAlreadyExistUserException
 import kr.co.jsol.api.exception.entities.user.UserDisableException
-import kr.co.jsol.api.jwt.dto.JwtToken
 import kr.co.jsol.api.jwt.dto.RefreshTokenDto
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
@@ -47,17 +46,22 @@ class UserService(
 
         try {
             println("username : ${user.username}\npassword : ${loginRequest.password}")
-            authenticationManager.authenticate(UsernamePasswordAuthenticationToken(user.username, loginRequest.password))
+            authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(
+                    user.username,
+                    loginRequest.password
+                )
+            )
         } catch (e: AuthenticationException) {
             e.printStackTrace()
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
-        } catch (e: LockedException){
+        } catch (e: LockedException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 잠겨 있습니다.")
-        } catch (e: DisabledException){
+        } catch (e: DisabledException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 비활성화 상태입니다.")
-        } catch (e: CredentialsExpiredException){
+        } catch (e: CredentialsExpiredException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 만료 되었습니다.")
-        } catch (e: AccountExpiredException){
+        } catch (e: AccountExpiredException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 만료되었습니다.")
         }
 
@@ -75,11 +79,11 @@ class UserService(
     }
 
     @Transactional(readOnly = true)
-    fun getAll(): List<User>{
+    fun getAll(): List<User> {
         return userRepository.findAll(Sort.by("name").ascending())
     }
 
-    fun createUser(userRequest: UserRequest): UserResponse{
+    fun createUser(userRequest: UserRequest): UserResponse {
 
         val encodePw = passwordEncoder.encode(userRequest.password)
         userRequest.setEncryptPassword(encodePw)
@@ -88,9 +92,9 @@ class UserService(
 
         try {
             val existUser = userRepository.findByIdAndLockedIsFalse(user.username)
-            if(existUser != null)throw UserAlreadyExistUserException()
-        }catch (_: Exception){}
-
+            if (existUser != null) throw UserAlreadyExistUserException()
+        } catch (_: Exception) {
+        }
 
         val site = siteRepository.findByIdOrThrow(userRequest.siteSeq, "농장 정보를 다시 확인해주세요.")
 
@@ -104,7 +108,7 @@ class UserService(
         )
     }
 
-    fun updateUser(userUpdateRequest: UserUpdateRequest): UserResponse{
+    fun updateUser(userUpdateRequest: UserUpdateRequest): UserResponse {
         val user = userRepository.findByIdAndLockedIsFalse(userUpdateRequest.username)
             ?: throw UserDisableException()
 
@@ -124,5 +128,4 @@ class UserService(
             site = updateUser.site,
         )
     }
-
 }

@@ -10,7 +10,6 @@ data class UserRequest(
     val siteSeq: Long,
 ) {
 
-
     fun setEncryptPassword(encodePw: String) {
         this.password = encodePw
     }
