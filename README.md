@@ -5,3 +5,6 @@
 
 api같은 경우 @SpringbotApplication 어노테이션이 있기 때문에
 gradlew :api:bootRun 으로 실행한다.
+
+현재 jenkins 설정 값
+gradlew build && gradlew :api:bootRun --args='--spring.profiles.active=prod'
