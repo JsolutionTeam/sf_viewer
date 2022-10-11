@@ -1,6 +1,5 @@
 package kr.co.jsol.api.config
 
-import kr.co.jsol.api.jwt.JwtAuthenticationEntryPoint
 import kr.co.jsol.api.jwt.JwtTokenProvider
 import kr.co.wimcorp.account.auth.filter.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean

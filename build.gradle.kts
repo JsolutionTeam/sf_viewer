@@ -19,7 +19,7 @@ allprojects {
     apply(plugin = "io.spring.dependency-management")
 
     group = "kr.co.j-sol"
-    version = "0.0.1-SNAPSHOT"
+    version = ""
 
     repositories {
         mavenCentral()

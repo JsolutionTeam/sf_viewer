@@ -11,7 +11,6 @@ import kr.co.jsol.api.entity.user.dto.request.LoginRequest
 import kr.co.jsol.api.entity.user.dto.request.UserRequest
 import kr.co.jsol.api.entity.user.dto.response.LoginResponse
 import kr.co.jsol.api.entity.user.dto.response.UserResponse
-import kr.co.jsol.api.jwt.dto.JwtToken
 import kr.co.jsol.api.jwt.dto.RefreshTokenDto
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/auth")
- class AuthController (
+class AuthController(
     private val userService: UserService,
 ) {
 
