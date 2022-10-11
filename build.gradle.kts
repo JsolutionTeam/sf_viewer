@@ -99,4 +99,13 @@ allprojects {
     tasks.withType<Test> {
         useJUnitPlatform()
     }
+
+    // 메인에는 Root(SpringbootApplication) 이 없으므로 build 실행 x
+    tasks.withType<Jar> {
+        enabled = true
+    }
+
+    tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+        enabled = false
+    }
 }
