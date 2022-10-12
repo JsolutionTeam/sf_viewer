@@ -10,7 +10,7 @@ import kr.co.jsol.api.entity.co2.QCo2Logger.co2Logger
 import kr.co.jsol.api.entity.micro.QMicro.micro
 import kr.co.jsol.api.entity.site.QSite.site
 import kr.co.jsol.api.entity.site.dto.response.SearchResponse
-import micro.dto.request.SearchCondition
+import kr.co.jsol.api.entity.site.dto.request.SearchCondition
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.time.LocalTime

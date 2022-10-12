@@ -15,102 +15,78 @@ class ApiExceptionHandler {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
-    fun httpMessageNotReadableException(ex: HttpMessageNotReadableException): ResponseEntity<ApiErrorResponse> {
-        ex.printStackTrace()
-        val response: ApiErrorResponse = ApiErrorResponse.create()
-            .status(400)
-            .code("error-request-body-missing-400")
-            .message("request body json을 입력해주세요")
-        return ResponseEntity<ApiErrorResponse>(response, HttpStatus.BAD_REQUEST)
+    fun httpMessageNotReadableException(ex: HttpMessageNotReadableException): ResponseEntity<BadRequestException> {
+        val message = REQUEST_BODY_ERROR
+        logger.error("httpMessageNotReadableException - message : $message")
+        return ResponseEntity<BadRequestException>(BadRequestException(message), HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(StorageException::class)
-    fun storageException(ex: StorageException): ResponseEntity<ApiErrorResponse> {
-        val response: ApiErrorResponse = ApiErrorResponse.create()
-            .status(500)
-            .code("error-storage-500")
-            .message(ex.message)
-        return ResponseEntity<ApiErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR)
+    fun storageException(ex: StorageException): ResponseEntity<BadRequestException> {
+        val message = ex.message
+        logger.error("storageException - message : $message")
+        return ResponseEntity<BadRequestException>(
+            BadRequestException(message ?: "파일 저장 중 오류가 발생했습니다."),
+            HttpStatus.INTERNAL_SERVER_ERROR
+        )
     }
 
-    // @Valid 검증 실패 시 Catch
+    // MethodArgumentNotValidException - @Valid 검증 실패 시 Catch된다.
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ApiErrorResponse> {
-        val errorMessage = e.bindingResult
+    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<BadRequestException> {
+        val message = e.bindingResult
             .allErrors[0]
-            .defaultMessage
-        val response: ApiErrorResponse = ApiErrorResponse.create()
-            .status(400)
-            .code(errorMessage)
-            .message(e.toString())
-        return ResponseEntity<ApiErrorResponse>(response, HttpStatus.BAD_REQUEST)
+            .defaultMessage ?: REQUEST_BODY_ERROR
+        logger.error("handleMethodArgumentNotValidException - message : $message")
+        return ResponseEntity<BadRequestException>(BadRequestException(message), HttpStatus.BAD_REQUEST)
     }
 
     // @Valid 검증 실패 시 Catch
     @ExceptionHandler(InvalidParameterException::class)
-    protected fun handleInvalidParameterException(e: InvalidParameterException): ResponseEntity<ApiErrorResponse> {
-        logger.error("handleInvalidParameterException", e)
-        val response: ApiErrorResponse = ApiErrorResponse.create()
-            .status(400)
-            .code(e.code)
-            .message(e.message)
-            .errors(e.errors)
-        return ResponseEntity<ApiErrorResponse>(
-            response,
-            HttpStatus.resolve(response.status)
-                ?: HttpStatus.INTERNAL_SERVER_ERROR
+    protected fun handleInvalidParameterException(ex: InvalidParameterException): ResponseEntity<InternalServerException> {
+        logger.error("handleInvalidParameterException - message : $ex.message")
+        return ResponseEntity<InternalServerException>(
+            InternalServerException("서버에서 오류가 발생했습니다. - Invalid Parameter Exception"),
+            HttpStatus.BAD_REQUEST
         )
     }
 
     @ExceptionHandler(DataIntegrityViolationException::class)
-    fun dataIntegrityViolationException(ex: DataIntegrityViolationException): ResponseEntity<ApiErrorResponse> {
-        logger.error(ex.message)
-        val response: ApiErrorResponse = ApiErrorResponse.create()
-            .status(400)
-            .code("error-value-valid")
-            .message(
-                """
-    데이터가 제약조건 위반됩니다.
-    ${ex.message}
-                """.trimIndent()
-            )
-        return ResponseEntity<ApiErrorResponse>(response, HttpStatus.BAD_REQUEST)
+    fun dataIntegrityViolationException(ex: DataIntegrityViolationException): ResponseEntity<BadRequestException> {
+        val message = ex.rootCause?.message
+        logger.error("dataIntegrityViolationException - message : $message")
+        return ResponseEntity<BadRequestException>(BadRequestException("데이터 제약조건 오류가 발생했습니다."), HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(BasicException::class)
-    fun unauthorizedException(ex: BasicException): ResponseEntity<ApiErrorResponse> {
-        ex.printStackTrace()
-        val response: ApiErrorResponse = ApiErrorResponse.create()
-            .status(ex.status)
-            .code(ex.code)
-            .message(ex.message)
-
-        // null이면 500
-        return ResponseEntity<ApiErrorResponse>(
-            response,
-            HttpStatus.resolve(ex.status) ?: HttpStatus.INTERNAL_SERVER_ERROR
+    fun handleBasicException(ex: BasicException): ResponseEntity<BasicException> {
+        logger.error("handleBasicException - message : $ex.message")
+        return ResponseEntity<BasicException>(
+            ex, HttpStatus.resolve(ex.status) ?: HttpStatus.INTERNAL_SERVER_ERROR
         )
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
-    protected fun illegalArgumentExceptionhandleException
-    (e: IllegalArgumentException?): ResponseEntity<ApiErrorResponse> {
-        logger.error("handleException...", e)
-        val response: ApiErrorResponse = ApiErrorResponse.create()
-            .status(500)
-            .code(HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase)
-            .message("서버 오류")
-        return ResponseEntity<ApiErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR)
+    protected fun illegalArgumentExceptionhandleException(ex: IllegalArgumentException?): ResponseEntity<InternalServerException> {
+        logger.error("illegalArgumentExceptionhandleException - message : $ex.message")
+        return ResponseEntity<InternalServerException>(
+            InternalServerException("서버에서 오류가 발생했습니다. - Illegal Argument Exception"),
+            HttpStatus.INTERNAL_SERVER_ERROR
+        )
     }
 
     // 모든 예외를 핸들링하여 ErrorResponse 형식으로 반환한다.
     @ExceptionHandler(Exception::class)
-    protected fun handleException(e: Exception): ResponseEntity<ApiErrorResponse> {
-        logger.error("handleException...", e)
-        val response: ApiErrorResponse = ApiErrorResponse.create()
-            .status(HttpStatus.INTERNAL_SERVER_ERROR.value().toString().toInt())
-            .code(HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase)
-            .message(e.toString())
-        return ResponseEntity<ApiErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR)
+    protected fun handleException(ex: Exception): ResponseEntity<InternalServerException> {
+        logger.error("handleException - message : $ex.message")
+        return ResponseEntity<InternalServerException>(
+            InternalServerException(UNKNOWN_ERROR),
+            HttpStatus.INTERNAL_SERVER_ERROR
+        )
+    }
+
+    companion object {
+        private val REQUEST_BODY_ERROR: String by lazy { "REQUEST-BODY와 관련된 문제가 발생했습니다." }
+        private val UNKNOWN_ERROR: String by lazy { "알 수 없는 에러가 발생했습니다." }
     }
 }

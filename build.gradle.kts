@@ -16,19 +16,20 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion apply false
 }
 
-allprojects {
-    apply(plugin = "io.spring.dependency-management")
-
-    group = "kr.co.j-sol"
+allprojects{
+    group = "kr.co.jsol"
     version = ""
 
     repositories {
         mavenCentral()
     }
+}
+
+subprojects {
 
     apply {
-        plugin("org.springframework.boot")
         plugin("io.spring.dependency-management")
+        plugin("org.springframework.boot")
 
         plugin("kotlin")
         plugin("org.jlleitschuh.gradle.ktlint")
@@ -101,12 +102,4 @@ allprojects {
         useJUnitPlatform()
     }
 
-    // 실행 bootJar로 만들 필요가 없으므로...
-    tasks.withType<Jar> {
-        enabled = true
-    }
-
-    tasks.withType<BootJar> {
-        enabled = false
-    }
 }

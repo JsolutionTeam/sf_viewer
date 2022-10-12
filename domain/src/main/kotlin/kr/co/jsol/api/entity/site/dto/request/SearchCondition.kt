@@ -1,4 +1,4 @@
-package micro.dto.request
+package kr.co.jsol.api.entity.site.dto.request
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema

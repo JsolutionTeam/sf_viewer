@@ -3,7 +3,7 @@ package kr.co.jsol.api.controller
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import micro.dto.request.SearchCondition
+import kr.co.jsol.api.entity.site.dto.request.SearchCondition
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import kr.co.jsol.api.entity.site.SiteService

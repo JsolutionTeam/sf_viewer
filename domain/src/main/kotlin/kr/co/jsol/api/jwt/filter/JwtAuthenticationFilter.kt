@@ -1,4 +1,4 @@
-package kr.co.wimcorp.account.auth.filter
+package kr.co.jsol.api.jwt.filter
 
 import io.jsonwebtoken.io.IOException
 import kr.co.jsol.api.jwt.JwtTokenProvider

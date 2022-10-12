@@ -21,7 +21,6 @@ noArg {
 }
 
 dependencies {
-//    implementation(project(":mcall-core"))
 
     val kapt by configurations
     api("org.springframework.boot:spring-boot-starter-data-jpa")

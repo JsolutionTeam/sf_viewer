@@ -2,7 +2,7 @@ package kr.co.jsol.api.entity.site
 
 import kr.co.jsol.api.entity.site.dto.response.SearchResponse
 import kr.co.jsol.api.entity.site.dto.response.SiteResponse
-import micro.dto.request.SearchCondition
+import kr.co.jsol.api.entity.site.dto.request.SearchCondition
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
