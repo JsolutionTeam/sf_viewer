@@ -3,12 +3,12 @@ package kr.co.jsol.api.controller
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import kr.co.jsol.api.entity.site.dto.request.SearchCondition
+import kr.co.jsol.domain.entity.site.dto.request.SearchCondition
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import kr.co.jsol.api.entity.site.SiteService
-import kr.co.jsol.api.entity.site.dto.response.SearchResponse
-import kr.co.jsol.api.entity.site.dto.response.SiteResponse
+import kr.co.jsol.domain.entity.site.SiteService
+import kr.co.jsol.domain.entity.site.dto.response.SearchResponse
+import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime

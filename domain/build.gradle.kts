@@ -35,6 +35,15 @@ dependencies {
 
 tasks.withType<Jar> {
     enabled = true
+
+//    // project-core 에 필요한 라이브러리들을 모두 포함해서 패키징한다
+//    from {
+//        configurations.runtimeClasspath.collect {
+//            it.isDirectory() ? it : zipTree(it)
+//        }
+//    }
+    // build 중에 중복되는 파일이 생성될경우 에러가 발생한다. 그것을 방지하기 위한 설정이다.
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.withType<BootJar> {
