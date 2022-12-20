@@ -1,22 +1,28 @@
 package kr.co.jsol.domain.entity.site
 
+import com.querydsl.core.Tuple
 import com.querydsl.core.types.Projections
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.DateTemplate
 import com.querydsl.core.types.dsl.DateTimePath
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.impl.JPAQueryFactory
+import kr.co.jsol.domain.entity.co2.QCo2Logger
 import kr.co.jsol.domain.entity.co2.QCo2Logger.co2Logger
+import kr.co.jsol.domain.entity.co2.dto.Co2Dto
+import kr.co.jsol.domain.entity.co2.dto.QCo2Dto
 import kr.co.jsol.domain.entity.micro.QMicro.micro
+import kr.co.jsol.domain.entity.micro.dto.MicroDto
+import kr.co.jsol.domain.entity.micro.dto.QMicroDto
 import kr.co.jsol.domain.entity.site.QSite.site
-import kr.co.jsol.domain.entity.site.dto.response.SearchResponse
 import kr.co.jsol.domain.entity.site.dto.request.SearchCondition
-import org.springframework.stereotype.Component
+import kr.co.jsol.domain.entity.site.dto.response.SearchResponse
+import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.YearMonth
 
-@Component
+@Repository
 class SiteQuerydslRepository(
     private val queryFactory: JPAQueryFactory,
 ) {
@@ -71,29 +77,10 @@ class SiteQuerydslRepository(
 
     fun getMicroList(condition: SearchCondition): List<SearchResponse> {
 
-        /**
-         select
-         avg(co2logger1_.co2)           as col_0_0_,
-         avg(micro2_.temperature)       as col_1_0_,
-         avg(micro2_.relative_humidity) as col_2_0_,
-         avg(micro2_.solar_radiation)   as col_3_0_,
-         avg(micro2_.rainfall)          as col_4_0_,
-         avg(micro2_.earth_temperature) as col_5_0_,
-         avg(micro2_.wind_direction)    as col_6_0_,
-         avg(micro2_.wind_speed)        as col_7_0_,
-         micro2_.reg_dtm           as mtime,
-         co2logger1_.reg_dtm       as ctime
-         from tb_site site0_
-         left outer join tb_co2_logger co2logger1_ on (co2logger1_.site_seq = site0_.site_seq and
-         (co2logger1_.reg_dtm between '2022-09-23T00:00:00.000+0900' and '2022-10-01T00:00:00.000+0900'))
-         left outer join tb_micro_station micro2_ on (micro2_.site_seq = site0_.site_seq and
-         (micro2_.reg_dtm between '2022-09-23T00:00:00.000+0900' and '2022-10-01T00:00:00.000+0900'))
-         where site0_.site_seq=13
-         group by
-         date_format(micro2_.reg_dtm, '%Y %c %d %H')
-         ,date_format(co2logger1_.reg_dtm, '%Y %c %d %H');
-         */
-        val microTime: DateTemplate<*> =
+        // 하나의 쿼리에서 두 개의 테이블을 조인하고 가져오는것이 굉장히 오래걸림.
+        // 그러므로 시간단위로 그룹바이한 값을 두 개를 조회해서 dto에 세팅하는 것으로 변경
+
+        val microTime: DateTemplate<LocalDateTime> =
             Expressions.dateTemplate(
                 LocalDateTime::class.java,
                 "DATE_FORMAT({0}, {1})",
@@ -101,7 +88,7 @@ class SiteQuerydslRepository(
                 "%Y %c %d %H"
             )
 
-        val co2Time: DateTemplate<*> =
+        val co2Time: DateTemplate<LocalDateTime> =
             Expressions.dateTemplate(
                 LocalDateTime::class.java,
                 "DATE_FORMAT({0}, {1})",
@@ -110,43 +97,84 @@ class SiteQuerydslRepository(
             )
 
         val (siteSeq, startTime, endTime) = checkTime(condition)
-        return queryFactory
-            .select(
-                Projections.constructor(
-                    SearchResponse::class.java,
-                    co2Logger.co2.avg(),
-                    micro.temperature.avg(),
-                    micro.relativeHumidity.avg(),
-                    micro.solarRadiation.avg(),
-                    micro.rainfall.avg(),
-                    micro.earthTemperature.avg(),
-                    micro.windDirection.avg(),
-                    micro.windSpeed.avg(),
-                    micro.regTime,
-                    co2Logger.regTime,
-                )
-            )
-            .from(site)
-            .leftJoin(co2Logger)
-            .on(
-                co2Logger.site.eq(site)
-                    .and(
-                        betweenTime(co2Logger.regTime, startTime!!, endTime!!)
-                    )
-            )
-            .fetchJoin()
 
-            .leftJoin(micro)
-            .on(
-                micro.site.eq(site)
-                    .and(
-                        betweenTime(micro.regTime, startTime, endTime)
-                    )
+        val co2: List<Co2Dto> = queryFactory.select(
+            QCo2Dto(
+                co2Logger.site.id.`as`("siteSeq"),
+//                co2Time.`as`("regTime"),
+                co2Logger.regTime,
+                co2Logger.co2.`as`("co2"),
+                co2Logger.temperature.`as`("temperature"),
+                co2Logger.relativeHumidity.`as`("relativeHumidity"),
             )
-            .where(site.id.eq(siteSeq))
-            .fetchJoin()
-            .groupBy(microTime, co2Time)
+        ).from(co2Logger)
+            .where(
+                co2Logger.site.id.eq(siteSeq),
+                betweenTime(co2Logger.regTime, startTime!!, endTime!!)
+            )
+//            .groupBy(co2Time)
+//            .orderBy(co2Time.desc())
             .fetch()
+
+        val micro: List<MicroDto> = queryFactory.select(
+            QMicroDto(
+                micro.site.id.`as`("siteSeq"),
+//                microTime.`as`("reg_dtm"),
+                micro.regTime,
+                micro.temperature.`as`("temperature"),
+                micro.relativeHumidity.`as`("relativeHumidity"),
+                micro.solarRadiation.`as`("solarRadiation"),
+                micro.rainfall.`as`("rainfall"),
+                micro.earthTemperature.`as`("earthTemperature"),
+                micro.windDirection.`as`("windDirection"),
+                micro.windSpeed.`as`("windSpeed"),
+            )
+        ).from(micro)
+            .where(
+                micro.site.id.eq(siteSeq),
+                betweenTime(micro.regTime, startTime, endTime)
+            )
+            .groupBy(microTime)
+            .orderBy(microTime.desc())
+            .fetch()
+        return SearchResponse.of(co2, micro)
+//        return queryFactory
+//            .select(
+//                Projections.constructor(
+//                    SearchResponse::class.java,
+//                    co2Logger.co2.avg(),
+//                    micro.temperature.avg(),
+//                    micro.relativeHumidity.avg(),
+//                    micro.solarRadiation.avg(),
+//                    micro.rainfall.avg(),
+//                    micro.earthTemperature.avg(),
+//                    micro.windDirection.avg(),
+//                    micro.windSpeed.avg(),
+//                    micro.regTime,
+//                    co2Logger.regTime,
+//                )
+//            )
+//            .from(site)
+//            .leftJoin(co2Logger)
+//            .on(
+//                co2Logger.site.eq(site)
+//                    .and(
+//                        betweenTime(co2Logger.regTime, startTime!!, endTime!!)
+//                    )
+//            )
+//            .fetchJoin()
+//
+//            .leftJoin(micro)
+//            .on(
+//                micro.site.eq(site)
+//                    .and(
+//                        betweenTime(micro.regTime, startTime, endTime)
+//                    )
+//            )
+//            .where(site.id.eq(siteSeq))
+//            .fetchJoin()
+//            .groupBy(microTime, co2Time)
+//            .fetch()
     }
 
     private fun checkTime(condition: SearchCondition): SearchCondition {

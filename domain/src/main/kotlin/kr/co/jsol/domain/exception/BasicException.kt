@@ -1,15 +1,25 @@
 package kr.co.jsol.domain.exception
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "에러")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 open class BasicException(
-    @Schema(description = "상태")
+
+    @field:Schema(description = "상태")
     val status: Int = 400,
 
-    @Schema(description = "코드")
-    val code: String = "",
-
-    @Schema(description = "메세지")
+    @field:Schema(description = "메세지")
     override var message: String = "",
-) : RuntimeException()
+
+    ) : RuntimeException() {
+
+    // 무조건 안나오게 설정
+    @field:Schema(hidden = true)
+    override var cause: Throwable? = null
+
+    // 무조건 안나오게 설정
+    @field:Schema(hidden = true)
+    val stackTrace: List<StackTraceElement>? = null
+}
