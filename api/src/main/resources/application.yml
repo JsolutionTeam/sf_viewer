@@ -3,6 +3,11 @@ spring:
     config:
         activate:
             on-profile: prod
+    datasource:
+        url: jdbc:mariadb://39.112.10.37:23307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+        username: faas
+        password: qweR1234@!
+        driver-class-name: org.mariadb.jdbc.Driver
 server:
     port: 15005
 ---
@@ -22,6 +27,11 @@ spring:
     config:
         activate:
             on-profile: dev
+    datasource:
+        url: jdbc:mariadb://39.112.10.37:23307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+        username: faas
+        password: qweR1234@!
+        driver-class-name: org.mariadb.jdbc.Driver
 server:
   port: 18080
 ---
@@ -51,11 +61,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  datasource:
-    url: jdbc:mariadb://39.112.10.37:23307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
-    username: faas
-    password: qweR1234@!
-    driver-class-name: org.mariadb.jdbc.Driver
 
   jpa:
       show-sql: true # sql log 보이게 설정
