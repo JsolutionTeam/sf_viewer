@@ -53,7 +53,7 @@ server:
       prefix: access
       rotate: true
       suffix: .log
-    basedir: ./logs
+#    basedir: logs
 
 spring:
   profiles:
