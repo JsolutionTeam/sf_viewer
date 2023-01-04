@@ -57,7 +57,7 @@ public class SwaggerConfig {
                 .securitySchemes(Arrays.asList(apiKey()))
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.jsol.mcall.controller")) // controller가 있는 패키지 지정 basePackage
+                .apis(RequestHandlerSelectors.basePackage("kr.co.jsol.api.controller")) // controller가 있는 패키지 지정 basePackage
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
@@ -65,9 +65,9 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("MCALL API Swagger")
-                .description("2022-01-25 api docs version 1.1")
-                .version("1.1")
+                .title("SmartFarm viewer API Swagger")
+                .description("2022-23-01 api docs")
+                .version("1.2")
                 .build();
     }
 

@@ -35,8 +35,6 @@ class SiteQuerydslRepository(
 
     fun getRealTime(condition: SearchCondition): List<SearchResponse> {
         val (siteSeq) = condition
-        val startTime = LocalDateTime.now().withMinute(0).withSecond(0)
-        val endTime = startTime.plusHours(1)
 
         return queryFactory
             .select(
@@ -58,18 +56,12 @@ class SiteQuerydslRepository(
             .leftJoin(co2Logger)
             .on(
                 co2Logger.site.eq(site)
-                    .and(
-                        betweenTime(co2Logger.regTime, startTime!!, endTime!!)
-                    )
             )
             .fetchJoin()
 
             .leftJoin(micro)
             .on(
                 micro.site.eq(site)
-                    .and(
-                        betweenTime(micro.regTime, startTime, endTime)
-                    )
             )
             .where(site.id.eq(siteSeq))
             .fetchJoin().limit(1).fetch()
