@@ -60,14 +60,13 @@ class SiteController(
     @GetMapping("/site/{siteSeq}/realtime")
     fun getSiteSummary(
         @PathVariable(required = true) siteSeq: Long,
-    ): ResponseEntity<List<SearchResponse>> {
+    ): ResponseEntity<SearchResponse> {
         val condition = SearchCondition(
             siteSeq = siteSeq,
             null,
             null,
         )
-        val realtime: List<SearchResponse> = siteService.getRealTime(condition)
-        println("realtime.size = ${realtime.size}")
+        val realtime: SearchResponse = siteService.getRealTime(condition)
         return ResponseEntity(realtime, HttpStatus.OK)
     }
 }
