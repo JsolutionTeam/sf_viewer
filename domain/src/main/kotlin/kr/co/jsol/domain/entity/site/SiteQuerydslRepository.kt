@@ -33,14 +33,17 @@ class SiteQuerydslRepository(
 //
 //    }
 
-    fun getRealTime(condition: SearchCondition): List<SearchResponse> {
+    fun getRealTime(condition: SearchCondition): SearchResponse {
         val (siteSeq) = condition
 
-        return queryFactory
+        val response: SearchResponse = SearchResponse(siteSeq = siteSeq)
+
+        val microDto = queryFactory
             .select(
                 Projections.constructor(
-                    SearchResponse::class.java,
-                    co2Logger.co2,
+                    MicroDto::class.java,
+                    Expressions.asNumber(siteSeq).`as`("siteSeq"),
+                    micro.regTime,
                     micro.temperature,
                     micro.relativeHumidity,
                     micro.solarRadiation,
@@ -48,23 +51,39 @@ class SiteQuerydslRepository(
                     micro.earthTemperature,
                     micro.windDirection,
                     micro.windSpeed,
-                    micro.regTime,
-                    co2Logger.regTime,
                 )
             )
-            .from(site)
-            .leftJoin(co2Logger)
-            .on(
-                co2Logger.site.eq(site)
-            )
-            .fetchJoin()
+            .from(micro)
+            .where(micro.site.id.eq(siteSeq))
+            .orderBy(micro.id.desc())
+            .limit(1)
+            .fetchOne()
 
-            .leftJoin(micro)
-            .on(
-                micro.site.eq(site)
+        val co2Dto = queryFactory
+            .select(
+                Projections.constructor(
+                    Co2Dto::class.java,
+                    Expressions.asNumber(siteSeq).`as`("siteSeq"),
+                    co2Logger.regTime,
+                    co2Logger.co2,
+                    co2Logger.temperature,
+                    co2Logger.relativeHumidity,
+                )
             )
-            .where(site.id.eq(siteSeq))
-            .fetchJoin().limit(1).fetch()
+            .from(co2Logger)
+            .where(co2Logger.site.id.eq(siteSeq))
+            .orderBy(co2Logger.id.desc())
+            .limit(1)
+            .fetchOne()
+
+        if(co2Dto != null){
+            response.setCo2(co2Dto)
+        }
+        if(microDto != null){
+            response.setMicro(microDto)
+        }
+
+        return response
     }
 
     fun getMicroList(condition: SearchCondition): List<SearchResponse> {
@@ -129,7 +148,7 @@ class SiteQuerydslRepository(
             .groupBy(microTime)
             .orderBy(microTime.desc())
             .fetch()
-        return SearchResponse.of(co2, micro)
+        return SearchResponse.of(siteSeq, co2, micro)
 //        return queryFactory
 //            .select(
 //                Projections.constructor(
