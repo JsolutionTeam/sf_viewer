@@ -13,7 +13,7 @@ class SiteService(
 ) {
 
     @Transactional(readOnly = true) // 메모리 사용 x
-    fun getRealTime(condition: SearchCondition): List<SearchResponse> {
+    fun getRealTime(condition: SearchCondition): SearchResponse {
         return siteQuerydslRepository.getRealTime(condition)
     }
 
