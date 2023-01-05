@@ -4,46 +4,67 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
 import kr.co.jsol.core.util.removeMinute
 import kr.co.jsol.domain.entity.co2.dto.Co2Dto
+import kr.co.jsol.domain.entity.micro.Micro
 import kr.co.jsol.domain.entity.micro.dto.MicroDto
 import java.time.LocalDateTime
 
-@Schema(name = "데이터베이스 조회 결과")
+@Schema(description = "데이터베이스 조회 결과")
 data class SearchResponse(
-    @Schema(name = "이산화탄소 농도 / 단위 ppm")
-    val co2: Double? = 0.0,
+    @Schema(description = "site id")
+    val siteSeq: Long = 0L,
 
-    @Schema(name = "온도 / 단위 ℃")
-    val temperature: Double? = 0.0,
+    @Schema(description = "이산화탄소 농도 / 단위 ppm")
+    var co2: Double? = 0.0,
 
-    @Schema(name = "습도 / 단위 %")
-    val relativeHumidity: Double? = 0.0,
+    @Schema(description = "온도 / 단위 ℃")
+    var temperature: Double? = 0.0,
 
-    @Schema(name = "일사량 / 단위 W/㎡")
-    val solarRadiation: Double? = 0.0,
+    @Schema(description = "습도 / 단위 %")
+    var relativeHumidity: Double? = 0.0,
 
-    @Schema(name = "강우량 / 단위 mm")
-    val rainfall: Double? = 0.0,
+    @Schema(description = "일사량 / 단위 W/㎡")
+    var solarRadiation: Double? = 0.0,
 
-    @Schema(name = "지온 / 단위 ℃")
-    val earthTemperature: Double? = 0.0,
+    @Schema(description = "강우량 / 단위 mm")
+    var rainfall: Double? = 0.0,
 
-    @Schema(name = "풍향 / 단위 ˚(각도)")
-    val windDirection: Double? = 0.0,
+    @Schema(description = "지온 / 단위 ℃")
+    var earthTemperature: Double? = 0.0,
 
-    @Schema(name = "풍속 / 단위 m/s")
-    val windSpeed: Double? = 0.0,
+    @Schema(description = "풍향 / 단위 ˚(각도)")
+    var windDirection: Double? = 0.0,
 
-    @Schema(name = "co2 외 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
+    @Schema(description = "풍속 / 단위 m/s")
+    var windSpeed: Double? = 0.0,
+
+    @Schema(description = "co2 외 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    val microRegTime: LocalDateTime?,
+    var microRegTime: LocalDateTime? = null,
 
-    @Schema(name = "co2 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
+    @Schema(description = "co2 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    val co2RegTime: LocalDateTime?,
-){
+    var co2RegTime: LocalDateTime? = null,
+) {
 
-    companion object{
-        fun of(co2: List<Co2Dto>, micro: List<MicroDto>): List<SearchResponse> {
+    fun setCo2(dto: Co2Dto) {
+        this.co2 = dto.co2;
+        this.co2RegTime = dto.regTime;
+    }
+
+    fun setMicro(dto: MicroDto) {
+        temperature = dto.temperature
+        relativeHumidity = dto.relativeHumidity
+        solarRadiation = dto.solarRadiation
+        rainfall = dto.rainfall
+        earthTemperature = dto.earthTemperature
+        windDirection = dto.windDirection
+        windSpeed = dto.windSpeed
+        this.microRegTime = dto.regTime;
+    }
+
+    companion object {
+
+        fun of(siteSeq: Long, co2: List<Co2Dto>, micro: List<MicroDto>): List<SearchResponse> {
             val result = mutableListOf<SearchResponse>()
             val co2Map = co2.groupBy { it.regTime.removeMinute() }
             val microMap = micro.groupBy { it.regTime.removeMinute() }
@@ -55,6 +76,7 @@ data class SearchResponse(
                 val microDto = microMap[key]?.firstOrNull()
                 result.add(
                     SearchResponse(
+                        siteSeq,
                         co2Dto?.co2,
                         microDto?.temperature,
                         microDto?.relativeHumidity,
