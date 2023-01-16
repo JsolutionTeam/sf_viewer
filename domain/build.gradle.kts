@@ -21,10 +21,10 @@ noArg {
 }
 
 dependencies {
+    api(project(":common"))
 
     val kapt by configurations
     api("org.springframework.boot:spring-boot-starter-data-jpa")
-    api("org.springframework.boot:spring-boot-starter-security")
     api("com.querydsl:querydsl-jpa:$querydslVersion")
     kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa")
     kapt("org.springframework.boot:spring-boot-configuration-processor")

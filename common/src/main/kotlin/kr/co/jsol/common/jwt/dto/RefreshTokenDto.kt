@@ -1,3 +1,3 @@
-package kr.co.jsol.domain.jwt.dto
+package kr.co.jsol.common.jwt.dto
 
 data class RefreshTokenDto(val accessToken: String)

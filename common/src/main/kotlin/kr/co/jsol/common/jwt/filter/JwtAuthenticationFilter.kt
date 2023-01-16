@@ -1,7 +1,7 @@
-package kr.co.jsol.domain.jwt.filter
+package kr.co.jsol.common.jwt.filter
 
 import io.jsonwebtoken.io.IOException
-import kr.co.jsol.domain.jwt.JwtTokenProvider
+import kr.co.jsol.common.jwt.JwtTokenProvider
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.GenericFilterBean
 import javax.servlet.FilterChain

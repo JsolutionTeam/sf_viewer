@@ -7,11 +7,11 @@ import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.LoginResponse
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
-import kr.co.jsol.domain.jwt.JwtTokenProvider
+import kr.co.jsol.common.jwt.JwtTokenProvider
 import kr.co.jsol.domain.entity.util.findByIdOrThrow
 import kr.co.jsol.domain.exception.entities.user.UserAlreadyExistUserException
 import kr.co.jsol.domain.exception.entities.user.UserDisableException
-import kr.co.jsol.domain.jwt.dto.RefreshTokenDto
+import kr.co.jsol.common.jwt.dto.RefreshTokenDto
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -29,11 +29,11 @@ import org.springframework.web.server.ResponseStatusException
 
 @Service
     class UserService(
-        private val jwtTokenProvider: JwtTokenProvider,
-        private val authenticationManager: AuthenticationManager,
-        private val userRepository: UserRepository,
-        private val siteRepository: SiteRepository,
-        private val passwordEncoder: PasswordEncoder,
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val authenticationManager: AuthenticationManager,
+    private val userRepository: UserRepository,
+    private val siteRepository: SiteRepository,
+    private val passwordEncoder: PasswordEncoder,
     ) {
 
         fun refreshToken(userId: String): RefreshTokenDto {

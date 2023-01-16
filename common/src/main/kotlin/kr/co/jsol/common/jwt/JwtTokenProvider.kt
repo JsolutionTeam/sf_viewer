@@ -1,17 +1,17 @@
-package kr.co.jsol.domain.jwt
+package kr.co.jsol.common.jwt
 
 import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
-import kr.co.jsol.domain.entity.user.UserDetailServiceImpl
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Component
 import java.security.Key
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @Component
-class JwtTokenProvider(private val userDetailsService: UserDetailServiceImpl) {
+class JwtTokenProvider(private val userDetailsService: UserDetailsService) {
     private var secretKey: Key = Keys.secretKeyFor(SignatureAlgorithm.HS256)
 
     private val accessTokenValidTime = 30 * 60 * 1000L
