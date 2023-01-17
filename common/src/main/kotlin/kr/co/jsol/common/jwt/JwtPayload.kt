@@ -1,4 +1,4 @@
-package kr.co.jsol.domain.jwt
+package kr.co.jsol.common.jwt
 
 import io.jsonwebtoken.Claims
 

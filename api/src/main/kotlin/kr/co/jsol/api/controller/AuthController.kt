@@ -11,7 +11,7 @@ import kr.co.jsol.domain.entity.user.dto.request.LoginRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import kr.co.jsol.domain.entity.user.dto.response.LoginResponse
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
-import kr.co.jsol.domain.jwt.dto.RefreshTokenDto
+import kr.co.jsol.common.jwt.dto.RefreshTokenDto
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal

@@ -1,4 +1,4 @@
-package kr.co.jsol.domain.jwt
+package kr.co.jsol.common.jwt
 
 data class JsonWebTokenDto(
     val grantType: String? = null,

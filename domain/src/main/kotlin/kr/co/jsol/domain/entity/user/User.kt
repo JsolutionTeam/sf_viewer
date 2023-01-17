@@ -19,7 +19,7 @@ class User(
 
     @ManyToOne(
         fetch = FetchType.LAZY,
-        cascade = [CascadeType.ALL],
+        cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
     )
     @JoinColumn(
         name = "site_seq",
@@ -33,10 +33,13 @@ class User(
 
     @Column(name = "is_locked")
     private var locked = false
+
     @Column(name = "is_enabled")
     private var enabled = true
+
     @Column(name = "is_expired")
     private var expired = false
+
     @Column(name = "is_credentials_expired")
     private var credentialExpired = false
 
