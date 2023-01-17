@@ -1,35 +1,40 @@
 package kr.co.jsol.domain.entity.ingsystem
 
+import kr.co.jsol.domain.entity.site.Site
+import kr.co.jsol.domain.entity.site.SiteRepository
 import org.springframework.stereotype.Service
+import java.lang.RuntimeException
 
 @Service
-class InGSystemService() {
-    var inGSystemRepository: InGSystemRepository = TODO()
+class InGSystemService(
+    private val inGSystemRepository: InGSystemRepository,
+    private val siteRepository: SiteRepository,
+) {
 
-    constructor(inGSystemRepository: InGSystemRepository) : this() {
-        this.inGSystemRepository = inGSystemRepository
-    }
+    fun saveInGSystem(
+        siteSeq: Long,
+        rateOfOpening: Double,
+        openSignal: Int,
+        clientIp: String? = null,
+    ): String {
+        try{
+            val site = siteRepository.findById(siteSeq).orElseThrow { RuntimeException("Site not found") }
 
-    fun saveInGSystem(input: String): String{
-        var rateOfOpening: Double = 0.0;
-        var openSignal: Int = 0;
+            inGSystemRepository.save(
+                InGSystem(
+                    rateOfOpening = rateOfOpening,
+                    openSignal = openSignal,
+                    site = site,
+                    ip = clientIp,
+                )
+            )
+        }catch(e: Exception){
+            throw RuntimeException("InGSystem 데이터 저장 중 에러 발생, message : ${e.message}")
+        }
 
-        // 메세지 형식이 제대로 들어왔는가?
-        if(!isValidMessage(input)) return "메세지 형식이 잘못되었습니다.";
-
-        val split = input.split(",")
-        var rateOfOpeningMessage: String = split[0]
-        var openSignalMessage = split[1]
-
-        rateOfOpening = parsePulse(rateOfOpeningMessage)
-        openSignal = parseDirection(openSignalMessage)
-
-        inGSystemRepository.save(InGSystem(
-            rateOfOpening = rateOfOpening,
-            openSignal = openSignal,
-        ))
         return "200 OK, save success"
     }
+
     private fun isValidMessage(str: String): Boolean {
         if (isIotMessage(str)) return false// '*'으로 시작하고 '#'으로 끝나는가?
         if (isContainsComma(str)) return false// ','가 포함되어 있는가?

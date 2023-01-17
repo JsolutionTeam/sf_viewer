@@ -10,7 +10,7 @@ import javax.persistence.Table
 class Site(
 
     @Column(name = "site_nm", insertable = false, updatable = false)
-    val name: String,
+    val name: String = "",
 
     @Id
     @Column(name = "site_seq", insertable = false, updatable = false)

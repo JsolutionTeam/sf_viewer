@@ -66,3 +66,9 @@ tcp:
     server:
         port: 2332
 
+ingsystem:
+    message:
+        length: 20
+        delimiter: ','
+        delimiter-count: 3
+

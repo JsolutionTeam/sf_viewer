@@ -23,6 +23,9 @@ class InGSystem(
     @Column(name = "machine_id")
     val machineId: Long = 0,
 
+    @Column(name = "ip")
+    val ip: String? = null,
+
     @ManyToOne(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
@@ -35,5 +38,10 @@ class InGSystem(
 
     @Id
     @Column(name = "InG_seq", updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-)
+){
+    override fun toString(): String {
+        return "InGSystem(rateOfOpening=$rateOfOpening, openSignal=$openSignal, regTime=$regTime, machineId=$machineId, site=$site, id=$id)"
+    }
+}
