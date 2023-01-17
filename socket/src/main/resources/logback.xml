@@ -7,19 +7,19 @@
     </appender>
 
     <appender name="INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/application.log</file>
+        <file>./logs/socket.log</file>
         <encoder>
             <pattern>%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-5level [%logger{0}:%line] - %msg %n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/zip/application.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
+            <fileNamePattern>logs/zip/socket.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
             <maxHistory>168</maxHistory>
             <totalSizeCap>5GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
     <appender name="WARN_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/warn.log</file>
+        <file>logs/socket_warn.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
             <onMatch>ACCEPT</onMatch>
@@ -29,14 +29,14 @@
             <pattern>%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-5level [%logger{0}:%line] - %msg %n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/zip/warn.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
+            <fileNamePattern>logs/zip/socket_warn.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
             <maxHistory>168</maxHistory>
             <totalSizeCap>5GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
     <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/error.log</file>
+        <file>logs/socket_error.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>Error</level>
             <onMatch>ACCEPT</onMatch>
@@ -46,7 +46,7 @@
             <pattern>%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-5level [%logger{0}:%line] - %msg %n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/zip/error.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
+            <fileNamePattern>logs/zip/socket_error.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
             <maxHistory>168</maxHistory>
             <totalSizeCap>5GB</totalSizeCap>
         </rollingPolicy>
