@@ -28,7 +28,7 @@ class TcpInGSystemService(
     @Transactional
     fun handleTcpMessage(@Payload message: Message<String>) {
         // serial deserial을 거쳐서 나온 message를 처리하는 곳
-        val payload = message.payload
+        val payload = message.payload.trim()
         val clientIp = message.headers["ip_address"] as String
         log.info("payload = $payload")
         log.info("clientIp = $clientIp")

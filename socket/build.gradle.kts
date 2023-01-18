@@ -15,7 +15,9 @@ dependencies {
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }
-// bootJar 허용, 실행 jar 만들기
-tasks.withType<BootJar> {
-    enabled = true
-}
+
+val jar: Jar by tasks
+val bootJar: BootJar by tasks
+
+bootJar.enabled = true
+jar.enabled = false
