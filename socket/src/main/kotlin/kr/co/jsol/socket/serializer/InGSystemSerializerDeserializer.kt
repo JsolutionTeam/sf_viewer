@@ -43,7 +43,7 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
     }
 
     override fun deserialize(inputStream: InputStream): String {
-        println("TCP InGSystem 역직렬화 작업 시작")
+        log.info("TCP InGSystem 역직렬화 작업 시작")
 
         try {
             val message = parseString(inputStream)
@@ -57,7 +57,7 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
             log.error("TCP 역직렬화 중 에러 발생 InGSystemSerializerDeserializer.deserialize() : ${e.message}")
             throw e
         }
-        println("TCP InGSystem 역직렬화 작업 종료")
+        log.info("TCP InGSystem 역직렬화 작업 종료")
     }
 
     @Throws(IOException::class)
@@ -66,10 +66,11 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
         var c: Int
         while (true) {
             c = inputStream.read()
+            log.info("c = $c")
             if (c == -1) {
                 break
             }
-            println("now char : ${c.toChar()}")
+            log.info("now char : ${c.toChar()}")
             builder.append(c.toChar())
         }
 //        for (i in 0 until messageLength) {
