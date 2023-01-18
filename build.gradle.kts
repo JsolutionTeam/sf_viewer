@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     val kotlinVersion: String by System.getProperties() // 1.6.21
@@ -101,4 +102,15 @@ subprojects {
         useJUnitPlatform()
     }
 
+    // plain jar 기본 true
+    tasks.withType<Jar> {
+        enabled = true
+        // build 중에 중복되는 파일이 생성될경우 에러가 발생한다. 그것을 방지하기 위한 설정이다.
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+
+    // BootJar 기본 false, 프로젝트 빌드 후 실행해야 하는 모듈이면 BootJar true 해줘야 함.
+    tasks.withType<BootJar> {
+        enabled = false
+    }
 }
