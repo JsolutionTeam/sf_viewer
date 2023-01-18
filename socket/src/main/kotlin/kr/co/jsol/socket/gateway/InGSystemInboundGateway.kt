@@ -7,7 +7,7 @@ import org.springframework.messaging.Message
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.Payload
 
-@MessagingGateway(defaultRequestChannel = "tcpInboundChannel")
+@MessagingGateway(defaultRequestChannel = "tcpInboundChannel",)
 interface InGSystemInboundGateway {
 
 
@@ -18,5 +18,5 @@ interface InGSystemInboundGateway {
      * @param message TCP로 들어오는 데이터를 @Payload로 명시했다.
      */
     @Gateway(requestChannel = "tcpInboundChannel")
-    fun handleTcpMessage(@Payload message: Message<String>)
+    fun handleTcpMessage(@Payload message: Message<String>,)
 }

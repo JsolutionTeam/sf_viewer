@@ -47,12 +47,17 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
 
         try {
             val message = parseString(inputStream)
-            log.info("message = ${message}")
-            if(message.isNullOrBlank()){
-                throw RuntimeException("message is null or blank")
+
+            if(message.isNullOrBlank()) {
+                throw IOException("payload is null")
             }
+
+            log.info("message = ${message}")
             return message
-        } catch (e: Exception) {
+        }catch (e: IOException){
+            throw IOException(if(e.message != "payload is null"){"파일 읽기 종료"}else{"payload is null"})
+        }
+        catch (e: Exception) {
             e.printStackTrace()
             log.error("TCP 역직렬화 중 에러 발생 InGSystemSerializerDeserializer.deserialize() : ${e.message}")
             throw e
@@ -60,34 +65,39 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
         log.info("TCP InGSystem 역직렬화 작업 종료")
     }
 
+    private fun isEOF(value: Int): Boolean {
+        return value == -1
+    }
+
     @Throws(IOException::class)
     private fun parseString(inputStream: InputStream): String {
         val builder = StringBuilder()
         var c: Int
+
+
         while (true) {
             c = inputStream.read()
+
             log.info("c = $c")
-            if (c == -1) {
+
+            // -1 은 EOF임. 항상 마지막에 EOF을 나타내고 있음. 이 값이 읽히기 전까지는 데이터 input stream에 값이 남아있게 되므로
+            // 10 12 13과 같은 값은 continue로 계속 읽도록 처리하고 -1만 break로 종료 함.
+            if(isEOF(c)){
                 break
             }
+
+            // 10 = LF 13 = CR 인데, 이 프로그램에서 10 13이 넘어오면 새로운 데이터가 들어올 예정이므로 종료한다.
+            // 12는 데이터 한 번 처리 후 용지 넘김이 자동으로 들어오는데.. 해당 값은 처리하지 않도록 한다.
+            if(c == 10 || c == 12 || c == 13){
+                continue
+            }
+
             log.info("now char : ${c.toChar()}")
             builder.append(c.toChar())
+
         }
-        log.info("builder = ${builder}")
-        log.info("builder.toString() = ${builder.toString()}")
         return builder.toString()
     }
-//    @Throws(IOException::class)
-//    private fun parseString(inputStream: InputStream, length: Int): String {
-//        val builder = StringBuilder()
-//        var c: Int
-//        for (i in 0 until length) {
-//            c = inputStream.read()
-//            checkClosure(c)
-//            builder.append(c.toChar())
-//        }
-//        return builder.toString()
-//    }
 
     /**
      * Check whether the byte passed in is the "closed socket" byte

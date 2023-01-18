@@ -34,7 +34,11 @@ class TcpInGSystemService(
         val clientIp = message.headers["ip_address"] as String
         log.info("payload = ${payload}")
         log.info("clientIp = ${clientIp}")
-        if (payload == null) throw RuntimeException("payload is null")
+
+        // 빈 값이 넘어오면 처리하지 않음
+        if (payload.isNullOrBlank()) {
+            throw RuntimeException("payload is null")
+        }
 
         if (!isValidMessage(payload)) {
             throw RuntimeException("Invalid message")
@@ -61,7 +65,7 @@ class TcpInGSystemService(
 
         // return을 넣게 되면 무한반복을 하는데.. 이유는 더 배워야 한다
 //        return "success".toByteArray()
-
+//        return "OK"
     }
 
 
