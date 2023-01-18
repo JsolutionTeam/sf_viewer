@@ -78,7 +78,7 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
         while (true) {
             c = inputStream.read()
 
-//            log.info("c = $c")
+            log.info("c = $c")
 
             // -1 은 EOF임. 항상 마지막에 EOF을 나타내고 있음. 이 값이 읽히기 전까지는 데이터 input stream에 값이 남아있게 되므로
             // 10 12 13과 같은 값은 continue로 계속 읽도록 처리하고 -1만 break로 종료 함.
@@ -87,12 +87,11 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
             }
 
             // 10 = LF 13 = CR 인데, 이 프로그램에서 10 13이 넘어오면 새로운 데이터가 들어올 예정이므로 종료한다.
-            // 12는 데이터 한 번 처리 후 용지 넘김이 자동으로 들어오는데.. 해당 값은 처리하지 않도록 한다.
             if(c == 10 || c == 12 || c == 13){
                 continue
             }
 
-//            log.info("now char : ${c.toChar()}")
+            log.info("now char : ${c.toChar()}")
             builder.append(c.toChar())
 
         }
