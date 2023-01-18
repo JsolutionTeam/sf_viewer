@@ -45,6 +45,7 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
 
     override fun deserialize(inputStream: InputStream): String {
         log.info("TCP InGSystem 역직렬화 작업 시작")
+        inputStream.copyTo(System.out)
 
         try {
             val message = parseString(inputStream)
