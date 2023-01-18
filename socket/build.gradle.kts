@@ -1,3 +1,4 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 dependencies {
     implementation(project(":domain"))
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -14,10 +15,7 @@ dependencies {
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }
-tasks.withType<Jar> {
+// bootJar 허용, 실행 jar 만들기
+tasks.withType<BootJar> {
     enabled = true
-}
-
-tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-    enabled = false
 }
