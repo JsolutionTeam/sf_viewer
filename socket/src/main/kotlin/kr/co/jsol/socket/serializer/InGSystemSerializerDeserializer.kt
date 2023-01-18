@@ -55,7 +55,11 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
             log.info("message = ${message}")
             return message
         }catch (e: IOException){
-            throw IOException(if(e.message != "payload is null"){"파일 읽기 종료"}else{"payload is null"})
+            log.error("TCP 역직렬화 중 IOException 발생 message : ${e.message}")
+            if(e.message == "payload is null") {
+                throw e
+            }
+            throw IOException("payload is null")
         }
         catch (e: Exception) {
             e.printStackTrace()
@@ -78,7 +82,6 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
         while (true) {
             c = inputStream.read()
 
-            log.info("c = $c")
 
             // -1 은 EOF임. 항상 마지막에 EOF을 나타내고 있음. 이 값이 읽히기 전까지는 데이터 input stream에 값이 남아있게 되므로
             // 10 12 13과 같은 값은 continue로 계속 읽도록 처리하고 -1만 break로 종료 함.
@@ -91,10 +94,10 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
                 continue
             }
 
-            log.info("now char : ${c.toChar()}")
             builder.append(c.toChar())
 
         }
+            log.info("parsing result : ${builder.toString()}")
         return builder.toString()
     }
 
