@@ -2,6 +2,7 @@ package kr.co.jsol.socket.serializer
 
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.logging.LogFactory
+import org.slf4j.LoggerFactory
 import org.springframework.core.serializer.Deserializer
 import org.springframework.core.serializer.Serializer
 import org.springframework.stereotype.Component
@@ -44,6 +45,7 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
 
     override fun deserialize(inputStream: InputStream): String {
         println("TCP InGSystem 역직렬화 작업 시작")
+        inputStream.copyTo(System.out)
 
         try {
             val message = parseString(inputStream)
