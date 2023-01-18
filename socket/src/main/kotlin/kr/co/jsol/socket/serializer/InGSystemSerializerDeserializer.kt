@@ -73,20 +73,23 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
             log.error("TCP 역직렬화 중 에러 발생 InGSystemSerializerDeserializer.deserialize() : ${e.message}")
             throw e
         }
-        log.info("TCP InGSystem 역직렬화 작업 종료")
+        finally {
+            log.info("TCP InGSystem 역직렬화 작업 종료")
+            inputStream.close()
+        }
     }
 
     private fun isEOF(value: Int): Boolean {
         return value == -1
     }
 
-    @Throws(IOException::class)
     private fun parseString(inputStream: InputStream): String {
         val builder = StringBuilder()
         var c: Int
 
-
         while (true) {
+            // READ 시 상대방이 소켓 연결을 끊을 시 connection reset 에러 발생.
+            // write 하지 않으므로 connection reset by peer 에러 발생은 하지 않는다.
             c = inputStream.read()
 
 
