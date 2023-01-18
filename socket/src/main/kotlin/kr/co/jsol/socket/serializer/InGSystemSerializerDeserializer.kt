@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
+import java.net.SocketException
 
 @Component
 class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String> {
@@ -54,10 +55,15 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
 
             log.info("message = ${message}")
             return message
-        }catch (e: IOException){
+        }catch (e: SocketException){
+            log.error(e.stackTraceToString())
+            log.error("TCP 역직렬화 중 Socket Exception 발생 : ${e.message}")
+            throw e
+        }
+        catch (e: IOException){
             log.error("TCP 역직렬화 중 IOException 발생 message : ${e.message}")
             if(e.message != "payload is null") {
-                e.printStackTrace()
+                log.error(e.stackTraceToString())
                 throw e
             }
             throw IOException("payload is null")
