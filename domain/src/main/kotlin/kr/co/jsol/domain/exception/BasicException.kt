@@ -13,7 +13,7 @@ open class BasicException(
     @field:Schema(description = "메세지")
     override var message: String = "",
 
-    ) : RuntimeException() {
+) : RuntimeException() {
 
     // 무조건 안나오게 설정
     @field:Schema(hidden = true)

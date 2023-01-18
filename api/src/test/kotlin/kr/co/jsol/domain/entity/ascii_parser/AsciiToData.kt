@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test
 
 class AsciiToData {
 
-
     // 맥시멈이 134 펄스
     // 짧은시간 안에 이동하는 만 큼만 펄스로 측정.
     // 아스키코드(텍스트) 값 형식 : *xxxxxxxxxx.yyyy#
@@ -16,11 +15,11 @@ class AsciiToData {
     @Test
     fun `정지_인식이_정상적으로_처리된다`() {
         val str = "*0,0#" // 10 펄스, 역방향
-        var pulse: Double = 0.0;
-        var direction: Int = 0;
+        var pulse: Double = 0.0
+        var direction: Int = 0
 
         // 메세지 형식이 제대로 들어왔는가?
-        if(!isValidMessage(str)) assertThat(false);
+        if (!isValidMessage(str)) assertThat(false)
 
         val split = str.split(",")
         var pulseStr: String = split[0]
@@ -29,8 +28,8 @@ class AsciiToData {
         pulse = parsePulse(pulseStr)
         direction = parseDirection(directionMessage)
 
-        println("pulse = ${pulse}")
-        println("direction = ${direction}")
+        println("pulse = $pulse")
+        println("direction = $direction")
         assertThat(pulse == 0.0) // 0.0 * 1.5
         assertThat(direction == 0)
     }
@@ -38,11 +37,11 @@ class AsciiToData {
     @Test
     fun `정방향_인식이_정상적으로_처리된다`() {
         val str = "*20,1#" // 20 펄스, 정방향
-        var pulse: Double = 0.0;
-        var direction: Int = 0;
+        var pulse: Double = 0.0
+        var direction: Int = 0
 
         // 메세지 형식이 제대로 들어왔는가?
-        if(!isValidMessage(str)) assertThat(false);
+        if (!isValidMessage(str)) assertThat(false)
 
         val split = str.split(",")
         var pulseStr: String = split[0]
@@ -51,8 +50,8 @@ class AsciiToData {
         pulse = parsePulse(pulseStr)
         direction = parseDirection(directionMessage)
 
-        println("pulse = ${pulse}")
-        println("direction = ${direction}")
+        println("pulse = $pulse")
+        println("direction = $direction")
         assertThat(pulse == 30.0) // 20 * 1.5
         assertThat(direction == 1)
     }
@@ -60,11 +59,11 @@ class AsciiToData {
     @Test
     fun `역방향_인식이_정상적으로_처리된다`() {
         val str = "*133,-1#" // 133 펄스, 역방향
-        var pulse: Double = 0.0;
-        var direction: Int = 0;
+        var pulse: Double = 0.0
+        var direction: Int = 0
 
         // 메세지 형식이 제대로 들어왔는가?
-        if(!isValidMessage(str)) assertThat(false);
+        if (!isValidMessage(str)) assertThat(false)
 
         val split = str.split(",")
         var pulseStr: String = split[0]
@@ -73,14 +72,14 @@ class AsciiToData {
         pulse = parsePulse(pulseStr)
         direction = parseDirection(directionMessage)
 
-        println("pulse = ${pulse}")
-        println("direction = ${direction}")
+        println("pulse = $pulse")
+        println("direction = $direction")
         assertThat(pulse == 199.5) // 133 * 1.5
         assertThat(direction == -1)
     }
     private fun isValidMessage(str: String): Boolean {
-        if (isIotMessage(str)) return false// '*'으로 시작하고 '#'으로 끝나는가?
-        if (isContainsComma(str)) return false// ','가 포함되어 있는가?
+        if (isIotMessage(str)) return false // '*'으로 시작하고 '#'으로 끝나는가?
+        if (isContainsComma(str)) return false // ','가 포함되어 있는가?
         return str.split(",").size == 2 // , 구분자로 2개로 나뉘어 지는가?
     }
 

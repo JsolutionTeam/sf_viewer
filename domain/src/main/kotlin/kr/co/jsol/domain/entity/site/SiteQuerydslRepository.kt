@@ -1,13 +1,11 @@
 package kr.co.jsol.domain.entity.site
 
-import com.querydsl.core.Tuple
 import com.querydsl.core.types.Projections
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.DateTemplate
 import com.querydsl.core.types.dsl.DateTimePath
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.impl.JPAQueryFactory
-import kr.co.jsol.domain.entity.co2.QCo2Logger
 import kr.co.jsol.domain.entity.co2.QCo2Logger.co2Logger
 import kr.co.jsol.domain.entity.co2.dto.Co2Dto
 import kr.co.jsol.domain.entity.co2.dto.QCo2Dto
@@ -76,10 +74,10 @@ class SiteQuerydslRepository(
             .limit(1)
             .fetchOne()
 
-        if(co2Dto != null){
+        if (co2Dto != null) {
             response.setCo2(co2Dto)
         }
-        if(microDto != null){
+        if (microDto != null) {
             response.setMicro(microDto)
         }
 

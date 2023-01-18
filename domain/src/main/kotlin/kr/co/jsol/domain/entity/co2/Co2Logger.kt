@@ -14,7 +14,7 @@ class Co2Logger(
     @Column(insertable = false, updatable = false)
     val temperature: Double = 0.0, // 대기 온도
 
-    @Column(name = "relative_humidity",insertable = false, updatable = false)
+    @Column(name = "relative_humidity", insertable = false, updatable = false)
     val relativeHumidity: Double = 0.0, // 대기 습도
 
     // 정보 수집 시간

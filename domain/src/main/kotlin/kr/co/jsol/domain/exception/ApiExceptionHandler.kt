@@ -109,7 +109,6 @@ class ApiExceptionHandler {
         )
     }
 
-
     @ExceptionHandler(ResponseStatusException::class)
     fun handleResponseStatusException(ex: ResponseStatusException): ResponseEntity<String> {
         logger.error("handle ResponseStatusException - message : $ex.message")
@@ -157,7 +156,6 @@ class ApiExceptionHandler {
             HttpStatus.BAD_REQUEST
         )
     }
-
 
     // 모든 예외를 핸들링하여 ErrorResponse 형식으로 반환한다.
     @ExceptionHandler(Exception::class)

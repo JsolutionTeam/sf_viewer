@@ -40,7 +40,7 @@ class InGSystem(
     @Column(name = "InG_seq", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-){
+) {
     override fun toString(): String {
         return "InGSystem(rateOfOpening=$rateOfOpening, openSignal=$openSignal, regTime=$regTime, machineId=$machineId, site=$site, id=$id)"
     }

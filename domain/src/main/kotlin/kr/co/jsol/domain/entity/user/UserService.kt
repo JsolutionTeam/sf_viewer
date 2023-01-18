@@ -28,50 +28,50 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 
 @Service
-    class UserService(
+class UserService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val authenticationManager: AuthenticationManager,
     private val userRepository: UserRepository,
     private val siteRepository: SiteRepository,
     private val passwordEncoder: PasswordEncoder,
-    ) {
+) {
 
-        fun refreshToken(userId: String): RefreshTokenDto {
-            return RefreshTokenDto(jwtTokenProvider.createRefreshToken(userId))
-        }
+    fun refreshToken(userId: String): RefreshTokenDto {
+        return RefreshTokenDto(jwtTokenProvider.createRefreshToken(userId))
+    }
 
-        fun login(loginRequest: LoginRequest): LoginResponse {
-            val user: User = userRepository.findByIdAndLockedIsFalse(loginRequest.username)
-                ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
+    fun login(loginRequest: LoginRequest): LoginResponse {
+        val user: User = userRepository.findByIdAndLockedIsFalse(loginRequest.username)
+            ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
 
-            try {
-                println("username : ${user.username}\npassword : ${loginRequest.password}")
-                authenticationManager.authenticate(
-                    UsernamePasswordAuthenticationToken(
-                        user.username,
-                        loginRequest.password
-                    )
+        try {
+            println("username : ${user.username}\npassword : ${loginRequest.password}")
+            authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(
+                    user.username,
+                    loginRequest.password
                 )
-            } catch (e: AuthenticationException) {
-                e.printStackTrace()
-                throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
-            } catch (e: LockedException) {
-                throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 잠겨 있습니다.")
-            } catch (e: DisabledException) {
-                throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 비활성화 상태입니다.")
-            } catch (e: CredentialsExpiredException) {
-                throw ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 만료 되었습니다.")
-            } catch (e: AccountExpiredException) {
-                throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 만료되었습니다.")
-            }
-
-            return LoginResponse(
-                role = user.role,
-                siteSeq = user.site!!.id,
-                accessToken = jwtTokenProvider.createAccessToken(user.username),
-                refreshToken = jwtTokenProvider.createRefreshToken(user.username),
             )
+        } catch (e: AuthenticationException) {
+            e.printStackTrace()
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
+        } catch (e: LockedException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 잠겨 있습니다.")
+        } catch (e: DisabledException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 비활성화 상태입니다.")
+        } catch (e: CredentialsExpiredException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 만료 되었습니다.")
+        } catch (e: AccountExpiredException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 만료되었습니다.")
         }
+
+        return LoginResponse(
+            role = user.role,
+            siteSeq = user.site!!.id,
+            accessToken = jwtTokenProvider.createAccessToken(user.username),
+            refreshToken = jwtTokenProvider.createRefreshToken(user.username),
+        )
+    }
 
     @Transactional(readOnly = true)
     fun getById(id: String): User {

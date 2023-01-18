@@ -1,6 +1,5 @@
 package kr.co.jsol.domain.entity.ingsystem
 
-import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
 import org.springframework.stereotype.Service
 import java.lang.RuntimeException
@@ -17,7 +16,7 @@ class InGSystemService(
         openSignal: Int,
         clientIp: String? = null,
     ): String {
-        try{
+        try {
             val site = siteRepository.findById(siteSeq).orElseThrow { RuntimeException("Site not found") }
 
             inGSystemRepository.save(
@@ -28,7 +27,7 @@ class InGSystemService(
                     ip = clientIp,
                 )
             )
-        }catch(e: Exception){
+        } catch (e: Exception) {
             throw RuntimeException("InGSystem 데이터 저장 중 에러 발생, message : ${e.message}")
         }
 
@@ -36,8 +35,8 @@ class InGSystemService(
     }
 
     private fun isValidMessage(str: String): Boolean {
-        if (isIotMessage(str)) return false// '*'으로 시작하고 '#'으로 끝나는가?
-        if (isContainsComma(str)) return false// ','가 포함되어 있는가?
+        if (isIotMessage(str)) return false // '*'으로 시작하고 '#'으로 끝나는가?
+        if (isContainsComma(str)) return false // ','가 포함되어 있는가?
         return str.split(",").size == 2 // , 구분자로 2개로 나뉘어 지는가?
     }
 

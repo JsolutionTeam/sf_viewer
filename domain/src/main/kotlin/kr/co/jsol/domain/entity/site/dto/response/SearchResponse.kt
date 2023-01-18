@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
 import kr.co.jsol.core.util.removeMinute
 import kr.co.jsol.domain.entity.co2.dto.Co2Dto
-import kr.co.jsol.domain.entity.micro.Micro
 import kr.co.jsol.domain.entity.micro.dto.MicroDto
 import java.time.LocalDateTime
 
@@ -47,8 +46,8 @@ data class SearchResponse(
 ) {
 
     fun setCo2(dto: Co2Dto) {
-        this.co2 = dto.co2;
-        this.co2RegTime = dto.regTime;
+        this.co2 = dto.co2
+        this.co2RegTime = dto.regTime
     }
 
     fun setMicro(dto: MicroDto) {
@@ -59,7 +58,7 @@ data class SearchResponse(
         earthTemperature = dto.earthTemperature
         windDirection = dto.windDirection
         windSpeed = dto.windSpeed
-        this.microRegTime = dto.regTime;
+        this.microRegTime = dto.regTime
     }
 
     companion object {

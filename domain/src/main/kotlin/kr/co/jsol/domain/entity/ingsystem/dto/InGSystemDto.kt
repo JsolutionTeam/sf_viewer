@@ -1,6 +1,5 @@
 package kr.co.jsol.domain.entity.ingsystem.dto
 
-import kr.co.jsol.domain.entity.site.Site
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -19,6 +18,4 @@ data class InGSystemDto(
     var siteSeq: Long,
 
     val id: Long,
-){
-
-}
+)
