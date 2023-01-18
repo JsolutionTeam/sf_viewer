@@ -40,3 +40,5 @@ logs/log/
 
 .DS_Store
 /logs/
+
+*.log
