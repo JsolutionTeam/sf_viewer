@@ -73,11 +73,8 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
             log.info("now char : ${c.toChar()}")
             builder.append(c.toChar())
         }
-//        for (i in 0 until messageLength) {
-//            c = inputStream.read()
-//            checkClosure(c)
-//            builder.append(c.toChar())
-//        }
+        log.info("builder = ${builder}")
+        log.info("builder.toString() = ${builder.toString()}")
         return builder.toString()
     }
 //    @Throws(IOException::class)
