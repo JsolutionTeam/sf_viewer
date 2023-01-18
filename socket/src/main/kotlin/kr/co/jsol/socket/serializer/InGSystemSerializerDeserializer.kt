@@ -56,7 +56,8 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
             return message
         }catch (e: IOException){
             log.error("TCP 역직렬화 중 IOException 발생 message : ${e.message}")
-            if(e.message == "payload is null") {
+            if(e.message != "payload is null") {
+                e.printStackTrace()
                 throw e
             }
             throw IOException("payload is null")
