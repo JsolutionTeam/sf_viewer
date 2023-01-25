@@ -52,7 +52,7 @@ class TcpInGSystemService(
     }
 
     private fun isValidMessage(str: String): Boolean {
-        log.info("isValidMessage - str : ${str}")
+        log.info("isValidMessage - str : $str")
 
         // '*'으로 시작하고 '#'으로 끝나는가?
         if (!isIotMessage(str)) {
