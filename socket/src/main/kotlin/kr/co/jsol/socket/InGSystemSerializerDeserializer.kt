@@ -79,8 +79,8 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
             log.error("TCP 역직렬화 중 에러 발생 InGSystemSerializerDeserializer.deserialize() : ${e.message}")
             throw e
         } finally {
-            log.info("TCP InGSystem 역직렬화 작업 종료")
-            inputStream.close()
+//            log.info("TCP InGSystem 역직렬화 작업 종료")
+//            inputStream.close()
         }
     }
 
