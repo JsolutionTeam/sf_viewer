@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity
 import kr.co.jsol.domain.entity.site.SiteService
 import kr.co.jsol.domain.entity.site.dto.response.SearchResponse
 import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
+import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
@@ -18,6 +19,8 @@ import java.time.LocalDateTime
 class SiteController(
     private val siteService: SiteService
 ) {
+
+    private val log = LoggerFactory.getLogger(SiteController::class.java)
 
     @Operation(summary = "농장 전체 정보 조회")
     @ApiResponses(
@@ -47,9 +50,9 @@ class SiteController(
             startTime = startTime,
             endTime = endTime,
         )
-        println("contition = $condition")
+        log.info("contition = $condition")
         val summaries: List<SearchResponse> = siteService.getByRegTime(condition)
-        println("summaries.size = ${summaries.size}")
+        log.info("summaries.size = ${summaries.size}")
         return summaries
     }
 

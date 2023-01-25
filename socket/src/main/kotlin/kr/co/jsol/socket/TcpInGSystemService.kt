@@ -52,22 +52,23 @@ class TcpInGSystemService(
     }
 
     private fun isValidMessage(str: String): Boolean {
+        log.info("isValidMessage - str : ${str}")
 
         // '*'으로 시작하고 '#'으로 끝나는가?
         if (!isIotMessage(str)) {
-            println("*으로 시작하고 #으로 끝나야 합니다.")
+            log.error("*으로 시작하고 #으로 끝나야 합니다.")
             return false
         }
 
         // ','가 포함되어 있는가?
         if (!isContainsDelimiter(str)) {
-            println("'$messageDelimiter'가 포함되어 있어야 합니다.")
+            log.error("'$messageDelimiter'가 포함되어 있어야 합니다.")
             return false
         }
 
         // 구분자가 ${countOfComma} 개로 나뉘어 지는가?
         if (!isDelimiterCountEq(str, countOfComma)) {
-            println("'$messageDelimiter'로 $countOfComma 개로 나누어져야 합니다.")
+            log.error("'$messageDelimiter'로 $countOfComma 개로 나누어져야 합니다.")
             return false
         }
 
@@ -78,7 +79,7 @@ class TcpInGSystemService(
 
     private fun isContainsDelimiter(str: String) = str.contains(",")
 
-    private fun isDelimiterCountEq(str: String, count: Int) = str.split(",").size == count
+    private fun isDelimiterCountEq(str: String, count: Int) = str.split(",").size - 1 == count
 
     private fun parseSiteSeq(siteSeqMessage: String): Long {
         val siteSeqStr = siteSeqMessage.replace(Regex("[^-0-9]"), "")
@@ -88,7 +89,6 @@ class TcpInGSystemService(
     private fun parseRateOfOpening(rateOfOpeningMessage: String): Double {
         // 숫자 외 제거
         val rateOfOpeningStr = rateOfOpeningMessage.replace(Regex("[^0-9]"), "")
-        println("pulseMessage = $rateOfOpeningStr")
 
         // 1.5 곱하기
         return rateOfOpeningStr.toDouble() * 1.5
@@ -96,7 +96,6 @@ class TcpInGSystemService(
 
     private fun parseOpenSignal(openSignalMessage: String): Int {
         val openSignalStr = openSignalMessage.replace(Regex("[^-0-9]"), "")
-        println("directionMessage = $openSignalStr")
 
         return openSignalStr.toInt()
     }

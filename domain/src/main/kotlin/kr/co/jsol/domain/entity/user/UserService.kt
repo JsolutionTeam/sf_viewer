@@ -12,6 +12,7 @@ import kr.co.jsol.domain.entity.util.findByIdOrThrow
 import kr.co.jsol.domain.exception.entities.user.UserAlreadyExistUserException
 import kr.co.jsol.domain.exception.entities.user.UserDisableException
 import kr.co.jsol.common.jwt.dto.RefreshTokenDto
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -36,6 +37,8 @@ class UserService(
     private val passwordEncoder: PasswordEncoder,
 ) {
 
+    private val log = LoggerFactory.getLogger(UserService::class.java)
+
     fun refreshToken(userId: String): RefreshTokenDto {
         return RefreshTokenDto(jwtTokenProvider.createRefreshToken(userId))
     }
@@ -45,7 +48,7 @@ class UserService(
             ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
 
         try {
-            println("username : ${user.username}\npassword : ${loginRequest.password}")
+            log.info("username : ${user.username}\npassword : ${loginRequest.password}")
             authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(
                     user.username,

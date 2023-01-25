@@ -26,12 +26,8 @@ internal class SiteQuerydslRepositoryTest @Autowired constructor(
             endTime = LocalDateTime.of(2022, 8, 30, 0, 0, 0),
         )
 
-        println("startTime = $startTime")
-        println("endTime = $endTime")
-
         // when
         val result = siteQuerydslRepository.getMicroList(condition)
-        println("result = $result")
         // then
     }
 }

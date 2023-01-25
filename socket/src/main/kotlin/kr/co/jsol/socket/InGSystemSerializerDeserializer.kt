@@ -18,7 +18,7 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
     private val charset = Charsets.UTF_8
 
     override fun serialize(`object`: String, outputStream: OutputStream) {
-        println("TCP InGSystem 직렬화 작업 시작")
+        log.info("TCP InGSystem 직렬화 작업 시작")
 
         try {
             outputStream.write(`object`.toByteArray(charset))
@@ -37,7 +37,7 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
             error("TCP 직렬화 중 에러 발생 InGSystemSerializerDeserializer.serialize() : ${e.message}")
             throw e
         }
-        println("TCP InGSystem 직렬화 작업 종료")
+        log.info("TCP InGSystem 직렬화 작업 종료")
     }
 
     private fun pad(desiredLength: Int, length: Int): String {

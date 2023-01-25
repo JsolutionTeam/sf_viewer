@@ -56,7 +56,7 @@ ingsystem:
     message:
         length: 20
         delimiter: ','
-        delimiter-count: 3
+        delimiter-count: 2
 
 ---
 
