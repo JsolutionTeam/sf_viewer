@@ -1,6 +1,7 @@
 package kr.co.jsol.socket
 
 import org.apache.commons.lang3.StringUtils
+import java.net.SocketInputStream
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.serializer.Deserializer
@@ -50,15 +51,16 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
     override fun deserialize(inputStream: InputStream): String {
         log.info("TCP InGSystem 역직렬화 작업 시작")
         try {
-            val writer: BufferedWriter = BufferedWriter(System.out.writer(), 100)
-            inputStream.bufferedReader().copyTo(writer)
+//            val writer: BufferedWriter = BufferedWriter(System.out.writer(), 100)
+//            inputStream.bufferedReader().copyTo(writer)
 //            log.info("writer info : ${writer}")
-            writer.flush()
+//            writer.flush()
             val message = inputStream.readAllBytes().toString(charset)
+//            val message = writer.
 //            val message = parseString(inputStream)
             log.info("message = ${message}")
 
-            log.info("is closed : ${inputStream.available() == 0}")
+            log.info("is closed : ${inputStream.}")
 
             if (message.isNullOrBlank()) {
                 throw IOException("payload is null")

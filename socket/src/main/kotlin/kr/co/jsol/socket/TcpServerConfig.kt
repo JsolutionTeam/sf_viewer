@@ -42,9 +42,11 @@ class TcpServerConfig {
         log.info("inbound 처리")
         val adapter = TcpReceivingChannelAdapter()
         adapter.setConnectionFactory(serverFactory())
-        adapter.retryInterval = 1000
         adapter.outputChannel = tcpInboundChannel()
+
+        adapter.retryInterval = 1000
         adapter.setSendTimeout(5000)
+
         return adapter
     }
 
