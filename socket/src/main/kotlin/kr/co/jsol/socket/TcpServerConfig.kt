@@ -1,8 +1,6 @@
-package kr.co.jsol.socket.config
+package kr.co.jsol.socket
 
 import kr.co.jsol.domain.entity.ingsystem.InGSystemService
-import kr.co.jsol.socket.serializer.InGSystemSerializerDeserializer
-import kr.co.jsol.socket.service.TcpInGSystemService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -11,7 +9,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.integration.channel.DirectChannel
 import org.springframework.integration.dsl.IntegrationFlow
 import org.springframework.integration.dsl.IntegrationFlows
-import org.springframework.integration.ip.tcp.TcpInboundGateway
 import org.springframework.integration.ip.tcp.TcpReceivingChannelAdapter
 import org.springframework.integration.ip.tcp.connection.TcpNetServerConnectionFactory
 import org.springframework.messaging.MessageChannel
@@ -37,8 +34,6 @@ class TcpServerConfig {
         val factory = TcpNetServerConnectionFactory(port)
         factory.serializer = serialDeserializer
         factory.deserializer = serialDeserializer
-        //        factory.setSerializer(new ByteArraySerializer());
-//        factory.setDeserializer(new ByteArrayDeserializer());
         return factory
     }
 
@@ -47,9 +42,9 @@ class TcpServerConfig {
         log.info("inbound 처리")
         val adapter = TcpReceivingChannelAdapter()
         adapter.setConnectionFactory(serverFactory())
-//        adapter.retryInterval = 1000
+        adapter.retryInterval = 1000
         adapter.outputChannel = tcpInboundChannel()
-//        adapter.setSendTimeout(5000)
+        adapter.setSendTimeout(5000)
         return adapter
     }
 
@@ -58,6 +53,7 @@ class TcpServerConfig {
         log.info("tcpInboundChannel 처리")
         return DirectChannel()
     }
+
 
     @Bean
     fun tcpServerHandler(inGSystemService: InGSystemService?): TcpInGSystemService {
@@ -73,12 +69,4 @@ class TcpServerConfig {
             .handle(tcpServerHandler)
             .get()
     }
-
-//    @Transformer(inputChannel = "tcpInboundChannel", outputChannel = "tcpInboundChannel")
-//    fun addConnectionHeader(connection: TcpConnection): Message<Any> {
-//        return MessageBuilder.withPayload(connection.payload as Any)
-//            .setHeader("connection_info", connection).build()
-//    }
-
-
 }

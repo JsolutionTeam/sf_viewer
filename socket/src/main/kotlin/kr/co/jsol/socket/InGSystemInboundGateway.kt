@@ -1,4 +1,4 @@
-package kr.co.jsol.socket.gateway
+package kr.co.jsol.socket
 
 import org.springframework.integration.annotation.Gateway
 import org.springframework.integration.annotation.MessagingGateway

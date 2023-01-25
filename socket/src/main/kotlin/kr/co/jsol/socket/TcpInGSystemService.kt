@@ -1,4 +1,4 @@
-package kr.co.jsol.socket.service
+package kr.co.jsol.socket
 
 import kr.co.jsol.domain.entity.ingsystem.InGSystemService
 import org.slf4j.LoggerFactory

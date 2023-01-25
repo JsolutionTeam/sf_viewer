@@ -13,8 +13,10 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
-    compileOnly("org.springframework.integration:spring-integration-core:6.0.2")
-    compileOnly("org.springframework.integration:spring-integration-event:6.0.2")
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-integration
+    implementation("org.springframework.boot:spring-boot-starter-integration")
+//    compileOnly("org.springframework.integration:spring-integration-core:6.0.2")
+//    compileOnly("org.springframework.integration:spring-integration-event:6.0.2")
     compileOnly("org.springframework.integration:spring-integration-ip:6.0.2")
 
 
