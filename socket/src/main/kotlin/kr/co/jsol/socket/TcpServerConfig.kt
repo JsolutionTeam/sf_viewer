@@ -13,7 +13,6 @@ import org.springframework.integration.ip.tcp.TcpReceivingChannelAdapter
 import org.springframework.integration.ip.tcp.connection.TcpNetServerConnectionFactory
 import org.springframework.messaging.MessageChannel
 
-
 @Configuration
 class TcpServerConfig {
 
@@ -30,7 +29,7 @@ class TcpServerConfig {
         if (serialDeserializer == null) {
             throw RuntimeException("serialDeserializer is null")
         }
-        log.info("TCP 서버 실행, port : ${port}")
+        log.info("TCP 서버 실행, port : $port")
         val factory = TcpNetServerConnectionFactory(port)
         factory.serializer = serialDeserializer
         factory.deserializer = serialDeserializer

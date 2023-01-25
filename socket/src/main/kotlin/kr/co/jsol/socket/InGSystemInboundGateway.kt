@@ -2,14 +2,11 @@ package kr.co.jsol.socket
 
 import org.springframework.integration.annotation.Gateway
 import org.springframework.integration.annotation.MessagingGateway
-import org.springframework.integration.ip.tcp.connection.TcpConnection
 import org.springframework.messaging.Message
-import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.Payload
 
 @MessagingGateway(defaultRequestChannel = "tcpInboundChannel",)
 interface InGSystemInboundGateway {
-
 
     /**
      * 매개변수가 하나 일 때는 무조건 Payload로 인식하지만 여러 개 일때는 어떤 인자가 Payload이며 어떤 인자가 Header임을 명시해 줘야 한다.

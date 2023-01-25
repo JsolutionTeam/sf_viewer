@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class TcpInGSystemService(
     private val inGSystemService: InGSystemService,
-)  {
+) {
     val log = LoggerFactory.getLogger(TcpInGSystemService::class.java)
 
     @Value("\${ingsystem.message.delimiter:,}")
@@ -49,7 +49,6 @@ class TcpInGSystemService(
         inGSystemService.saveInGSystem(siteSeq, rateOfOpening, openSignal, clientIp)
 
         log.info("InGSystem 데이터 추가 완료")
-
     }
 
     private fun isValidMessage(str: String): Boolean {
