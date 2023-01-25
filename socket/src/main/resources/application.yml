@@ -38,6 +38,27 @@ spring:
 server:
     port: 18081
 ---
+spring:
+    config:
+        activate:
+            on-profile: common
+jwt:
+    secret: asdfbjahdslfjh2edoiughdivjhsxlkjvcahxclksdfhieduwhgowieurhgoeirufhsdlfddjvkahlsxckvjhasdlkjvchlkj34htop23i4uythoiuerwjhgasdvdgouasyv987d6v987
+
+tcp:
+    client:
+        host: localhost
+        port: 2332
+    server:
+        port: 2332
+
+ingsystem:
+    message:
+        length: 20
+        delimiter: ','
+        delimiter-count: 3
+
+---
 
 
 server:
@@ -63,6 +84,10 @@ server:
 spring:
     profiles:
         active: local
+        group:
+            "local": "common"
+            "dev": "common"
+            "smartfarm": "common"
     mvc:
         pathmatch:
             matching-strategy: ant_path_matcher
@@ -74,21 +99,4 @@ spring:
             hibernate:
                 show-sql: true # sql log 보이게 설정
                 format_sql: true
-
-
-jwt:
-    secret: asdfbjahdslfjh2edoiughdivjhsxlkjvcahxclksdfhieduwhgowieurhgoeirufhsdlfddjvkahlsxckvjhasdlkjvchlkj34htop23i4uythoiuerwjhgasdvdgouasyv987d6v987
-
-tcp:
-    client:
-        host: localhost
-        port: 2332
-    server:
-        port: 2332
-
-ingsystem:
-    message:
-        length: 20
-        delimiter: ','
-        delimiter-count: 3
 
