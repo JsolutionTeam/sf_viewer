@@ -27,7 +27,7 @@ class TcpServerConfig {
 
     @Bean
     fun serverFactory(): TcpNetServerConnectionFactory {
-        if(serialDeserializer == null){
+        if (serialDeserializer == null) {
             throw RuntimeException("serialDeserializer is null")
         }
         log.info("TCP 서버 실행, port : ${port}")
@@ -55,7 +55,6 @@ class TcpServerConfig {
         log.info("tcpInboundChannel 처리")
         return DirectChannel()
     }
-
 
     @Bean
     fun tcpServerHandler(inGSystemService: InGSystemService?): TcpInGSystemService {

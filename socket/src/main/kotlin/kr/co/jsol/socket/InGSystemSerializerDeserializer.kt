@@ -54,7 +54,7 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
             val message = inputStream.readAllBytes().toString(charset)
 //            val message = writer.
 //            val message = parseString(inputStream)
-            log.info("message = ${message}")
+            log.info("message = $message")
 
 //            log.info("is closed : ${inputStream.}")
 
@@ -97,7 +97,6 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
             // write 하지 않으므로 connection reset by peer 에러 발생은 하지 않는다.
             c = inputStream.read()
 
-
             // -1 은 EOF임. 항상 마지막에 EOF을 나타내고 있음. 이 값이 읽히기 전까지는 데이터 input stream에 값이 남아있게 되므로
             // 10 12 13과 같은 값은 continue로 계속 읽도록 처리하고 -1만 break로 종료 함.
             if (isEOF(c)) {
@@ -110,9 +109,7 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
             }
 
             builder.append(c.toChar())
-
         }
-        log.info("parsing result : ${builder.toString()}")
         return builder.toString()
     }
 
@@ -133,4 +130,3 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
         }
     }
 }
-
