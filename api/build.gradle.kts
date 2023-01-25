@@ -6,9 +6,9 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.22")
 }
 tasks.withType<Jar> {
-    enabled = true
+    enabled = false
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-    enabled = false
+    enabled = true
 }
