@@ -1,18 +1,14 @@
 package kr.co.jsol.socket
 
 import org.apache.commons.lang3.StringUtils
-import java.net.SocketInputStream
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.serializer.Deserializer
 import org.springframework.core.serializer.Serializer
 import org.springframework.stereotype.Component
-import java.io.BufferedWriter
-import java.io.Console
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.io.Writer
 import java.net.SocketException
 
 @Component
@@ -60,7 +56,7 @@ class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String>
 //            val message = parseString(inputStream)
             log.info("message = ${message}")
 
-            log.info("is closed : ${inputStream.}")
+//            log.info("is closed : ${inputStream.}")
 
             if (message.isNullOrBlank()) {
                 throw IOException("payload is null")
