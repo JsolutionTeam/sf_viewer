@@ -1,0 +1,1 @@
+System.setProperty( "https.protocols", "TLSv1.1,TLSv1.2" );

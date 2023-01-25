@@ -22,6 +22,23 @@ spring:
 server:
     port: 18081
 ---
+spring:
+    config:
+        activate:
+            on-profile: local
+    datasource:
+        url: jdbc:mariadb://localhost:3306/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+        username: root
+        password: 1234
+        driver-class-name: org.mariadb.jdbc.Driver
+
+    jpa:
+        hibernate:
+            ddl-auto: create
+server:
+    port: 18081
+---
+
 
 server:
     servlet:
@@ -45,7 +62,7 @@ server:
 
 spring:
     profiles:
-        active: dev
+        active: local
     mvc:
         pathmatch:
             matching-strategy: ant_path_matcher
@@ -63,6 +80,9 @@ jwt:
     secret: asdfbjahdslfjh2edoiughdivjhsxlkjvcahxclksdfhieduwhgowieurhgoeirufhsdlfddjvkahlsxckvjhasdlkjvchlkj34htop23i4uythoiuerwjhgasdvdgouasyv987d6v987
 
 tcp:
+    client:
+        host: localhost
+        port: 2332
     server:
         port: 2332
 

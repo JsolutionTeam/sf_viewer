@@ -1,7 +1,8 @@
 package kr.co.jsol.socket.serializer
 
 import org.apache.commons.lang3.StringUtils
-import org.apache.commons.logging.LogFactory
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.core.serializer.Deserializer
 import org.springframework.core.serializer.Serializer
 import org.springframework.stereotype.Component
@@ -12,7 +13,7 @@ import java.net.SocketException
 
 @Component
 class InGSystemSerializerDeserializer : Serializer<String>, Deserializer<String> {
-    protected val log = LogFactory.getLog(this.javaClass)
+    protected val log: Logger = LoggerFactory.getLogger(this.javaClass)
 
     private val charset = Charsets.UTF_8
 

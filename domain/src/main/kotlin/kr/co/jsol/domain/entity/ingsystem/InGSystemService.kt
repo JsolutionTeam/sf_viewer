@@ -2,6 +2,7 @@ package kr.co.jsol.domain.entity.ingsystem
 
 import kr.co.jsol.domain.entity.site.SiteRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.lang.RuntimeException
 
 @Service
@@ -10,6 +11,8 @@ class InGSystemService(
     private val siteRepository: SiteRepository,
 ) {
 
+    // trasnactional이 없으면 site가 조회 안되고 생성됨 왜지?
+    @Transactional
     fun saveInGSystem(
         siteSeq: Long,
         rateOfOpening: Double,

@@ -7,16 +7,12 @@ import org.springframework.integration.annotation.ServiceActivator
 import org.springframework.messaging.Message
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class TcpInGSystemService(
     private val inGSystemService: InGSystemService,
-) {
+)  {
     val log = LoggerFactory.getLogger(TcpInGSystemService::class.java)
-
-    @Value("\${ingsystem.message.length}")
-    private val messageLength: Int = 0
 
     @Value("\${ingsystem.message.delimiter:,}")
     private val messageDelimiter: String = ","
@@ -24,8 +20,7 @@ class TcpInGSystemService(
     @Value("\${ingsystem.message.delimiter-count}")
     private val countOfComma: Int = 0
 
-    @ServiceActivator(inputChannel = "tcpInGSystemChannel")
-    @Transactional
+    @ServiceActivator(inputChannel = "inboundChannel")
     fun handleTcpMessage(@Payload message: Message<String>) {
         // serial deserial을 거쳐서 나온 message를 처리하는 곳
         val payload = message.payload.trim()
@@ -54,6 +49,7 @@ class TcpInGSystemService(
         inGSystemService.saveInGSystem(siteSeq, rateOfOpening, openSignal, clientIp)
 
         log.info("InGSystem 데이터 추가 완료")
+
     }
 
     private fun isValidMessage(str: String): Boolean {
