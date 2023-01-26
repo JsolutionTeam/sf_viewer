@@ -1,4 +1,4 @@
-package kr.co.jsol.socket
+package kr.co.jsol.service
 
 import kr.co.jsol.domain.entity.ingsystem.InGSystemService
 import org.slf4j.LoggerFactory
@@ -20,14 +20,9 @@ class TcpInGSystemService(
     @Value("\${ingsystem.message.delimiter-count}")
     private val countOfComma: Int = 0
 
-    @ServiceActivator(inputChannel = "inboundChannel")
-    fun handleTcpMessage(@Payload message: Message<String>) {
+    fun handleTcpMessage(message: String, clientIp: String? = null) {
         // serial deserial을 거쳐서 나온 message를 처리하는 곳
-        val payload = message.payload.trim()
-        val clientIp = message.headers["ip_address"] as String
-        log.info("payload = $payload")
-        log.info("clientIp = $clientIp")
-
+        val payload = message.trim()
         // 빈 값이 넘어오면 처리하지 않음
         if (payload.isNullOrBlank()) {
             throw RuntimeException("payload is null")
