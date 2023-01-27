@@ -3,9 +3,6 @@ package kr.co.jsol.service
 import kr.co.jsol.domain.entity.ingsystem.InGSystemService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.integration.annotation.ServiceActivator
-import org.springframework.messaging.Message
-import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 
 @Service

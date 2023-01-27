@@ -1,7 +1,6 @@
 package kr.co.jsol.socket
 
 import org.slf4j.LoggerFactory
-import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.net.ServerSocket
@@ -25,7 +24,5 @@ class TcpServerConfig(
                 log.error("tcpServer error", e.message)
             }
         }
-
-
     }
 }
