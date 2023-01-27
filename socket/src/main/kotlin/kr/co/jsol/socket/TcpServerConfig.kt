@@ -21,7 +21,7 @@ class TcpServerConfig(
                 val socket = serverSocket.accept()
                 tcpRequestHandler.handle(socket)
             } catch (e: Exception) {
-                log.error("tcpServer error", e.message)
+                log.error("Occurred error - ${e.message}")
             }
         }
     }
