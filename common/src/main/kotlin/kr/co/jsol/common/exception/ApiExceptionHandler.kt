@@ -1,8 +1,8 @@
-package kr.co.jsol.domain.exception
+package kr.co.jsol.common.exception
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import kr.co.jsol.domain.exception.storage.StorageException
+import kr.co.jsol.common.exception.storage.StorageException
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessApiUsageException
@@ -161,10 +161,9 @@ class ApiExceptionHandler {
     @ExceptionHandler(Exception::class)
     fun handleException(ex: Exception): ResponseEntity<InternalServerException> {
         logger.error("handleException - message : ${ex.message}")
-//        ex.printStackTrace()
         logger.error("handleException - message : ${ex.stackTraceToString()}")
         return ResponseEntity<InternalServerException>(
-            InternalServerException(UNKNOWN_ERROR),
+            InternalServerException(ex.message ?: UNKNOWN_ERROR),
             HttpStatus.INTERNAL_SERVER_ERROR
         )
     }

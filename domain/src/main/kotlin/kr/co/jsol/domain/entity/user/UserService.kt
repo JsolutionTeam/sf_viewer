@@ -9,9 +9,10 @@ import kr.co.jsol.domain.entity.user.dto.response.LoginResponse
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
 import kr.co.jsol.common.jwt.JwtTokenProvider
 import kr.co.jsol.domain.entity.util.findByIdOrThrow
-import kr.co.jsol.domain.exception.entities.user.UserAlreadyExistUserException
-import kr.co.jsol.domain.exception.entities.user.UserDisableException
+import kr.co.jsol.common.exception.entities.user.UserAlreadyExistUserException
+import kr.co.jsol.common.exception.entities.user.UserDisableException
 import kr.co.jsol.common.jwt.dto.RefreshTokenDto
+import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
@@ -33,6 +34,7 @@ class UserService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val authenticationManager: AuthenticationManager,
     private val userRepository: UserRepository,
+    private val userQuerydslRepository: UserQuerydslRepository,
     private val siteRepository: SiteRepository,
     private val passwordEncoder: PasswordEncoder,
 ) {
@@ -82,8 +84,8 @@ class UserService(
     }
 
     @Transactional(readOnly = true)
-    fun getAll(): List<User> {
-        return userRepository.findAll(Sort.by("name").ascending())
+    fun getAll(): List<UserResponse> {
+        return userQuerydslRepository.findAllBy()
     }
 
     fun createUser(userRequest: UserRequest): UserResponse {
@@ -107,7 +109,7 @@ class UserService(
         return UserResponse(
             username = saveUser.username,
             role = saveUser.role,
-            site = site
+            site = SiteResponse.of(site),
         )
     }
 
@@ -119,16 +121,12 @@ class UserService(
         val role = userUpdateRequest.role
 
         user.updateInfo(
+            role = role,
             site = site,
-            role = role
         )
 
         val updateUser = userRepository.save(user)
 
-        return UserResponse(
-            username = updateUser.username,
-            role = updateUser.role,
-            site = updateUser.site,
-        )
+        return UserResponse.of(updateUser)
     }
 }

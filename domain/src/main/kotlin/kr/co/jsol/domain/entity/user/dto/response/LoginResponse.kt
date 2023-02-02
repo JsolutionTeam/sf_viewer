@@ -1,6 +1,6 @@
 package kr.co.jsol.domain.entity.user.dto.response
 
-import kr.co.jsol.domain.entity.user.enum.UserRoleType
+import kr.co.jsol.domain.entity.user.enums.UserRoleType
 
 data class LoginResponse(
     val role: UserRoleType,

@@ -1,4 +1,4 @@
-package kr.co.jsol.domain.exception
+package kr.co.jsol.common.exception
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import io.swagger.v3.oas.annotations.media.Schema

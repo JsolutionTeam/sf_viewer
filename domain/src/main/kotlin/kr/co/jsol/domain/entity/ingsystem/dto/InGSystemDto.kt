@@ -1,9 +1,12 @@
 package kr.co.jsol.domain.entity.ingsystem.dto
 
+import com.querydsl.core.annotations.QueryProjection
 import java.time.LocalDateTime
 import javax.persistence.*
 
 data class InGSystemDto(
+    var siteSeq: Long,
+
     // 개폐장치 움직임 정도(rate)
     val rateOfOpening: Double = 0.0,
 
@@ -14,8 +17,4 @@ data class InGSystemDto(
     val regTime: LocalDateTime,
 
     val machineId: Long = 0,
-
-    var siteSeq: Long,
-
-    val id: Long,
 )

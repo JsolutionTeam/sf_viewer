@@ -1,7 +1,7 @@
 package kr.co.jsol.domain.entity.user
 
 import kr.co.jsol.domain.entity.site.Site
-import kr.co.jsol.domain.entity.user.enum.UserRoleType
+import kr.co.jsol.domain.entity.user.enums.UserRoleType
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -49,7 +49,7 @@ class User(
         site: Site? = this.site,
     ) {
         this.role = role
-        this.site = site
+        this.site = site ?: this.site
     }
 
     fun disable() {

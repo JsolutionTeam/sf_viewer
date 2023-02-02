@@ -2,8 +2,9 @@ package kr.co.jsol.domain.entity.site.dto.response
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
-import kr.co.jsol.core.util.removeMinute
+import kr.co.jsol.common.util.removeMinute
 import kr.co.jsol.domain.entity.co2.dto.Co2Dto
+import kr.co.jsol.domain.entity.ingsystem.dto.InGSystemDto
 import kr.co.jsol.domain.entity.micro.dto.MicroDto
 import java.time.LocalDateTime
 
@@ -36,6 +37,12 @@ data class SearchResponse(
     @Schema(description = "풍속 / 단위 m/s")
     var windSpeed: Double? = 0.0,
 
+    @Schema(description = "개폐장치 개폐 정도")
+    var rateOfOpening: Double? = 0.0,
+
+    @Schema(description = "개폐장치 작동 구분자, -1=역방향, 0=멈춤, 1=정방향", allowableValues = ["-1", "0", "1"])
+    var openSignal: Int = 0,
+
     @Schema(description = "co2 외 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     var microRegTime: LocalDateTime? = null,
@@ -43,9 +50,13 @@ data class SearchResponse(
     @Schema(description = "co2 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     var co2RegTime: LocalDateTime? = null,
+
+    @Schema(description = "개폐장치 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    var openDataRegTime: LocalDateTime? = null,
 ) {
 
-    fun setCo2(dto: Co2Dto) {
+    fun setCo2Info(dto: Co2Dto) {
         this.co2 = dto.co2
         this.co2RegTime = dto.regTime
     }
@@ -59,6 +70,12 @@ data class SearchResponse(
         windDirection = dto.windDirection
         windSpeed = dto.windSpeed
         this.microRegTime = dto.regTime
+    }
+
+    fun setInGSystem(inGDto: InGSystemDto) {
+        this.rateOfOpening = inGDto.rateOfOpening
+        this.openSignal = inGDto.openSignal
+        this.openDataRegTime = inGDto.regTime
     }
 
     companion object {
@@ -75,17 +92,24 @@ data class SearchResponse(
                 val microDto = microMap[key]?.firstOrNull()
                 result.add(
                     SearchResponse(
-                        siteSeq,
-                        co2Dto?.co2,
-                        microDto?.temperature,
-                        microDto?.relativeHumidity,
-                        microDto?.solarRadiation,
-                        microDto?.rainfall,
-                        microDto?.earthTemperature,
-                        microDto?.windDirection,
-                        microDto?.windSpeed,
-                        microDto?.regTime?.removeMinute(),
-                        co2Dto?.regTime?.removeMinute(),
+                        // site
+                        siteSeq = siteSeq,
+
+                        // co2
+                        co2 = co2Dto?.co2,
+
+                        // micro
+                        temperature = microDto?.temperature,
+                        relativeHumidity = microDto?.relativeHumidity,
+                        solarRadiation = microDto?.solarRadiation,
+                        rainfall = microDto?.rainfall,
+                        earthTemperature = microDto?.earthTemperature,
+                        windDirection = microDto?.windDirection,
+                        windSpeed = microDto?.windSpeed,
+
+                        // regtime
+                        microRegTime = microDto?.regTime?.removeMinute(),
+                        co2RegTime = co2Dto?.regTime?.removeMinute(),
                     )
                 )
             }

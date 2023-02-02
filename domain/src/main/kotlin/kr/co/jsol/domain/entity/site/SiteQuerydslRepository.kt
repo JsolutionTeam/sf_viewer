@@ -6,13 +6,14 @@ import com.querydsl.core.types.dsl.DateTemplate
 import com.querydsl.core.types.dsl.DateTimePath
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.impl.JPAQueryFactory
-import kr.co.jsol.domain.entity.co2.QCo2Logger.co2Logger
+import kr.co.jsol.domain.entity.co2.QCo2Logger.Companion.co2Logger
 import kr.co.jsol.domain.entity.co2.dto.Co2Dto
 import kr.co.jsol.domain.entity.co2.dto.QCo2Dto
-import kr.co.jsol.domain.entity.micro.QMicro.micro
+import kr.co.jsol.domain.entity.ingsystem.QInGSystem.Companion.inGSystem
+import kr.co.jsol.domain.entity.ingsystem.dto.InGSystemDto
+import kr.co.jsol.domain.entity.micro.QMicro.Companion.micro
 import kr.co.jsol.domain.entity.micro.dto.MicroDto
 import kr.co.jsol.domain.entity.micro.dto.QMicroDto
-import kr.co.jsol.domain.entity.site.QSite.site
 import kr.co.jsol.domain.entity.site.dto.request.SearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.SearchResponse
 import org.springframework.stereotype.Repository
@@ -74,11 +75,31 @@ class SiteQuerydslRepository(
             .limit(1)
             .fetchOne()
 
+        val inGDto = queryFactory
+            .select(
+                Projections.constructor(
+                    InGSystemDto::class.java,
+                    Expressions.asNumber(siteSeq).`as`("siteSeq"),
+                    inGSystem.rateOfOpening,
+                    inGSystem.openSignal,
+                    inGSystem.regTime,
+                    inGSystem.machineId,
+                )
+            )
+            .from(inGSystem)
+            .where(inGSystem.site.id.eq(siteSeq))
+            .orderBy(inGSystem.id.desc())
+            .limit(1)
+            .fetchOne()
+
         if (co2Dto != null) {
-            response.setCo2(co2Dto)
+            response.setCo2Info(co2Dto)
         }
         if (microDto != null) {
             response.setMicro(microDto)
+        }
+        if (inGDto != null) {
+            response.setInGSystem(inGDto)
         }
 
         return response
