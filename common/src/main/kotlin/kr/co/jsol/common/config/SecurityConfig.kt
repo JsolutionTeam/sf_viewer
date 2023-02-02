@@ -2,6 +2,7 @@ package kr.co.jsol.common.config
 
 import kr.co.jsol.common.jwt.JwtTokenProvider
 import kr.co.jsol.common.jwt.filter.JwtAuthenticationFilter
+import kr.co.jsol.common.jwt.filter.JwtExceptionFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -26,6 +27,7 @@ import org.springframework.web.filter.CorsFilter
 )
 class SecurityConfig(
     private val jwtTokenProvider: JwtTokenProvider,
+    private val jwtExceptionFilter: JwtExceptionFilter,
     private val corsFilter: CorsFilter,
 ) : WebSecurityConfigurerAdapter() {
 
@@ -51,16 +53,18 @@ class SecurityConfig(
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-//        http.authorizeRequests()
+        http.authorizeRequests()
+            .antMatchers("/api/auth/login").permitAll()
 //            .antMatchers("/api/auth/login").permitAll()
-//            .antMatchers("/api/auth/login").permitAll()
-//            .antMatchers("/api/**").authenticated()
+            .antMatchers("/api/user").authenticated()
+            .anyRequest().permitAll()
 
         http
             .addFilterBefore(
                 JwtAuthenticationFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter::class.java
             )
+            .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter::class.java)
 
         http
             .addFilter(corsFilter)
