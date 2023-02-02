@@ -1,91 +1,74 @@
 package kr.co.jsol.api.config;
 
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.SecurityReference;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
-import springfox.documentation.spring.web.plugins.Docket;
+import io.swagger.v3.oas.models.info.Contact;
 
 import java.util.Arrays;
 import java.util.List;
 
+
 @Configuration
+@SecurityScheme(
+    name = "Bearer Authentication",
+    type = SecuritySchemeType.HTTP,
+    bearerFormat = "JWT",
+    scheme = "bearer"
+)
 public class SwaggerConfig {
 
-//    @Bean
-//    public Docket api() {
-//        return new Docket(DocumentationType.OAS_30) // open api spec 3.0
-//                .select()
-//                .apis(RequestHandlerSelectors.any())
-//                .paths(PathSelectors.any())
-//                .build();
-//    }
+    @Bean
+    public OpenAPI api() {
 
-    /**
-     * ocket: Swagger 설정의 핵심이 되는 Bean
-     * useDefaultResponseMessages: Swagger 에서 제공해주는 기본 응답 코드 (200, 401, 403, 404). false 로 설정하면 기본 응답 코드를 노출하지 않음
-     * apis: api 스펙이 작성되어 있는 패키지 (Controller) 를 지정
-     * paths: apis 에 있는 API 중 특정 path 를 선택
-     * apiInfo:Swagger UI 로 노출할 정보
-     */
-//    @Bean
-//    public Docket api() {
-//        return new Docket(DocumentationType.OAS_30) // OAS 3
-//                .useDefaultResponseMessages(false)
-//                .select()
-//                .apis(RequestHandlerSelectors.basePackage("")) // controller가 있는 패키지 지정 basePackage
-//                // Application main 있는 파일에서 지정해줌.
-////                .apis(RequestHandlerSelectors.any()) // controller가 있는 패키지 지정 basePackage
-//                .paths(PathSelectors.any())
-//                .build()
-//                .apiInfo(apiInfo());
-//    }
+        Server localServer = new Server();
+        localServer.setUrl("http://localhost:18080");
+        localServer.setDescription("Server URL in Local environment");
+
+        Server prodServer = new Server();
+        prodServer.setUrl("http://39.112.10.37:15006");
+        prodServer.setDescription("Server URL in Production environment");
+
+        License mitLicense = new License()
+            .name("MIT License")
+            .url("https://choosealicense.com/licenses/mit/");
+
+        Info info = new Info()
+            .title("Jsolution 환경정보 모니터링 관리 API")
+            .description("제이솔루션 2022 경북농기원 외주사업 APIDOC")
+            .version("v0.0.1")
+            .contact(new Contact().name("(주)제이솔루션").url("http://www.j-sol.co.kr").email("master@j-sol.co.kr"))
+            .termsOfService("https://my-awesome-api.com/terms")
+            .license(mitLicense);
+
+        return new OpenAPI()
+            .info(info)
+            .servers(List.of(localServer, prodServer));
+    }
 
 
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.OAS_30) // OAS 3
-                .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(Arrays.asList(apiKey()))
-                .useDefaultResponseMessages(false)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("kr.co.jsol.api.controller")) // controller가 있는 패키지 지정 basePackage
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(apiInfo());
+    public GroupedOpenApi userApi() {
+        return GroupedOpenApi.builder()
+            .group("v1 user")
+            .pathsToMatch("/api/**")
+            .pathsToExclude("/api/admin/**")
+            .build();
     }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("SmartFarm viewer API Swagger")
-                .description("2022-23-01 api docs")
-                .version("1.2")
-                .build();
+    @Bean
+    public GroupedOpenApi adminApi() {
+        return GroupedOpenApi.builder()
+            .group("v1 admin")
+            .pathsToMatch("/api/admin/**", "/api/auth/**")
+            .build();
     }
 
-
-    private SecurityContext securityContext() {
-        return SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .build();
-    }
-
-    private List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
-    }
-
-    private ApiKey apiKey() {
-        return new ApiKey("Authorization", "Authorization", "header");
-    }
 }
