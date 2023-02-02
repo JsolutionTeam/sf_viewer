@@ -32,6 +32,7 @@ class AuthController(
     @ResponseStatus(value = HttpStatus.OK)
     @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasAnyAuthority(\"ADMIN\", \"USER\")")
+    // PreAuthorize를 사용하지 않으려면 security config 에서 정의한다.
     fun refreshToken(@AuthenticationPrincipal userDetails: User): RefreshTokenDto {
         return userService.refreshToken(userDetails.username)
     }
