@@ -1,4 +1,4 @@
-package kr.co.jsol.domain.exception
+package kr.co.jsol.common.exception
 
 import org.springframework.validation.Errors
 

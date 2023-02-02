@@ -1,4 +1,4 @@
-package kr.co.jsol.domain.exception
+package kr.co.jsol.common.exception
 
 class MyEntityNotFoundException : BasicException {
     constructor() : super(400, "데이터를 찾을 수 없습니다.") {}

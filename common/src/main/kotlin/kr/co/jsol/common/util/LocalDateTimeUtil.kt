@@ -1,4 +1,5 @@
-package kr.co.jsol.core.util
+package kr.co.jsol.common.util
+
 
 import java.time.LocalDateTime
 
