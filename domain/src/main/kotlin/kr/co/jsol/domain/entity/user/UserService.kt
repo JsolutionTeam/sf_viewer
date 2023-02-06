@@ -1,32 +1,25 @@
 package kr.co.jsol.domain.entity.user
 
+import kr.co.jsol.common.exception.entities.user.UserAlreadyExistException
+import kr.co.jsol.common.exception.entities.user.UserDisableException
+import kr.co.jsol.common.jwt.JwtTokenProvider
+import kr.co.jsol.common.jwt.dto.RefreshTokenDto
 import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
+import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
 import kr.co.jsol.domain.entity.user.dto.request.LoginRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.LoginResponse
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
-import kr.co.jsol.common.jwt.JwtTokenProvider
 import kr.co.jsol.domain.entity.util.findByIdOrThrow
-import kr.co.jsol.common.exception.entities.user.UserAlreadyExistUserException
-import kr.co.jsol.common.exception.entities.user.UserDisableException
-import kr.co.jsol.common.jwt.dto.RefreshTokenDto
-import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
-import org.springframework.security.authentication.AccountExpiredException
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.CredentialsExpiredException
-import org.springframework.security.authentication.DisabledException
-import org.springframework.security.authentication.LockedException
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.authentication.*
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 
 @Service
@@ -78,12 +71,14 @@ class UserService(
         )
     }
 
-    @Transactional(readOnly = true)
+    fun isExistUserById(id: String): Boolean {
+        return userRepository.existsById(id)
+    }
+
     fun getById(id: String): User {
         return userRepository.findByIdOrThrow(id, "계정 정보를 찾을 수 없습니다.")
     }
 
-    @Transactional(readOnly = true)
     fun getAll(): List<UserResponse> {
         return userQuerydslRepository.findAllBy()
     }
@@ -97,7 +92,7 @@ class UserService(
 
         try {
             val existUser = userRepository.findByIdAndLockedIsFalse(user.username)
-            if (existUser != null) throw UserAlreadyExistUserException()
+            if (existUser != null) throw UserAlreadyExistException()
         } catch (_: Exception) {
         }
 
@@ -128,5 +123,14 @@ class UserService(
         val updateUser = userRepository.save(user)
 
         return UserResponse.of(updateUser)
+    }
+
+    fun deleteUserById(username: String): Boolean {
+        val user = userRepository.findByIdAndLockedIsFalse(username)
+            ?: throw UserDisableException()
+
+        user.updateInfo(locked = true)
+        userRepository.save(user)
+        return true
     }
 }

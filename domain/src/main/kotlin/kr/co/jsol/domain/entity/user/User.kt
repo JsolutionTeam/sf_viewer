@@ -47,9 +47,11 @@ class User(
     fun updateInfo(
         role: UserRoleType = this.role,
         site: Site? = this.site,
+        locked: Boolean = this.locked,
     ) {
         this.role = role
         this.site = site ?: this.site
+        this.locked = locked
     }
 
     fun disable() {
