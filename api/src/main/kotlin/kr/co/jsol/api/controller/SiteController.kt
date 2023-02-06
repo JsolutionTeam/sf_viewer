@@ -51,7 +51,7 @@ class SiteController(
             endTime = endTime,
         )
         log.info("contition = $condition")
-        val summaries: List<SearchResponse> = siteService.getByRegTime(condition)
+        val summaries: List<SearchResponse> = siteService.getSummaryBySearchCondition(condition)
         log.info("summaries.size = ${summaries.size}")
         return summaries
     }

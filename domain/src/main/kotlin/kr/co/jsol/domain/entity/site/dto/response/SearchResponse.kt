@@ -41,7 +41,7 @@ data class SearchResponse(
     var rateOfOpening: Double? = 0.0,
 
     @Schema(description = "개폐장치 작동 구분자, -1=역방향, 0=멈춤, 1=정방향", allowableValues = ["-1", "0", "1"])
-    var openSignal: Int = 0,
+    var openSignal: Int? = 0,
 
     @Schema(description = "co2 외 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -72,10 +72,10 @@ data class SearchResponse(
         this.microRegTime = dto.regTime
     }
 
-    fun setInGSystem(inGDto: InGSystemDto) {
-        this.rateOfOpening = inGDto.rateOfOpening
-        this.openSignal = inGDto.openSignal
-        this.openDataRegTime = inGDto.regTime
+    fun setInGSystem(inGDto: InGSystemDto?) {
+        this.rateOfOpening = inGDto?.rateOfOpening
+        this.openSignal = inGDto?.openSignal
+        this.openDataRegTime = inGDto?.regTime
     }
 
     companion object {

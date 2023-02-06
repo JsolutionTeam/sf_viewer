@@ -55,8 +55,8 @@ class SecurityConfig(
 
         http.authorizeRequests()
             .antMatchers("/api/auth/login").permitAll()
-//            .antMatchers("/api/auth/login").permitAll()
-            .antMatchers("/api/user").authenticated()
+            .antMatchers("/api/admin").hasRole("ADMIN")
+            .antMatchers("/api/user").hasAnyRole("USER", "ADMIN")
             .anyRequest().permitAll()
 
         http

@@ -105,7 +105,7 @@ class SiteQuerydslRepository(
         return response
     }
 
-    fun getMicroList(condition: SearchCondition): List<SearchResponse> {
+    fun getSummaryBySearchCondition(condition: SearchCondition): List<SearchResponse> {
 
         // 하나의 쿼리에서 두 개의 테이블을 조인하고 가져오는것이 굉장히 오래걸림.
         // 그러므로 시간단위로 그룹바이한 값을 두 개를 조회해서 dto에 세팅하는 것으로 변경

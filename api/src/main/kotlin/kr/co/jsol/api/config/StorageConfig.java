@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 // storage:
 //  location: ~~~ 와 같은 형태로 값이 있어야 함.
 @ConfigurationProperties(prefix="storage")
-@Configuration // 이게 없으면 또 오류나네.. 전에는 잘만 됐는데
+@Configuration
 public class StorageConfig {
     private String location;
 
