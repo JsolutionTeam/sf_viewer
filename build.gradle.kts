@@ -45,6 +45,7 @@ subprojects {
 
         // databases
         runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
+        runtimeOnly("com.h2database:h2")
 
         annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jpa")
         annotationProcessor("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final")
