@@ -1,6 +1,5 @@
 package kr.co.jsol.domain.entity.site
 
-import kr.co.jsol.domain.entity.site.SiteQuerydslRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired

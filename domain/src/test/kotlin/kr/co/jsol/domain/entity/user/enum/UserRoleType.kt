@@ -1,4 +1,4 @@
-package kr.co.jsol.api.entity.user.enum
+package kr.co.jsol.domain.entity.user.enum
 
 enum class UserRoleType {
     ROLE_ADMIN,

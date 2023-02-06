@@ -1,4 +1,4 @@
-package kr.co.jsol.api.entity.user.enum
+package kr.co.jsol.domain.entity.user.enum
 
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
