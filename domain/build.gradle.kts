@@ -44,8 +44,10 @@ dependencies {
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa") // 이게 없으면 build해도 Q class가 생성되지 않는다.
 
-    // test
+    // test dependencies
     testApi("org.springframework.boot:spring-boot-starter-test")
+    testApi("org.springframework.security:spring-security-test:5.7.3")
+    testApi(project(":common"))
 }
 
 tasks.withType<Jar> {
