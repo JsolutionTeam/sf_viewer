@@ -4,7 +4,7 @@ import com.querydsl.core.annotations.QueryProjection
 import java.time.LocalDateTime
 import javax.persistence.*
 
-data class InGSystemDto(
+data class InGSystemDto @QueryProjection constructor(
     var siteSeq: Long,
 
     // 개폐장치 움직임 정도(rate)
