@@ -1,0 +1,56 @@
+server:
+    servlet:
+        context-path: /
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+            force-response: true
+
+spring:
+
+    mvc:
+        pathmatch:
+            matching-strategy: ant_path_matcher
+        format:
+            date: yyyy-MM-dd
+            date-time: yyyy-MM-dd HH:mm:ss
+            time: HH:mm:ss
+
+    servlet:
+        multipart:
+            max-request-size: 10240KB #?? ?? ??? : 10MB
+            max-file-size: 10240KB #?? ?? ??? : 10MB
+
+    redis:
+        lettuce:
+            pool:
+                max-active: 5 # pool에 할당될 수 있는 커넥션 최대수
+                max-idle: 5 # pool의 'idle' 커넥션 최대수
+                min-idle: 2
+        host: localhost
+        port: 6379
+
+    datasource:
+        url: 'jdbc:h2:mem:sfviewer'
+        username: 'user'
+        password: ''
+        driver-class-name: org.h2.Driver
+    jpa:
+        hibernate:
+            ddl-auto: create-drop
+        properties:
+            hibernate:
+                format_sql: true
+                show_sql: true
+                # to use function
+    #        dialect: kr.co.jsol.api.config.database.MariaDBFunctionsDialect
+
+    h2:
+        console:
+            enabled: true
+            path: '/h2-console'
+
+jwt:
+    secret: asdfbjahdslfjh2edoiughdivjhsxlkjvcahxclksdfhieduwhgowieurhgoeirufhsdlfddjvkahlsxckvjhasdlkjvchlkj34htop23i4uythoiuerwjhgasdvdgouasyv987d6v987
+    paths: /api/v1, /api/v2, /api/v3
