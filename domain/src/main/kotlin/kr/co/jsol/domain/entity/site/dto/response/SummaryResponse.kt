@@ -9,7 +9,7 @@ import kr.co.jsol.domain.entity.micro.dto.MicroDto
 import java.time.LocalDateTime
 
 @Schema(description = "데이터베이스 조회 결과")
-data class SearchResponse(
+data class SummaryResponse(
     @Schema(description = "site id")
     val siteSeq: Long = 0L,
 
@@ -37,12 +37,6 @@ data class SearchResponse(
     @Schema(description = "풍속 / 단위 m/s")
     var windSpeed: Double? = 0.0,
 
-    @Schema(description = "개폐장치 개폐 정도")
-    var rateOfOpening: Double? = 0.0,
-
-    @Schema(description = "개폐장치 작동 구분자, -1=역방향, 0=멈춤, 1=정방향", allowableValues = ["-1", "0", "1"])
-    var openSignal: Int? = 0,
-
     @Schema(description = "co2 외 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     var microRegTime: LocalDateTime? = null,
@@ -50,10 +44,6 @@ data class SearchResponse(
     @Schema(description = "co2 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     var co2RegTime: LocalDateTime? = null,
-
-    @Schema(description = "개폐장치 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    var openDataRegTime: LocalDateTime? = null,
 ) {
 
     fun setCo2Info(dto: Co2Dto) {
@@ -72,16 +62,10 @@ data class SearchResponse(
         this.microRegTime = dto.regTime
     }
 
-    fun setInGSystem(inGDto: InGSystemDto?) {
-        this.rateOfOpening = inGDto?.rateOfOpening
-        this.openSignal = inGDto?.openSignal
-        this.openDataRegTime = inGDto?.regTime
-    }
-
     companion object {
 
-        fun of(siteSeq: Long, co2: List<Co2Dto>, micro: List<MicroDto>): List<SearchResponse> {
-            val result = mutableListOf<SearchResponse>()
+        fun of(siteSeq: Long, co2: List<Co2Dto>, micro: List<MicroDto>): List<SummaryResponse> {
+            val result = mutableListOf<SummaryResponse>()
             val co2Map = co2.groupBy { it.regTime.removeMinute() }
             val microMap = micro.groupBy { it.regTime.removeMinute() }
             val co2KeySet = co2Map.keys
@@ -91,7 +75,7 @@ data class SearchResponse(
                 val co2Dto = co2Map[key]?.firstOrNull()
                 val microDto = microMap[key]?.firstOrNull()
                 result.add(
-                    SearchResponse(
+                    SummaryResponse(
                         // site
                         siteSeq = siteSeq,
 

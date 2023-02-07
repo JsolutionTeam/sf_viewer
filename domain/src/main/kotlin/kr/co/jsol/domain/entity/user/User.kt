@@ -45,13 +45,13 @@ class User(
 
     // ------------------------------------
     fun updateInfo(
-        role: UserRoleType = this.role,
+        role: UserRoleType? = this.role,
         site: Site? = this.site,
-        locked: Boolean = this.locked,
+        locked: Boolean? = this.locked,
     ) {
-        this.role = role
+        this.role = role ?: this.role
         this.site = site ?: this.site
-        this.locked = locked
+        this.locked = locked ?: this.locked
     }
 
     fun disable() {
@@ -121,5 +121,9 @@ class User(
     override fun isEnabled(): Boolean {
         // 이메일이 인증되어 있고 계정이 잠겨있지 않으면 true
         return enabled
+    }
+
+    fun updatePassword(newPassword: String) {
+        this.password = newPassword
     }
 }

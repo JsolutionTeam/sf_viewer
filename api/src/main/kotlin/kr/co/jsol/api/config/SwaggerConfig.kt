@@ -27,8 +27,8 @@ class SwaggerConfig {
         localServer.description = "Server URL in Local environment"
 
         val localServer2 = Server()
-        localServer.url = "http://localhost:18081"
-        localServer.description = "Server URL in Local environment test 2"
+        localServer2.url = "http://localhost:18081"
+        localServer2.description = "Server URL in Local environment test 2"
 
         val prodServer = Server()
         prodServer.url = "http://39.112.10.37:3000"

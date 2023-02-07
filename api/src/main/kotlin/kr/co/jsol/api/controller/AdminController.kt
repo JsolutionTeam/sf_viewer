@@ -69,9 +69,9 @@ class AdminController(
         ApiResponse(responseCode = "200", description = "성공"),
         ApiResponse(responseCode = "401", description = "유효하지 않은 토큰입니다.", content = [Content()])
     )
-    @DeleteMapping("/user/{username}")
+    @DeleteMapping("/user/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    fun deleteUser(@PathVariable username: String): Boolean {
-        return userService.deleteUserById(username)
+    fun deleteUser(@PathVariable id: String): Boolean {
+        return userService.deleteUserById(id)
     }
 }

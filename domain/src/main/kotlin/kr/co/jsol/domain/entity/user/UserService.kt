@@ -12,6 +12,7 @@ import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.LoginResponse
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
+import kr.co.jsol.domain.entity.user.enums.UserRoleType
 import kr.co.jsol.domain.entity.util.findByIdOrThrow
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -112,25 +113,37 @@ class UserService(
         val user = userRepository.findByIdAndLockedIsFalse(userUpdateRequest.username)
             ?: throw UserDisableException()
 
-        val site: Site? = siteRepository.findByIdOrNull(userUpdateRequest.siteSeq) ?: user.site
-        val role = userUpdateRequest.role
+        val site: Site? = if (userUpdateRequest.siteSeq != null) {
+            siteRepository.findByIdOrNull(userUpdateRequest.siteSeq)
+        } else {
+            null
+        }
+        val role: UserRoleType? = userUpdateRequest.role
+        val password = userUpdateRequest.password ?: ""
+
 
         user.updateInfo(
             role = role,
             site = site,
         )
 
+        if(password.isNotBlank()){
+            val newPassword = passwordEncoder.encode(password)
+            user.updatePassword(newPassword)
+        }
+
         val updateUser = userRepository.save(user)
 
         return UserResponse.of(updateUser)
     }
 
-    fun deleteUserById(username: String): Boolean {
-        val user = userRepository.findByIdAndLockedIsFalse(username)
-            ?: throw UserDisableException()
-
-        user.updateInfo(locked = true)
-        userRepository.save(user)
+    fun deleteUserById(id: String): Boolean {
+//        val user = userRepository.findByIdAndLockedIsFalse(id)
+//            ?: throw UserDisableException()
+//
+//        user.updateInfo(locked = true)
+//        userRepository.save(user)
+        userRepository.deleteById(id)
         return true
     }
 }
