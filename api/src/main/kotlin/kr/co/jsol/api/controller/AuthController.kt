@@ -30,8 +30,7 @@ class AuthController(
     )
     @GetMapping("refresh")
     @ResponseStatus(value = HttpStatus.OK)
-    @SecurityRequirement(name = "Bearer Authentication")
-    @PreAuthorize("hasAnyAuthority(\"ADMIN\", \"USER\")")
+    // PreAuthorize를 사용하지 않으려면 security config 에서 정의한다.
     fun refreshToken(@AuthenticationPrincipal userDetails: User): RefreshTokenDto {
         return userService.refreshToken(userDetails.username)
     }
@@ -45,16 +44,5 @@ class AuthController(
     @ResponseStatus(value = HttpStatus.OK)
     fun login(@RequestBody loginRequest: LoginRequest): LoginResponse {
         return userService.login(loginRequest)
-    }
-
-    @Operation(summary = "계정 생성")
-    @ApiResponses(
-        ApiResponse(responseCode = "201", description = "성공"),
-        ApiResponse(responseCode = "400", description = "계정 생성에 실패했습니다.", content = [Content()])
-    )
-    @PostMapping("/user")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    fun createUser(@RequestBody userRequest: UserRequest): UserResponse {
-        return userService.createUser(userRequest)
     }
 }

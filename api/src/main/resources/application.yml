@@ -15,9 +15,12 @@ spring:
         activate:
             on-profile: dev
     datasource:
-        url: jdbc:mariadb://39.112.10.37:23307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
-        username: faas
-        password: qweR1234@!
+#        url: jdbc:mariadb://39.112.10.37:23307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+#        username: faas
+#        password: qweR1234@!
+        url: jdbc:mariadb://localhost:3306/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+        username: root
+        password: 1234
         driver-class-name: org.mariadb.jdbc.Driver
 server:
   port: 18080
@@ -59,3 +62,22 @@ spring:
 
 jwt:
     secret: asdfbjahdslfjh2edoiughdivjhsxlkjvcahxclksdfhieduwhgowieurhgoeirufhsdlfddjvkahlsxckvjhasdlkjvchlkj34htop23i4uythoiuerwjhgasdvdgouasyv987d6v987
+
+springdoc:
+    version: 1.0.2
+    api-docs:
+        path: /api-docs
+    default-consumes-media-type: application/json
+    default-produces-media-type: application/json
+    swagger-ui:
+        operations-sorter: alpha
+        tags-sorter: alpha
+        path: /swagger-ui.html
+        disable-swagger-default-url: true
+        display-query-params-without-oauth2: true
+        doc-expansion: none
+        persist-authorization: true
+    paths-to-match:
+        - /api/**
+
+

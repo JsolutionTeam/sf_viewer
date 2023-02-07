@@ -38,33 +38,14 @@ subprojects {
     }
 
     dependencies {
-        // kotlin logger
-        implementation("io.github.microutils:kotlin-logging-jvm:3.0.0")
-
-        implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
-        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-        implementation("org.springframework.boot:spring-boot-starter-jdbc")
-        implementation("org.springframework.boot:spring-boot-starter-websocket")
-        implementation("org.springframework.boot:spring-boot-starter-validation") // 파라미터 값 확인(인증, Bean Validation)을 위해
-        implementation("org.springframework.boot:spring-boot-starter-security")
-
+        // kotlin supports module
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
         // databases
         runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
-
-        // swagger v3
-        implementation("io.springfox:springfox-boot-starter:3.0.0")
-
-        // query dsl
-        implementation("com.querydsl:querydsl-jpa:5.0.0")
-        implementation("com.querydsl:querydsl-core:5.0.0")
-
-        // jwt
-        runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
-        runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
-        implementation("io.jsonwebtoken:jjwt-gson:0.11.5")
+        runtimeOnly("com.h2database:h2")
 
         annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jpa")
         annotationProcessor("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final")

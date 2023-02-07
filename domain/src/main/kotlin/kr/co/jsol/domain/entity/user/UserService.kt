@@ -1,31 +1,26 @@
 package kr.co.jsol.domain.entity.user
 
+import kr.co.jsol.common.exception.entities.user.UserAlreadyExistException
+import kr.co.jsol.common.exception.entities.user.UserDisableException
+import kr.co.jsol.common.jwt.JwtTokenProvider
+import kr.co.jsol.common.jwt.dto.RefreshTokenDto
 import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
+import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
 import kr.co.jsol.domain.entity.user.dto.request.LoginRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.LoginResponse
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
-import kr.co.jsol.common.jwt.JwtTokenProvider
+import kr.co.jsol.domain.entity.user.enums.UserRoleType
 import kr.co.jsol.domain.entity.util.findByIdOrThrow
-import kr.co.jsol.domain.exception.entities.user.UserAlreadyExistUserException
-import kr.co.jsol.domain.exception.entities.user.UserDisableException
-import kr.co.jsol.common.jwt.dto.RefreshTokenDto
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
-import org.springframework.security.authentication.AccountExpiredException
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.CredentialsExpiredException
-import org.springframework.security.authentication.DisabledException
-import org.springframework.security.authentication.LockedException
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.authentication.*
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 
 @Service
@@ -33,6 +28,7 @@ class UserService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val authenticationManager: AuthenticationManager,
     private val userRepository: UserRepository,
+    private val userQuerydslRepository: UserQuerydslRepository,
     private val siteRepository: SiteRepository,
     private val passwordEncoder: PasswordEncoder,
 ) {
@@ -76,14 +72,16 @@ class UserService(
         )
     }
 
-    @Transactional(readOnly = true)
+    fun isExistUserById(id: String): Boolean {
+        return userRepository.existsById(id)
+    }
+
     fun getById(id: String): User {
         return userRepository.findByIdOrThrow(id, "계정 정보를 찾을 수 없습니다.")
     }
 
-    @Transactional(readOnly = true)
-    fun getAll(): List<User> {
-        return userRepository.findAll(Sort.by("name").ascending())
+    fun getAll(): List<UserResponse> {
+        return userQuerydslRepository.findAllBy()
     }
 
     fun createUser(userRequest: UserRequest): UserResponse {
@@ -95,7 +93,7 @@ class UserService(
 
         try {
             val existUser = userRepository.findByIdAndLockedIsFalse(user.username)
-            if (existUser != null) throw UserAlreadyExistUserException()
+            if (existUser != null) throw UserAlreadyExistException()
         } catch (_: Exception) {
         }
 
@@ -107,7 +105,7 @@ class UserService(
         return UserResponse(
             username = saveUser.username,
             role = saveUser.role,
-            site = site
+            site = SiteResponse.of(site),
         )
     }
 
@@ -115,20 +113,37 @@ class UserService(
         val user = userRepository.findByIdAndLockedIsFalse(userUpdateRequest.username)
             ?: throw UserDisableException()
 
-        val site: Site? = siteRepository.findByIdOrNull(userUpdateRequest.siteSeq) ?: user.site
-        val role = userUpdateRequest.role
+        val site: Site? = if (userUpdateRequest.siteSeq != null) {
+            siteRepository.findByIdOrNull(userUpdateRequest.siteSeq)
+        } else {
+            null
+        }
+        val role: UserRoleType? = userUpdateRequest.role
+        val password = userUpdateRequest.password ?: ""
+
 
         user.updateInfo(
+            role = role,
             site = site,
-            role = role
         )
+
+        if(password.isNotBlank()){
+            val newPassword = passwordEncoder.encode(password)
+            user.updatePassword(newPassword)
+        }
 
         val updateUser = userRepository.save(user)
 
-        return UserResponse(
-            username = updateUser.username,
-            role = updateUser.role,
-            site = updateUser.site,
-        )
+        return UserResponse.of(updateUser)
+    }
+
+    fun deleteUserById(id: String): Boolean {
+//        val user = userRepository.findByIdAndLockedIsFalse(id)
+//            ?: throw UserDisableException()
+//
+//        user.updateInfo(locked = true)
+//        userRepository.save(user)
+        userRepository.deleteById(id)
+        return true
     }
 }

@@ -1,5 +1,6 @@
 package kr.co.jsol.domain.entity.ingsystem
 
+import kr.co.jsol.domain.entity.ingsystem.dto.InGSystemDto
 import kr.co.jsol.domain.entity.site.SiteRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -8,6 +9,7 @@ import java.lang.RuntimeException
 @Service
 class InGSystemService(
     private val inGSystemRepository: InGSystemRepository,
+    private val inGSystemQuerydslRepository: InGSystemQuerydslRepository,
     private val siteRepository: SiteRepository,
 ) {
 
@@ -35,5 +37,9 @@ class InGSystemService(
         }
 
         return "200 OK, save success"
+    }
+
+    fun getInGSystemBySiteSeq(siteSeq: Long): InGSystemDto? {
+        return inGSystemQuerydslRepository.findInGSystemBySiteSeq(siteSeq)
     }
 }

@@ -5,9 +5,11 @@ val querydslVersion: String by System.getProperties()
 plugins {
     kotlin("kapt")
     kotlin("plugin.jpa")
+
+    // intellij idea에서 사용할 수 있도록 추가
+    idea
 }
 
-// allopen setting 1
 allOpen {
     annotation("javax.persistence.Entity")
     annotation("javax.persistence.MappedSuperclass")
@@ -24,14 +26,28 @@ dependencies {
     api(project(":common"))
 
     val kapt by configurations
-    api("org.springframework.boot:spring-boot-starter-data-jpa")
-    api("com.querydsl:querydsl-jpa:$querydslVersion")
-    kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa")
-    kapt("org.springframework.boot:spring-boot-configuration-processor")
+
+    // // spring-boot-starter
+    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    // querydsl kotlin codegen
+    api("com.querydsl:querydsl-jpa:$querydslVersion")
+    api("com.querydsl:querydsl-kotlin-codegen:$querydslVersion") // kotlin code generation support
+
+    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1")
+
+    //apt
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+    kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa") // 이게 없으면 build해도 Q class가 생성되지 않는다.
+
+    // test dependencies
     testApi("org.springframework.boot:spring-boot-starter-test")
+    testApi("org.springframework.security:spring-security-test:5.7.3")
+    testApi(project(":common"))
 }
 
 tasks.withType<Jar> {

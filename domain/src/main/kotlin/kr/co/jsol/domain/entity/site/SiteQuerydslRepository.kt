@@ -6,15 +6,19 @@ import com.querydsl.core.types.dsl.DateTemplate
 import com.querydsl.core.types.dsl.DateTimePath
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.impl.JPAQueryFactory
-import kr.co.jsol.domain.entity.co2.QCo2Logger.co2Logger
+import kr.co.jsol.domain.entity.co2.QCo2Logger.Companion.co2Logger
 import kr.co.jsol.domain.entity.co2.dto.Co2Dto
 import kr.co.jsol.domain.entity.co2.dto.QCo2Dto
-import kr.co.jsol.domain.entity.micro.QMicro.micro
+import kr.co.jsol.domain.entity.ingsystem.QInGSystem.Companion.inGSystem
+import kr.co.jsol.domain.entity.ingsystem.dto.InGSystemDto
+import kr.co.jsol.domain.entity.ingsystem.dto.QInGSystemDto
+import kr.co.jsol.domain.entity.micro.QMicro.Companion.micro
 import kr.co.jsol.domain.entity.micro.dto.MicroDto
 import kr.co.jsol.domain.entity.micro.dto.QMicroDto
-import kr.co.jsol.domain.entity.site.QSite.site
 import kr.co.jsol.domain.entity.site.dto.request.SearchCondition
-import kr.co.jsol.domain.entity.site.dto.response.SearchResponse
+import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
+import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
+import kr.co.jsol.domain.entity.util.formatDateTemplate
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -31,10 +35,10 @@ class SiteQuerydslRepository(
 //
 //    }
 
-    fun getRealTime(condition: SearchCondition): SearchResponse {
+    fun getRealTime(condition: SearchCondition): RealTimeResponse {
         val (siteSeq) = condition
 
-        val response: SearchResponse = SearchResponse(siteSeq = siteSeq)
+        val response = RealTimeResponse(siteSeq = siteSeq)
 
         val microDto = queryFactory
             .select(
@@ -74,38 +78,49 @@ class SiteQuerydslRepository(
             .limit(1)
             .fetchOne()
 
+        val inGDto = queryFactory
+            .select(
+                Projections.constructor(
+                    InGSystemDto::class.java,
+                    Expressions.asNumber(siteSeq).`as`("siteSeq"),
+                    inGSystem.rateOfOpening,
+                    inGSystem.openSignal,
+                    inGSystem.regTime,
+                    inGSystem.machineId,
+                )
+            )
+            .from(inGSystem)
+            .where(inGSystem.site.id.eq(siteSeq))
+            .orderBy(inGSystem.id.desc())
+            .limit(1)
+            .fetchOne()
+
         if (co2Dto != null) {
-            response.setCo2(co2Dto)
+            response.setCo2Info(co2Dto)
         }
         if (microDto != null) {
             response.setMicro(microDto)
+        }
+        if (inGDto != null) {
+            response.setInGSystem(inGDto)
         }
 
         return response
     }
 
-    fun getMicroList(condition: SearchCondition): List<SearchResponse> {
+    fun getSummaryBySearchCondition(condition: SearchCondition): List<SummaryResponse> {
 
         // 하나의 쿼리에서 두 개의 테이블을 조인하고 가져오는것이 굉장히 오래걸림.
         // 그러므로 시간단위로 그룹바이한 값을 두 개를 조회해서 dto에 세팅하는 것으로 변경
 
-        val microTime: DateTemplate<LocalDateTime> =
-            Expressions.dateTemplate(
-                LocalDateTime::class.java,
-                "DATE_FORMAT({0}, {1})",
-                micro.regTime,
-                "%Y %c %d %H"
-            )
+        val microTime: DateTemplate<LocalDateTime> =formatDateTemplate(micro.regTime)
+        val co2Time: DateTemplate<LocalDateTime> =formatDateTemplate(co2Logger.regTime)
 
-        val co2Time: DateTemplate<LocalDateTime> =
-            Expressions.dateTemplate(
-                LocalDateTime::class.java,
-                "DATE_FORMAT({0}, {1})",
-                co2Logger.regTime,
-                "%Y %c %d %H"
-            )
+        val siteSeq = condition.siteSeq
+        val initDto = initTime(condition)
+        val startTime: LocalDateTime = initDto.startTime!!
+        val endTime: LocalDateTime = initDto.endTime!!
 
-        val (siteSeq, startTime, endTime) = checkTime(condition)
 
         val co2: List<Co2Dto> = queryFactory.select(
             QCo2Dto(
@@ -119,10 +134,10 @@ class SiteQuerydslRepository(
         ).from(co2Logger)
             .where(
                 co2Logger.site.id.eq(siteSeq),
-                betweenTime(co2Logger.regTime, startTime!!, endTime!!)
+                betweenTime(co2Logger.regTime, startTime, endTime)
             )
-//            .groupBy(co2Time)
-//            .orderBy(co2Time.desc())
+            .groupBy(co2Time)
+            .orderBy(co2Time.desc())
             .fetch()
 
         val micro: List<MicroDto> = queryFactory.select(
@@ -146,47 +161,36 @@ class SiteQuerydslRepository(
             .groupBy(microTime)
             .orderBy(microTime.desc())
             .fetch()
-        return SearchResponse.of(siteSeq, co2, micro)
-//        return queryFactory
-//            .select(
-//                Projections.constructor(
-//                    SearchResponse::class.java,
-//                    co2Logger.co2.avg(),
-//                    micro.temperature.avg(),
-//                    micro.relativeHumidity.avg(),
-//                    micro.solarRadiation.avg(),
-//                    micro.rainfall.avg(),
-//                    micro.earthTemperature.avg(),
-//                    micro.windDirection.avg(),
-//                    micro.windSpeed.avg(),
-//                    micro.regTime,
-//                    co2Logger.regTime,
-//                )
-//            )
-//            .from(site)
-//            .leftJoin(co2Logger)
-//            .on(
-//                co2Logger.site.eq(site)
-//                    .and(
-//                        betweenTime(co2Logger.regTime, startTime!!, endTime!!)
-//                    )
-//            )
-//            .fetchJoin()
-//
-//            .leftJoin(micro)
-//            .on(
-//                micro.site.eq(site)
-//                    .and(
-//                        betweenTime(micro.regTime, startTime, endTime)
-//                    )
-//            )
-//            .where(site.id.eq(siteSeq))
-//            .fetchJoin()
-//            .groupBy(microTime, co2Time)
-//            .fetch()
+        return SummaryResponse.of(siteSeq, co2, micro)
     }
 
-    private fun checkTime(condition: SearchCondition): SearchCondition {
+    fun getDoorSummaryBySearchCondition(condition: SearchCondition): List<InGSystemDto> {
+        val inGTime: DateTemplate<LocalDateTime> =formatDateTemplate(inGSystem.regTime, "%Y %m %d %H %i")
+
+        val siteSeq = condition.siteSeq
+        val initDto = initTime(condition)
+        val startTime: LocalDateTime = initDto.startTime!!
+        val endTime: LocalDateTime = initDto.endTime!!
+
+        return queryFactory.select(
+            QInGSystemDto(
+                inGSystem.site.id,
+                inGSystem.rateOfOpening,
+                inGSystem.openSignal,
+                inGSystem.regTime,
+                inGSystem.machineId,
+            )
+        ).from(inGSystem)
+            .where(
+                inGSystem.site.id.eq(siteSeq),
+                betweenTime(inGSystem.regTime, startTime, endTime)
+            )
+            .groupBy(inGTime)
+            .orderBy(inGTime.desc())
+            .fetch()
+    }
+
+    private fun initTime(condition: SearchCondition): SearchCondition {
         var startTime = condition.startTime
         var endTime = condition.endTime
 
