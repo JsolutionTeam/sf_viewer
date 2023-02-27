@@ -1,23 +1,23 @@
 package kr.co.jsol.service
 
-import kr.co.jsol.domain.entity.ingsystem.InGSystemService
+import kr.co.jsol.domain.entity.opening.OpeningService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
-class TcpInGSystemService(
-    private val inGSystemService: InGSystemService,
+class TcpSensorService(
+    private val openingService: OpeningService,
 ) {
-    val log = LoggerFactory.getLogger(TcpInGSystemService::class.java)
+    val log = LoggerFactory.getLogger(TcpSensorService::class.java)
 
     @Value("\${ingsystem.message.delimiter:,}")
     private val messageDelimiter: String = ","
 
-    @Value("\${ingsystem.message.delimiter-count}")
-    private val countOfComma: Int = 0
+//    @Value("\${ingsystem.message.delimiter-count}")
+//    private val countOfComma: Int = 0
 
-    fun handleTcpMessage(message: String, clientIp: String? = null) {
+    fun handleTcpMessage(message: String, clientIp: String? = null): Long {
         // serial deserial을 거쳐서 나온 message를 처리하는 곳
         val payload = message.trim()
         // 빈 값이 넘어오면 처리하지 않음
@@ -30,17 +30,22 @@ class TcpInGSystemService(
         }
 
         val split = payload.split(messageDelimiter)
-        val siteSeqMessage = split[0]
-        val rateOfOpeningMessage = split[1]
-        val openSignalMessage = split[2]
+        log.info("split : $split")
 
-        val siteSeq: Long = parseSiteSeq(siteSeqMessage)
-        val rateOfOpening: Double = parseRateOfOpening(rateOfOpeningMessage)
-        val openSignal: Int = parseOpenSignal(openSignalMessage)
-
-        inGSystemService.saveInGSystem(siteSeq, rateOfOpening, openSignal, clientIp)
+        // 이 부분부터 분기가 시작되어야 함.
+        // 고유번호에 따라 개폐장치 처리 혹은 센서장치 처리
+//        val siteSeqMessage = split[0]
+//        val rateOfOpeningMessage = split[1]
+//        val openSignalMessage = split[2]
+//
+//        val siteSeq: Long = parseSiteSeq(siteSeqMessage)
+//        val rateOfOpening: Double = parseRateOfOpening(rateOfOpeningMessage)
+//        val openSignal: Int = parseOpenSignal(openSignalMessage)
+//
+//        openingService.saveInGSystem(siteSeq, rateOfOpening, openSignal, clientIp)
 
         log.info("InGSystem 데이터 추가 완료")
+        return 1
     }
 
     private fun isValidMessage(str: String): Boolean {
@@ -59,10 +64,10 @@ class TcpInGSystemService(
         }
 
         // 구분자가 ${countOfComma} 개로 나뉘어 지는가?
-        if (!isDelimiterCountEq(str, countOfComma)) {
-            log.error("'$messageDelimiter'로 $countOfComma 개로 나누어져야 합니다.")
-            return false
-        }
+//        if (!isDelimiterCountEq(str, countOfComma)) {
+//            log.error("'$messageDelimiter'로 $countOfComma 개로 나누어져야 합니다.")
+//            return false
+//        }
 
         return true
     }

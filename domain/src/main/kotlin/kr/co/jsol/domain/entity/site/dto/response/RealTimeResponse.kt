@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
 import kr.co.jsol.common.util.removeMinute
 import kr.co.jsol.domain.entity.co2.dto.Co2Dto
-import kr.co.jsol.domain.entity.ingsystem.dto.InGSystemDto
+import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.micro.dto.MicroDto
 import java.time.LocalDateTime
 
@@ -72,7 +72,7 @@ data class RealTimeResponse(
         this.microRegTime = dto.regTime
     }
 
-    fun setInGSystem(inGDto: InGSystemDto?) {
+    fun setInGSystem(inGDto: OpeningResDto?) {
         this.rateOfOpening = inGDto?.rateOfOpening
         this.openSignal = inGDto?.openSignal
         this.openDataRegTime = inGDto?.regTime

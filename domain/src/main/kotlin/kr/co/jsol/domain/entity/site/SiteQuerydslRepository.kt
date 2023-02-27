@@ -9,9 +9,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import kr.co.jsol.domain.entity.co2.QCo2Logger.Companion.co2Logger
 import kr.co.jsol.domain.entity.co2.dto.Co2Dto
 import kr.co.jsol.domain.entity.co2.dto.QCo2Dto
-import kr.co.jsol.domain.entity.ingsystem.QInGSystem.Companion.inGSystem
-import kr.co.jsol.domain.entity.ingsystem.dto.InGSystemDto
-import kr.co.jsol.domain.entity.ingsystem.dto.QInGSystemDto
+import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.micro.QMicro.Companion.micro
 import kr.co.jsol.domain.entity.micro.dto.MicroDto
 import kr.co.jsol.domain.entity.micro.dto.QMicroDto
@@ -37,73 +35,73 @@ class SiteQuerydslRepository(
 
     fun getRealTime(condition: SearchCondition): RealTimeResponse {
         val (siteSeq) = condition
-
+//
         val response = RealTimeResponse(siteSeq = siteSeq)
-
-        val microDto = queryFactory
-            .select(
-                Projections.constructor(
-                    MicroDto::class.java,
-                    Expressions.asNumber(siteSeq).`as`("siteSeq"),
-                    micro.regTime,
-                    micro.temperature,
-                    micro.relativeHumidity,
-                    micro.solarRadiation,
-                    micro.rainfall,
-                    micro.earthTemperature,
-                    micro.windDirection,
-                    micro.windSpeed,
-                )
-            )
-            .from(micro)
-            .where(micro.site.id.eq(siteSeq))
-            .orderBy(micro.id.desc())
-            .limit(1)
-            .fetchOne()
-
-        val co2Dto = queryFactory
-            .select(
-                Projections.constructor(
-                    Co2Dto::class.java,
-                    Expressions.asNumber(siteSeq).`as`("siteSeq"),
-                    co2Logger.regTime,
-                    co2Logger.co2,
-                    co2Logger.temperature,
-                    co2Logger.relativeHumidity,
-                )
-            )
-            .from(co2Logger)
-            .where(co2Logger.site.id.eq(siteSeq))
-            .orderBy(co2Logger.id.desc())
-            .limit(1)
-            .fetchOne()
-
-        val inGDto = queryFactory
-            .select(
-                Projections.constructor(
-                    InGSystemDto::class.java,
-                    Expressions.asNumber(siteSeq).`as`("siteSeq"),
-                    inGSystem.rateOfOpening,
-                    inGSystem.openSignal,
-                    inGSystem.regTime,
-                    inGSystem.machineId,
-                )
-            )
-            .from(inGSystem)
-            .where(inGSystem.site.id.eq(siteSeq))
-            .orderBy(inGSystem.id.desc())
-            .limit(1)
-            .fetchOne()
-
-        if (co2Dto != null) {
-            response.setCo2Info(co2Dto)
-        }
-        if (microDto != null) {
-            response.setMicro(microDto)
-        }
-        if (inGDto != null) {
-            response.setInGSystem(inGDto)
-        }
+//
+//        val microDto = queryFactory
+//            .select(
+//                Projections.constructor(
+//                    MicroDto::class.java,
+//                    Expressions.asNumber(siteSeq).`as`("siteSeq"),
+//                    micro.regTime,
+//                    micro.temperature,
+//                    micro.relativeHumidity,
+//                    micro.solarRadiation,
+//                    micro.rainfall,
+//                    micro.earthTemperature,
+//                    micro.windDirection,
+//                    micro.windSpeed,
+//                )
+//            )
+//            .from(micro)
+//            .where(micro.site.id.eq(siteSeq))
+//            .orderBy(micro.id.desc())
+//            .limit(1)
+//            .fetchOne()
+//
+//        val co2Dto = queryFactory
+//            .select(
+//                Projections.constructor(
+//                    Co2Dto::class.java,
+//                    Expressions.asNumber(siteSeq).`as`("siteSeq"),
+//                    co2Logger.regTime,
+//                    co2Logger.co2,
+//                    co2Logger.temperature,
+//                    co2Logger.relativeHumidity,
+//                )
+//            )
+//            .from(co2Logger)
+//            .where(co2Logger.site.id.eq(siteSeq))
+//            .orderBy(co2Logger.id.desc())
+//            .limit(1)
+//            .fetchOne()
+//
+//        val inGDto = queryFactory
+//            .select(
+//                Projections.constructor(
+//                    OpeningResDto::class.java,
+//                    Expressions.asNumber(siteSeq).`as`("siteSeq"),
+//                    inGSystem.rateOfOpening,
+//                    inGSystem.openSignal,
+//                    inGSystem.regTime,
+//                    inGSystem.machineId,
+//                )
+//            )
+//            .from(inGSystem)
+//            .where(inGSystem.site.id.eq(siteSeq))
+//            .orderBy(inGSystem.id.desc())
+//            .limit(1)
+//            .fetchOne()
+//
+//        if (co2Dto != null) {
+//            response.setCo2Info(co2Dto)
+//        }
+//        if (microDto != null) {
+//            response.setMicro(microDto)
+//        }
+//        if (inGDto != null) {
+//            response.setInGSystem(inGDto)
+//        }
 
         return response
     }
@@ -164,30 +162,31 @@ class SiteQuerydslRepository(
         return SummaryResponse.of(siteSeq, co2, micro)
     }
 
-    fun getDoorSummaryBySearchCondition(condition: SearchCondition): List<InGSystemDto> {
-        val inGTime: DateTemplate<LocalDateTime> =formatDateTemplate(inGSystem.regTime, "%Y %m %d %H %i")
-
-        val siteSeq = condition.siteSeq
-        val initDto = initTime(condition)
-        val startTime: LocalDateTime = initDto.startTime!!
-        val endTime: LocalDateTime = initDto.endTime!!
-
-        return queryFactory.select(
-            QInGSystemDto(
-                inGSystem.site.id,
-                inGSystem.rateOfOpening,
-                inGSystem.openSignal,
-                inGSystem.regTime,
-                inGSystem.machineId,
-            )
-        ).from(inGSystem)
-            .where(
-                inGSystem.site.id.eq(siteSeq),
-                betweenTime(inGSystem.regTime, startTime, endTime)
-            )
-            .groupBy(inGTime)
-            .orderBy(inGTime.desc())
-            .fetch()
+    fun getDoorSummaryBySearchCondition(condition: SearchCondition): List<OpeningResDto> {
+//        val inGTime: DateTemplate<LocalDateTime> =formatDateTemplate(inGSystem.regTime, "%Y %m %d %H %i")
+//
+//        val siteSeq = condition.siteSeq
+//        val initDto = initTime(condition)
+//        val startTime: LocalDateTime = initDto.startTime!!
+//        val endTime: LocalDateTime = initDto.endTime!!
+//
+//        return queryFactory.select(
+//            QInGSystemDto(
+//                inGSystem.site.id,
+//                inGSystem.rateOfOpening,
+//                inGSystem.openSignal,
+//                inGSystem.regTime,
+//                inGSystem.machineId,
+//            )
+//        ).from(inGSystem)
+//            .where(
+//                inGSystem.site.id.eq(siteSeq),
+//                betweenTime(inGSystem.regTime, startTime, endTime)
+//            )
+//            .groupBy(inGTime)
+//            .orderBy(inGTime.desc())
+//            .fetch()
+        return listOf()
     }
 
     private fun initTime(condition: SearchCondition): SearchCondition {

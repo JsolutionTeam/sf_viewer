@@ -12,11 +12,18 @@ class Site(
     @Column(name = "site_nm")
     var name: String = "",
 
+    @Column(name = "logger_delay", nullable = false)
+    var delay: Long = 1000L,
+
     @Id
-    @Column(name = "site_seq", updatable = false,)
+    @Column(name = "site_seq", updatable = false)
     val id: Long,
 ) {
-    fun update(siteUpdateRequest: SiteUpdateRequest) {
-        this.name = siteUpdateRequest.name ?: this.name
+    fun update(
+        name: String?,
+        delay: Long?,
+    ) {
+        this.name = name ?: this.name
+        this.delay = delay ?: this.delay
     }
 }

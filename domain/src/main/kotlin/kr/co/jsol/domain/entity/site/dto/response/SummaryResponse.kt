@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
 import kr.co.jsol.common.util.removeMinute
 import kr.co.jsol.domain.entity.co2.dto.Co2Dto
-import kr.co.jsol.domain.entity.ingsystem.dto.InGSystemDto
 import kr.co.jsol.domain.entity.micro.dto.MicroDto
 import java.time.LocalDateTime
 

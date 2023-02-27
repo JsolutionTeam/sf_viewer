@@ -4,5 +4,6 @@ import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.util.fail
 
 data class SiteUpdateRequest(
-    val name: String?,
+    var name: String?,
+    var delay: Long?,
 )
