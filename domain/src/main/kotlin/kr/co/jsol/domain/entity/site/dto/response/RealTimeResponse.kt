@@ -56,7 +56,7 @@ data class RealTimeResponse(
     var openDataRegTime: LocalDateTime? = null,
 ) {
 
-    fun setCo2Info(dto: Co2Dto) {
+    fun setCo2(dto: Co2Dto) {
         this.co2 = dto.co2
         this.co2RegTime = dto.regTime
     }
@@ -72,48 +72,9 @@ data class RealTimeResponse(
         this.microRegTime = dto.regTime
     }
 
-    fun setInGSystem(inGDto: OpeningResDto?) {
+    fun setOpening(inGDto: OpeningResDto?) {
         this.rateOfOpening = inGDto?.rateOfOpening
         this.openSignal = inGDto?.openSignal
         this.openDataRegTime = inGDto?.regTime
-    }
-
-    companion object {
-
-        fun of(siteSeq: Long, co2: List<Co2Dto>, micro: List<MicroDto>): List<RealTimeResponse> {
-            val result = mutableListOf<RealTimeResponse>()
-            val co2Map = co2.groupBy { it.regTime.removeMinute() }
-            val microMap = micro.groupBy { it.regTime.removeMinute() }
-            val co2KeySet = co2Map.keys
-            val microKeySet = microMap.keys
-            val keySet = co2KeySet.union(microKeySet)
-            keySet.forEach { key ->
-                val co2Dto = co2Map[key]?.firstOrNull()
-                val microDto = microMap[key]?.firstOrNull()
-                result.add(
-                    RealTimeResponse(
-                        // site
-                        siteSeq = siteSeq,
-
-                        // co2
-                        co2 = co2Dto?.co2,
-
-                        // micro
-                        temperature = microDto?.temperature,
-                        relativeHumidity = microDto?.relativeHumidity,
-                        solarRadiation = microDto?.solarRadiation,
-                        rainfall = microDto?.rainfall,
-                        earthTemperature = microDto?.earthTemperature,
-                        windDirection = microDto?.windDirection,
-                        windSpeed = microDto?.windSpeed,
-
-                        // regtime
-                        microRegTime = microDto?.regTime?.removeMinute(),
-                        co2RegTime = co2Dto?.regTime?.removeMinute(),
-                    )
-                )
-            }
-            return result
-        }
     }
 }

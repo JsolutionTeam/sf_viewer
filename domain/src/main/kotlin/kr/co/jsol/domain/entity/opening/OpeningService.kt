@@ -41,21 +41,10 @@ class OpeningService(
             log.error("개폐장치 데이터 등록 중 에러발생 trace : ${e.stackTraceToString()}")
 //            throw RuntimeException("InGSystem 데이터 저장 중 에러 발생, message : ${e.message}")
         }
-
-        // 1.23
-        // 90
-        // 1.25
-        // 90
-        // 22.8
-        // 45.5
-        // 23.1
-        // 450
-        // 44.5
-        // 0 // 감우가 비가 왔다가 맑아짐
         return "200 OK, save success"
     }
 
-    fun getInGSystemBySiteSeq(siteSeq: Long): OpeningResDto? {
+    fun getOpeningBySiteSeq(siteSeq: Long): OpeningResDto? {
         return openingQuerydslRepository.findInGSystemBySiteSeq(siteSeq)
     }
 }

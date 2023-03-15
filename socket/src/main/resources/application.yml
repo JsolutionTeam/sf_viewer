@@ -7,6 +7,7 @@ spring:
         username: faas
         password: qweR1234@!
         driver-class-name: org.mariadb.jdbc.Driver
+
 server:
     port: 15006
 ---
@@ -19,6 +20,7 @@ spring:
         username: faas
         password: qweR1234@!
         driver-class-name: org.mariadb.jdbc.Driver
+
 server:
     port: 18081
 ---
@@ -32,11 +34,17 @@ spring:
         password: 1234
         driver-class-name: org.mariadb.jdbc.Driver
 
+
     jpa:
         hibernate:
             ddl-auto: create
 server:
     port: 18081
+
+logging:
+    level:
+        com.zaxxer.hikari: TRACE
+        com.zaxxer.hikari.HikariConfig: DEBUG
 ---
 spring:
     config:
@@ -46,9 +54,6 @@ jwt:
     secret: asdfbjahdslfjh2edoiughdivjhsxlkjvcahxclksdfhieduwhgowieurhgoeirufhsdlfddjvkahlsxckvjhasdlkjvchlkj34htop23i4uythoiuerwjhgasdvdgouasyv987d6v987
 
 tcp:
-    client:
-        host: localhost
-        port: 2332
     server:
         port: 2332
 
@@ -57,7 +62,10 @@ ingsystem:
         length: 20
         delimiter: ','
         delimiter-count: 2
-
+        default-delay: 120
+        min-delay: 10 # 현재 최소 입력 값 10 초 (초단위)
+        max-delay: 600 # 현재 최대 입력 값 10 분 (초단위)
+        send-delay: 60 # 각 센서에 서버시간, 지연시간 보내는 주기 (초단위)
 ---
 
 
@@ -79,6 +87,11 @@ server:
             prefix: access
             rotate: true
             suffix: .log
+        threads:
+            ## 쓰레드풀 공식 = CPU 수 * (CPU목표 사용량)*(1+대기 시간/서비스 시간)
+            max: 200 # 쓰레드 사용할 최대 개수
+            min-spare: 10 # 활성화 상태로 유지할 최소 쓰레드의 개수
+    accept-count: 100 # 모든 스레드가 사용 중일때 들어오는 연결 요청 큐의 최대 길이
 #    basedir: logs
 
 spring:
@@ -94,9 +107,16 @@ spring:
 
     jpa:
         hibernate:
-            ddl-auto: none
+            ddl-auto: update
         properties:
             hibernate:
                 show-sql: true # sql log 보이게 설정
                 format_sql: true
+    datasource:
+        hikari:
+            maximum-pool-size: 50 # 커넥션 풀 50개 설정
+            connection-timeout: 5000 # 커넥션 타임아웃 5초
+            idle-timeout: 600000 # 커넥션 유휴시간 10분
+            max-lifetime: 1800000 # 커넥션 최대 생존시간 30분
+            minimum-idle: 10 # 커넥션 최소 유휴 개수
 

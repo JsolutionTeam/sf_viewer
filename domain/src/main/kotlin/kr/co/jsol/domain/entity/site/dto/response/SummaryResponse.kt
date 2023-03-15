@@ -70,7 +70,9 @@ data class SummaryResponse(
             val co2KeySet = co2Map.keys
             val microKeySet = microMap.keys
             val keySet = co2KeySet.union(microKeySet)
-            keySet.forEach { key ->
+            keySet.sortedByDescending { // 날짜 최신 순으로 정렬
+                it
+            }.forEach { key ->
                 val co2Dto = co2Map[key]?.firstOrNull()
                 val microDto = microMap[key]?.firstOrNull()
                 result.add(

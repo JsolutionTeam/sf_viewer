@@ -8,6 +8,7 @@ import kr.co.jsol.domain.entity.site.dto.request.SearchCondition
 import kr.co.jsol.domain.entity.site.dto.request.SiteCreateRequest
 import kr.co.jsol.domain.entity.site.dto.request.SiteUpdateRequest
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,6 +17,9 @@ class SiteService(
     private val siteQuerydslRepository: SiteQuerydslRepository,
     private val openingService: OpeningService,
 ) {
+    // 기본 delay
+    @Value("\${inGSystem.message.default-delay:60}")
+    private val defaultDelay: Long = 60
 
     fun getById(siteSeq: Long): SiteResponse {
         val optional = siteRepository.findById(siteSeq)
@@ -23,6 +27,11 @@ class SiteService(
             throw IllegalArgumentException("존재하지 않는 농장 번호입니다.")
         }
         return SiteResponse.of(optional.get())
+    }
+
+    fun getDelayByIp(ip: String): Long {
+        val site = siteRepository.findFirstByIpOrderBySiteIpUpdatedAtDesc(ip) ?: return defaultDelay
+        return site.delay
     }
 
     fun saveSite(siteCreateRequest: SiteCreateRequest): Long {
@@ -40,7 +49,7 @@ class SiteService(
 
     fun getRealTime(condition: SearchCondition): RealTimeResponse {
         val realTime = siteQuerydslRepository.getRealTime(condition)
-        realTime.setInGSystem(openingService.getInGSystemBySiteSeq(condition.siteSeq))
+        realTime.setOpening(openingService.getOpeningBySiteSeq(condition.siteSeq))
         return realTime
     }
 
@@ -61,6 +70,7 @@ class SiteService(
         site.update(
             name = siteUpdateRequest.name,
             delay = siteUpdateRequest.delay,
+            ip = siteUpdateRequest.ip,
         )
         siteRepository.save(site)
         return siteSeq
