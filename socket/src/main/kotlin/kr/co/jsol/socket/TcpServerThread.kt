@@ -10,7 +10,6 @@ import java.net.Socket
 import java.net.SocketTimeoutException
 import kotlin.system.exitProcess
 
-
 @Configuration
 class TcpServerThread(
     private val tcpRequestHandler: TcpRequestHandler,
@@ -51,13 +50,13 @@ class TcpServerThread(
             |   - 최대 지연시간 : ${(maxDelay * 2 + 10)} sec
             |   - socketTimeout = $socketTimeout
             |=======================================
-        """.trimIndent()
+            """.trimIndent()
         )
         try { // server socket try
 
             serverSocket = ServerSocket(port)
             serverSocket.soTimeout = 5000 // accept 할 때 X ms간 인식이 없으면 SocketTimeoutException 발생
-            var socket: Socket? = null
+            var socket: Socket?
             while (true) {
                 // 연결 수락
                 try {
@@ -70,7 +69,7 @@ class TcpServerThread(
 
                     [현재 접속 정보] ${socket.inetAddress.hostAddress}, ${socket.port}
                     [현재 실행중인 스레드 수] ${Thread.activeCount()}
-                """.trimIndent()
+                    """.trimIndent()
                 )
 
                 socket.soTimeout = socketTimeout
@@ -86,7 +85,7 @@ class TcpServerThread(
 
 //                val t = Thread {
 //                    try {
-////                        process(socket)
+// //                        process(socket)
 //                    } catch (e: IOException) {
 //                        e.printStackTrace()
 //                    } finally {
@@ -116,13 +115,12 @@ class TcpServerThread(
                 =========  ==   ====  ======
 
                 [TCP 서버] 종료
-            """.trimIndent()
+                """.trimIndent()
             )
             serverSocket?.close()
             exitProcess(0)
         }
     }
-
 
     inner class InProcessThread(socket: Socket) : Runnable {
         private val socket: Socket = socket
@@ -138,26 +136,25 @@ class TcpServerThread(
                 |=======================================
                 |[데이터 처리 쓰레드 시작]
                 | - SOCKET 정보 출력
-                | - ${socket?.inetAddress?.hostAddress}, ${socket?.port}
+                | - ${socket.inetAddress.hostAddress}, ${socket.port}
                 |=======================================
             """.trimIndent()
         )
-        var message: String? = null
-        var inputStream: InputStream? = null
-        if (inputStream == null) inputStream = socket?.getInputStream()
+        var message: String?
+        var inputStream: InputStream = socket.getInputStream()
         try {
             while (true) {
                 if (socket.isClosed) break
 
                 // 읽을 데이터가 있을 때만 진행
-                if (inputStream!!.available() > 0) {
+                if (inputStream.available() > 0) {
                     log.info(
                         """
 
                     |=======================================
                     |[데이터 입력 작업 시작]
                     |=======================================
-                """.trimIndent()
+                        """.trimIndent()
                     )
 
                     val buffer = BufferedReader(InputStreamReader(inputStream))
@@ -177,11 +174,9 @@ class TcpServerThread(
                     }
                 }
 
-
                 // 소켓 통신 속도 딜레이를 줘 너무 잦은 프로세싱은 하지 않도록 함
                 Thread.sleep(1000)
             }
-
         } catch (e: Exception) {
             e.printStackTrace()
             log.error("[TCP 서버] 에러 발생, 스트림 소켓 종료 후 로깅, 메세지 : $e")
@@ -195,7 +190,7 @@ class TcpServerThread(
                             | - ${socket?.inetAddress?.hostAddress}, ${socket?.port}
                             | - socket is closed: ${socket!!.isClosed}
                             |=======================================
-                        """.trimIndent()
+                """.trimIndent()
             )
 
             try {
@@ -243,7 +238,7 @@ class TcpServerThread(
                         Thread Id : ${Thread.currentThread().id}
                         socket Info : ${socket.inetAddress.hostAddress}, ${socket.port}
                         ==========================================
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                     // delay 단위로 데이터 전송
 

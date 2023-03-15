@@ -1,6 +1,5 @@
 package kr.co.jsol.service
 
-import kr.co.jsol.common.util.parseLong
 import kr.co.jsol.domain.entity.opening.OpeningService
 import kr.co.jsol.domain.entity.sensor.SensorService
 import kr.co.jsol.domain.entity.sensor.dto.SensorTcpDto
@@ -22,7 +21,6 @@ class TcpSensorService(
 
     @Value("\${ingsystem.message.default-delay:60}")
     private val defaultDelay: Long = 60L
-
 
     fun getSiteDelayByIp(ip: String): Long {
         return siteService.getDelayByIp(ip)
@@ -61,11 +59,11 @@ class TcpSensorService(
         // 이 부분부터 분기가 시작되어야 함.
         // 고유번호에 따라 개폐장치 처리 혹은 센서장치 처리
         val processKey = split[1]
-        when(processKey){
+        when (processKey) {
             // 001 => 센서장치
-            "001"->{
+            "001" -> {
                 log.info("001, 센서장치, 처리 시작, ip: $clientIp")
-                if(!isValidSensorData(split)){
+                if (!isValidSensorData(split)) {
                     throw RuntimeException("Invalid sensor data")
                 }
                 val sensorDto: SensorTcpDto = SensorTcpDto().parseSplitMessageToSensorTcpDto(split)
@@ -73,7 +71,7 @@ class TcpSensorService(
                 return sensorService.saveSensor(sensorDto, clientIp)
             }
             // 002 => 개폐장치
-            "002"->{
+            "002" -> {
                 log.info("002, 개폐장치, 처리 시작, ip: $clientIp")
                 //        val rateOfOpeningMessage = split[1]
 //        val openSignalMessage = split[2]
@@ -86,16 +84,16 @@ class TcpSensorService(
                 return defaultDelay
             }
             // 그 외에는 처리하지 않음
-            else->{
+            else -> {
                 log.info("InGSystem 데이터 추가 완료")
                 return defaultDelay
             }
         }
     }
 
-    private fun isValidSensorData(split: List<String>) : Boolean{
+    private fun isValidSensorData(split: List<String>): Boolean {
         // 총 데이터 개수가 11개여야 함.
-        if(split.size != 11){
+        if (split.size != 11) {
             log.error("데이터 개수가 11개가 아닙니다.")
             return false
         }
