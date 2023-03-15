@@ -1,4 +1,4 @@
-package kr.co.jsol.domain.entity.ingsystem
+package kr.co.jsol.domain.entity.opening
 
 import kr.co.jsol.domain.entity.site.Site
 import java.time.LocalDateTime
@@ -6,7 +6,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "tb_InG_system")
-class InGSystem(
+class Opening(
 
     // 개폐장치 움직인 정도 값
     @Column(name = "rate_of_opening",)
@@ -37,11 +37,11 @@ class InGSystem(
     var site: Site? = null,
 
     @Id
-    @Column(name = "InG_seq", updatable = false)
+    @Column(name = "opening_seq", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 ) {
     override fun toString(): String {
-        return "InGSystem(rateOfOpening=$rateOfOpening, openSignal=$openSignal, regTime=$regTime, machineId=$machineId, site=$site, id=$id)"
+        return "Opening(id=$id, rateOfOpening=$rateOfOpening, openSignal=$openSignal, regTime=$regTime, machineId=$machineId, site=$site)"
     }
 }

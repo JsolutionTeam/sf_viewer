@@ -1,35 +1,35 @@
-package kr.co.jsol.domain.entity.ingsystem
+package kr.co.jsol.domain.entity.opening
 
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.DateTimePath
 import com.querydsl.jpa.impl.JPAQueryFactory
-import kr.co.jsol.domain.entity.ingsystem.QInGSystem.Companion.inGSystem
-import kr.co.jsol.domain.entity.ingsystem.dto.InGSystemDto
-import kr.co.jsol.domain.entity.ingsystem.dto.QInGSystemDto
+import kr.co.jsol.domain.entity.opening.QOpening.Companion.opening
+import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
+import kr.co.jsol.domain.entity.opening.dto.QOpeningResDto
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 
 @Repository
-class InGSystemQuerydslRepository(
+class OpeningQuerydslRepository(
     private val queryFactory: JPAQueryFactory,
 ) {
 
-    fun findInGSystemBySiteSeq(siteSeq: Long): InGSystemDto? {
+    fun findInGSystemBySiteSeq(siteSeq: Long): OpeningResDto? {
         return queryFactory
             .select(
-                QInGSystemDto(
-                    inGSystem.site.id,
-                    inGSystem.rateOfOpening,
-                    inGSystem.openSignal,
-                    inGSystem.regTime,
-                    inGSystem.machineId,
+                QOpeningResDto(
+                    opening.site.id,
+                    opening.rateOfOpening,
+                    opening.openSignal,
+                    opening.regTime,
+                    opening.machineId,
                 )
             )
-            .from(inGSystem)
+            .from(opening)
             .where(
-                inGSystem.site.id.eq(siteSeq)
+                opening.site.id.eq(siteSeq)
             )
-            .orderBy(inGSystem.id.desc())
+            .orderBy(opening.id.desc())
             .limit(1)
             .fetchOne()
     }

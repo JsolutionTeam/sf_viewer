@@ -3,10 +3,9 @@ package kr.co.jsol.api.controller
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import kr.co.jsol.domain.entity.ingsystem.dto.InGSystemDto
+import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.site.dto.request.SearchCondition
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import kr.co.jsol.domain.entity.site.SiteService
 import kr.co.jsol.domain.entity.site.dto.request.SiteCreateRequest
 import kr.co.jsol.domain.entity.site.dto.request.SiteUpdateRequest
@@ -31,10 +30,20 @@ class SiteController(
         ApiResponse(responseCode = "201", description = "등록 성공"),
         ApiResponse(responseCode = "400", description = "요청 데이터 확인필요"),
     )
-    @PostMapping("/")
+    @PostMapping("/site")
     @ResponseStatus(value = HttpStatus.CREATED)
     fun saveSite(@RequestBody siteCreateRequest: SiteCreateRequest): Long {
         return siteService.saveSite(siteCreateRequest)
+    }
+
+    @Operation(summary = "농장 번호 중복 확인")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공"),
+    )
+    @GetMapping("/site/exist/{siteSeq}")
+    @ResponseStatus(value = HttpStatus.OK)
+    fun existSite(@PathVariable siteSeq: Long): Boolean {
+        return siteService.isExistSiteSeq(siteSeq)
     }
 
     @Operation(summary = "농장 전체 정보 조회")
@@ -83,13 +92,13 @@ class SiteController(
         @RequestParam(required = false) startTime: LocalDateTime?,
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         @RequestParam(required = false) endTime: LocalDateTime?,
-    ): List<InGSystemDto> {
+    ): List<OpeningResDto> {
         val condition = SearchCondition(
             siteSeq = siteSeq,
             startTime = startTime,
             endTime = endTime,
         )
-        val summaries: List<InGSystemDto> = siteService.getDoorSummaryBySearchCondition(condition)
+        val summaries: List<OpeningResDto> = siteService.getDoorSummaryBySearchCondition(condition)
         log.info("summaries.size = ${summaries.size}")
         return summaries
     }
@@ -117,7 +126,7 @@ class SiteController(
         ApiResponse(responseCode = "200", description = "등록 성공"),
         ApiResponse(responseCode = "400", description = "요청 데이터 확인필요"),
     )
-    @PutMapping("/{siteSeq}")
+    @PutMapping("/site/{siteSeq}")
     @ResponseStatus(value = HttpStatus.OK)
     fun updateSite(
         @PathVariable(required = true) siteSeq: Long,
@@ -131,7 +140,7 @@ class SiteController(
         ApiResponse(responseCode = "200", description = "등록 성공"),
         ApiResponse(responseCode = "400", description = "요청 데이터 확인필요"),
     )
-    @DeleteMapping("/{siteSeq}")
+    @DeleteMapping("/site/{siteSeq}")
     @ResponseStatus(value = HttpStatus.OK)
     fun deleteSite(
         @PathVariable(required = true) siteSeq: Long,

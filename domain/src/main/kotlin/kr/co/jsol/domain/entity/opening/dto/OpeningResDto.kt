@@ -1,10 +1,9 @@
-package kr.co.jsol.domain.entity.ingsystem.dto
+package kr.co.jsol.domain.entity.opening.dto
 
 import com.querydsl.core.annotations.QueryProjection
 import java.time.LocalDateTime
-import javax.persistence.*
 
-data class InGSystemDto @QueryProjection constructor(
+data class OpeningResDto @QueryProjection constructor(
     var siteSeq: Long,
 
     // 개폐장치 움직임 정도(rate)

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
 import kr.co.jsol.common.util.removeMinute
 import kr.co.jsol.domain.entity.co2.dto.Co2Dto
-import kr.co.jsol.domain.entity.ingsystem.dto.InGSystemDto
 import kr.co.jsol.domain.entity.micro.dto.MicroDto
 import java.time.LocalDateTime
 
@@ -71,7 +70,9 @@ data class SummaryResponse(
             val co2KeySet = co2Map.keys
             val microKeySet = microMap.keys
             val keySet = co2KeySet.union(microKeySet)
-            keySet.forEach { key ->
+            keySet.sortedByDescending { // 날짜 최신 순으로 정렬
+                it
+            }.forEach { key ->
                 val co2Dto = co2Map[key]?.firstOrNull()
                 val microDto = microMap[key]?.firstOrNull()
                 result.add(

@@ -11,6 +11,6 @@ class SocketApplication
 
 fun main(args: Array<String>) {
     val log = LoggerFactory.getLogger(SocketApplication::class.java)
-    log.info("SocketApplication start - v1.0.0")
+    log.info("SocketApplication start - v1.1.0")
     runApplication<SocketApplication>(*args)
 }

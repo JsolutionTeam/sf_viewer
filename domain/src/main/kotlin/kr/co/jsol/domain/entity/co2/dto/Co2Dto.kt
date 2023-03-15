@@ -7,6 +7,4 @@ data class Co2Dto @QueryProjection constructor(
     val siteSeq: Long,
     val regTime: LocalDateTime,
     val co2: Double,
-    val temperature: Double,
-    val relativeHumidity: Double,
 )

@@ -1,4 +1,4 @@
-package kr.co.jsol.domain.entity.ingsystem
+package kr.co.jsol.domain.entity.opening
 
 import kr.co.jsol.domain.config.WithAccount
 import kr.co.jsol.domain.entity.site.Site
@@ -13,9 +13,9 @@ import java.time.LocalDateTime
 
 @SpringBootTest
 @DisplayName("005. 개폐데이터 조회 테스트")
-class InGSystemQuerydslRepositoryTest @Autowired constructor(
-    private val inGSystemRepository: InGSystemRepository,
-    private val inGSystemQuerydslRepository: InGSystemQuerydslRepository,
+class OpeningQuerydslRepositoryTest @Autowired constructor(
+    private val openingRepository: OpeningRepository,
+    private val openingQuerydslRepository: OpeningQuerydslRepository,
     private val siteRepository: SiteRepository,
 ) {
 
@@ -34,15 +34,15 @@ class InGSystemQuerydslRepositoryTest @Autowired constructor(
         // 5분 + 5분 => 10분 데이터 생성
         val second = first.plusMinutes(5)
 
-        inGSystemRepository.saveAll(
+        openingRepository.saveAll(
             listOf(
-                InGSystem(
+                Opening(
                     rateOfOpening = 0.0,
                     openSignal = 0,
                     site = site,
                     regTime = first
                 ),
-                InGSystem(
+                Opening(
                     rateOfOpening = 0.0,
                     openSignal = 0,
                     site = site,
@@ -52,7 +52,7 @@ class InGSystemQuerydslRepositoryTest @Autowired constructor(
         )
 
         // when
-        val realTimeBySiteSeq = inGSystemQuerydslRepository.findInGSystemBySiteSeq(2)
+        val realTimeBySiteSeq = openingQuerydslRepository.findInGSystemBySiteSeq(2)
 
         // then
         // 제일 최신 데이터이므로 10분 데이터가 나와야 한다.
