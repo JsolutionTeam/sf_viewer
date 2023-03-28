@@ -4,9 +4,8 @@ import com.querydsl.core.types.Projections
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.DateTimePath
 import com.querydsl.jpa.impl.JPAQueryFactory
-import kr.co.jsol.domain.entity.site.QSite
 import kr.co.jsol.domain.entity.site.QSite.Companion.site
-import kr.co.jsol.domain.entity.site.dto.request.SearchCondition
+import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.user.QUser.Companion.user
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
 import org.springframework.stereotype.Repository
@@ -42,7 +41,7 @@ class UserQuerydslRepository(
             .fetch()
     }
 
-    private fun checkTime(condition: SearchCondition): SearchCondition {
+    private fun checkTime(condition: SiteSearchCondition): SiteSearchCondition {
         var startTime = condition.startTime
         var endTime = condition.endTime
 
@@ -55,7 +54,7 @@ class UserQuerydslRepository(
         if (endTime == null) endTime =
             LocalDateTime.of(endDate, time)
 
-        return SearchCondition(
+        return SiteSearchCondition(
             condition.siteSeq,
             startTime = startTime,
             endTime = endTime,

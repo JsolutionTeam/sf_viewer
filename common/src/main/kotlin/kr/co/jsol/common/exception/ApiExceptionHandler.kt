@@ -50,7 +50,7 @@ class ApiExceptionHandler {
     fun handleInvalidParameterException(ex: InvalidParameterException): ResponseEntity<InternalServerException> {
         logger.error("handleInvalidParameterException - message : $ex.message")
         return ResponseEntity<InternalServerException>(
-            InternalServerException("서버에서 오류가 발생했습니다. - Invalid Parameter Exception"),
+            InternalServerException("파라미터 입력이 잘못되었습니다. - Invalid Parameter Exception"),
             HttpStatus.BAD_REQUEST
         )
     }
@@ -97,15 +97,15 @@ class ApiExceptionHandler {
     @ExceptionHandler(IllegalArgumentException::class)
     fun illegalArgumentExceptionHandler(ex: IllegalArgumentException): ResponseEntity<BasicException> {
         logger.error("illegalArgumentExceptionHandler - message : ${ex.message}")
-        ex.printStackTrace()
         val code = if (ex.message != null) 400 else 500
         val message: String = ex.message ?: "서버에서 오류가 발생했습니다."
+        val httpStatus = HttpStatus.resolve(code) ?: HttpStatus.INTERNAL_SERVER_ERROR
         return ResponseEntity<BasicException>(
             BasicException(
                 code,
                 message,
             ),
-            HttpStatus.INTERNAL_SERVER_ERROR
+            httpStatus,
         )
     }
 

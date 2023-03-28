@@ -1,30 +1,3 @@
-spring:
-    config:
-        activate:
-            on-profile: smartfarm
-    datasource:
-        url: jdbc:mariadb://192.168.0.21:3307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
-        username: faas
-        password: qweR1234@!
-        driver-class-name: org.mariadb.jdbc.Driver
-server:
-    port: 15005
----
-spring:
-    config:
-        activate:
-            on-profile: dev
-    datasource:
-#        url: jdbc:mariadb://39.112.10.37:23307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
-#        username: faas
-#        password: qweR1234@!
-        url: jdbc:mariadb://localhost:3306/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
-        username: root
-        password: 1234
-        driver-class-name: org.mariadb.jdbc.Driver
-server:
-  port: 18080
----
 server:
   servlet:
     context-path: /
@@ -54,7 +27,7 @@ spring:
 
   jpa:
       hibernate:
-          ddl-auto: none
+          ddl-auto: update
       properties:
           hibernate:
               show-sql: true # sql log 보이게 설정

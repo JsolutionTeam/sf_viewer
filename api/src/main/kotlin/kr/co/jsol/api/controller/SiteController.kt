@@ -4,16 +4,16 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
-import kr.co.jsol.domain.entity.site.dto.request.SearchCondition
-import org.springframework.http.HttpStatus
 import kr.co.jsol.domain.entity.site.SiteService
 import kr.co.jsol.domain.entity.site.dto.request.SiteCreateRequest
+import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.request.SiteUpdateRequest
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
-import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
 import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
+import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
 import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
@@ -69,7 +69,7 @@ class SiteController(
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         @RequestParam(required = false) endTime: LocalDateTime?,
     ): List<SummaryResponse> {
-        val condition = SearchCondition(
+        val condition = SiteSearchCondition(
             siteSeq = siteSeq,
             startTime = startTime,
             endTime = endTime,
@@ -93,7 +93,7 @@ class SiteController(
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         @RequestParam(required = false) endTime: LocalDateTime?,
     ): List<OpeningResDto> {
-        val condition = SearchCondition(
+        val condition = SiteSearchCondition(
             siteSeq = siteSeq,
             startTime = startTime,
             endTime = endTime,
@@ -112,12 +112,11 @@ class SiteController(
     fun getSiteSummary(
         @PathVariable(required = true) siteSeq: Long,
     ): RealTimeResponse {
-        val condition = SearchCondition(
+        val condition = SiteSearchCondition(
             siteSeq = siteSeq,
             null,
             null,
         )
-        val realtime =
         return siteService.getRealTime(condition)
     }
 

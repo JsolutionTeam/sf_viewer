@@ -4,7 +4,7 @@ import kr.co.jsol.domain.entity.opening.OpeningService
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
 import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
-import kr.co.jsol.domain.entity.site.dto.request.SearchCondition
+import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.request.SiteCreateRequest
 import kr.co.jsol.domain.entity.site.dto.request.SiteUpdateRequest
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
@@ -47,17 +47,17 @@ class SiteService(
         return siteRepository.existsById(siteSeq)
     }
 
-    fun getRealTime(condition: SearchCondition): RealTimeResponse {
+    fun getRealTime(condition: SiteSearchCondition): RealTimeResponse {
         val realTime = siteQuerydslRepository.getRealTime(condition)
         realTime.setOpening(openingService.getOpeningBySiteSeq(condition.siteSeq))
         return realTime
     }
 
-    fun getSummaryBySearchCondition(condition: SearchCondition): List<SummaryResponse> {
+    fun getSummaryBySearchCondition(condition: SiteSearchCondition): List<SummaryResponse> {
         return siteQuerydslRepository.getSummaryBySearchCondition(condition)
     }
 
-    fun getDoorSummaryBySearchCondition(condition: SearchCondition): List<OpeningResDto> {
+    fun getDoorSummaryBySearchCondition(condition: SiteSearchCondition): List<OpeningResDto> {
         return siteQuerydslRepository.getDoorSummaryBySearchCondition(condition)
     }
 

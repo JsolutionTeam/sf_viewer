@@ -16,7 +16,7 @@ import kr.co.jsol.domain.entity.opening.QOpening.Companion.opening
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.opening.dto.QOpeningResDto
 import kr.co.jsol.domain.entity.sensor.QSensor.Companion.sensor
-import kr.co.jsol.domain.entity.site.dto.request.SearchCondition
+import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
 import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
 import kr.co.jsol.domain.entity.util.formatDateTemplate
@@ -34,7 +34,7 @@ class SiteQuerydslRepository(
     // JPAQueryFactory를 사용하려면 QueryDslConfig 파일에 Bean 등록 해줘야함.
     private val log = LoggerFactory.getLogger(SiteQuerydslRepository::class.java)
 
-    fun getRealTime(condition: SearchCondition): RealTimeResponse {
+    fun getRealTime(condition: SiteSearchCondition): RealTimeResponse {
         val (siteSeq) = condition
 //
         val response = RealTimeResponse(siteSeq = siteSeq)
@@ -113,7 +113,7 @@ class SiteQuerydslRepository(
         return response
     }
 
-    fun getSummaryBySearchCondition(condition: SearchCondition): List<SummaryResponse> {
+    fun getSummaryBySearchCondition(condition: SiteSearchCondition): List<SummaryResponse> {
 
         // 하나의 쿼리에서 두 개의 테이블을 조인하고 가져오는것이 굉장히 오래걸림.
         // 그러므로 시간단위로 그룹바이한 값을 두 개를 조회해서 dto에 세팅하는 것으로 변경
@@ -167,7 +167,7 @@ class SiteQuerydslRepository(
         return SummaryResponse.of(siteSeq, co2List, microList)
     }
 
-    fun getDoorSummaryBySearchCondition(condition: SearchCondition): List<OpeningResDto> {
+    fun getDoorSummaryBySearchCondition(condition: SiteSearchCondition): List<OpeningResDto> {
         val inGTime: DateTemplate<LocalDateTime> = formatDateTemplate(opening.regTime, "%Y %m %d %H %i")
 
         val siteSeq = condition.siteSeq
@@ -186,7 +186,7 @@ class SiteQuerydslRepository(
             .fetch()
     }
 
-    private fun initTime(condition: SearchCondition): SearchCondition {
+    private fun initTime(condition: SiteSearchCondition): SiteSearchCondition {
         var startTime = condition.startTime
         var endTime = condition.endTime
 
@@ -199,7 +199,7 @@ class SiteQuerydslRepository(
         if (endTime == null) endTime =
             LocalDateTime.of(endDate, time)
 
-        return SearchCondition(
+        return SiteSearchCondition(
             condition.siteSeq,
             startTime = startTime,
             endTime = endTime,

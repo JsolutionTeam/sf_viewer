@@ -1,0 +1,12 @@
+spring:
+    config:
+        activate:
+            on-profile: smartfarm
+    datasource:
+        url: jdbc:mariadb://192.168.0.21:3307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+        username: faas
+        password: qweR1234@!
+        driver-class-name: org.mariadb.jdbc.Driver
+server:
+    port: 15005
+
