@@ -10,12 +10,14 @@ import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
 import org.springframework.http.HttpStatus
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/admin")
-@Schema(description = "관리자 API",
-    )
+@Schema(
+    description = "관리자 API",
+)
 class AdminController(
     private val userService: UserService,
 ) {
@@ -27,6 +29,7 @@ class AdminController(
     )
     @PostMapping("/user")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Transactional
     fun createUser(@RequestBody userRequest: UserRequest): UserResponse {
         return userService.createUser(userRequest)
     }
@@ -60,8 +63,9 @@ class AdminController(
     )
     @PutMapping("/user")
     @ResponseStatus(value = HttpStatus.OK)
-    fun putUser(@RequestBody userUpdateRequest: UserUpdateRequest,): Unit {
-        userService.updateUser(userUpdateRequest)
+    @Transactional
+    fun putUser(@RequestBody userUpdateRequest: UserUpdateRequest): UserResponse {
+        return userService.updateUser(userUpdateRequest)
     }
 
     @Operation(summary = "사용자 삭제")
@@ -71,6 +75,7 @@ class AdminController(
     )
     @DeleteMapping("/user/{id}")
     @ResponseStatus(value = HttpStatus.OK)
+    @Transactional
     fun deleteUser(@PathVariable id: String): Boolean {
         return userService.deleteUserById(id)
     }

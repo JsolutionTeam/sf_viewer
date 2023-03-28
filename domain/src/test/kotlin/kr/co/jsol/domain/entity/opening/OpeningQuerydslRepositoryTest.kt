@@ -27,7 +27,7 @@ class OpeningQuerydslRepositoryTest @Autowired constructor(
         // given
         val siteSeq = 2L
 
-        val site = siteRepository.save(Site(id = 2, name = "테스트-양파-제솔"))
+        val site = siteRepository.save(Site(id = 2, crop = "양파", location = "테스트"))
 
         // 5분 데이터 생성
         val first = LocalDateTime.of(2023, 2, 6, 11, 5, 30)

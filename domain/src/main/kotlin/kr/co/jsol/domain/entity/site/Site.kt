@@ -1,11 +1,11 @@
 package kr.co.jsol.domain.entity.site
 
 import org.hibernate.annotations.Comment
-import org.hibernate.annotations.DynamicUpdate
-import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Table
 
@@ -13,7 +13,10 @@ import javax.persistence.Table
 @Table(name = "tb_site")
 class Site(
     @Column(name = "site_nm")
-    var name: String = "",
+    var crop: String,
+
+    @Column(name = "site_location")
+    var location: String,
 
     @Column(name = "logger_delay", nullable = false)
     var delay: Long = 1000L,
@@ -23,8 +26,9 @@ class Site(
     var ip: String = "",
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "site_seq", updatable = false)
-    val id: Long,
+    val id: Long? = null,
 ) {
 
     @Column(name = "site_ip_updated_at")
@@ -32,11 +36,13 @@ class Site(
     var siteIpUpdatedAt: LocalDateTime? = null
 
     fun update(
-        name: String? = null,
+        crop: String? = null,
+        location: String? = null,
         delay: Long? = null,
         ip: String? = null,
     ) {
-        this.name = name ?: this.name
+        this.crop = crop ?: this.crop
+        this.location = location ?: this.location
         this.delay = delay ?: this.delay
         this.ip = ip ?: this.ip
     }

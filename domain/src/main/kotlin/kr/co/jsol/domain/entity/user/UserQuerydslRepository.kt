@@ -1,13 +1,11 @@
 package kr.co.jsol.domain.entity.user
 
-import com.querydsl.core.types.Projections
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.DateTimePath
 import com.querydsl.jpa.impl.JPAQueryFactory
 import kr.co.jsol.domain.entity.site.QSite.Companion.site
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.user.QUser.Companion.user
-import kr.co.jsol.domain.entity.user.dto.response.UserResponse
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -24,17 +22,9 @@ class UserQuerydslRepository(
 //
 //    }
 
-    fun findAllBy(): List<UserResponse> {
+    fun findAllBy(): List<User> {
         return queryFactory
-            .select(
-                Projections.constructor(
-                    UserResponse::class.java,
-                    user.id,
-                    user.role,
-                    site.id,
-                    site.name,
-                )
-            )
+            .selectFrom(user)
             .from(user)
             .leftJoin(user.site, site)
             .orderBy(user.id.desc())

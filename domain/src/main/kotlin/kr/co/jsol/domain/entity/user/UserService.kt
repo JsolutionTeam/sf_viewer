@@ -4,14 +4,11 @@ import kr.co.jsol.common.exception.entities.user.UserAlreadyExistException
 import kr.co.jsol.common.exception.entities.user.UserDisableException
 import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
-import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
 import kr.co.jsol.domain.entity.user.enums.UserRoleType
-import kr.co.jsol.domain.entity.util.findByIdOrThrow
 import org.slf4j.LoggerFactory
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -30,60 +27,42 @@ class UserService(
     }
 
     fun getAll(): List<UserResponse> {
-        return userQuerydslRepository.findAllBy()
+        return userQuerydslRepository.findAllBy().map { UserResponse(it) }
     }
 
     fun createUser(userRequest: UserRequest): UserResponse {
+        val existUser = userRepository.findByIdAndLockedIsFalse(userRequest.username)
+        if (existUser != null) throw UserAlreadyExistException()
 
-        val encodePw = passwordEncoder.encode(userRequest.password)
-        userRequest.setEncryptPassword(encodePw)
+        val site = siteRepository.save(Site(crop = userRequest.crop, location = userRequest.location))
 
+        userRequest.setEncryptPassword(passwordEncoder.encode(userRequest.password))
         val user: User = userRequest.toEntity()
+        user.site = site
 
-        try {
-            val existUser = userRepository.findByIdAndLockedIsFalse(user.username)
-            if (existUser != null) throw UserAlreadyExistException()
-        } catch (_: Exception) {
-        }
+        userRepository.save(user)
 
-        val site = siteRepository.findByIdOrThrow(userRequest.siteSeq, "농장 정보를 다시 확인해주세요.")
-
-        user.updateInfo(site = site)
-        val saveUser = userRepository.save(user)
-
-        return UserResponse(
-            username = saveUser.username,
-            role = saveUser.role,
-            site = SiteResponse.of(site),
-        )
+        return UserResponse(user)
     }
 
     fun updateUser(userUpdateRequest: UserUpdateRequest): UserResponse {
         val user = userRepository.findByIdAndLockedIsFalse(userUpdateRequest.username)
             ?: throw UserDisableException()
 
-        val site: Site? = if (userUpdateRequest.siteSeq != null) {
-            siteRepository.findByIdOrNull(userUpdateRequest.siteSeq)
-        } else {
-            null
-        }
         val role: UserRoleType? = userUpdateRequest.role
         val password = userUpdateRequest.password ?: ""
 
-
-        user.updateInfo(
-            role = role,
-            site = site,
-        )
+        user.updateInfo(role = role)
 
         if (password.isNotBlank()) {
             val newPassword = passwordEncoder.encode(password)
             user.updatePassword(newPassword)
         }
+        user.site!!.update(userUpdateRequest.siteCrop, userUpdateRequest.siteLocation)
 
         val updateUser = userRepository.save(user)
 
-        return UserResponse.of(updateUser)
+        return UserResponse(updateUser)
     }
 
     fun deleteUserById(id: String): Boolean {

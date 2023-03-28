@@ -1,7 +1,6 @@
 package kr.co.jsol.domain.config
 
 import kr.co.jsol.domain.entity.user.UserRepository
-import kr.co.jsol.domain.entity.user.UserService
 import kr.co.jsol.domain.entity.user.enums.UserRoleType
 import kr.co.jsol.common.exception.entities.user.UserAlreadyExistException
 import kr.co.jsol.domain.entity.site.Site
@@ -26,7 +25,8 @@ class WithAccountSecurityContextFactory(
         val site001 = siteRepository.save(
             Site(
                 id = 1L,
-                name = "사이트001",
+                crop = "사이트001",
+                location = "사이트001",
             )
         )
 

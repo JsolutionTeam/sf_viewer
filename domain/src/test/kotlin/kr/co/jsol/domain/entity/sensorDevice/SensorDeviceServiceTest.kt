@@ -27,8 +27,9 @@ class SensorDeviceServiceTest @Autowired constructor(
         sensorDeviceRepository.deleteAll()
         try{
             // 기본 농가 정보를 등록한다.
-            siteRepository.save(Site(id = 1L, name = "테스트-양파-제솔"))
-        }catch (e: Exception){ }
+            siteRepository.save(Site(id = 1L, crop = "양파", location = "테스트"))
+        } catch (e: Exception) {
+        }
     }
 
     @Test
@@ -66,7 +67,7 @@ class SensorDeviceServiceTest @Autowired constructor(
                 serialNumber = "serialNumber",
                 ip = "ip",
                 memo = "memo",
-                site = Site(id = 1L, name = "테스트-양파-제솔")
+                site = Site(id = 1L, crop = "양파", location = "테스트")
             )
         )
 
@@ -99,7 +100,7 @@ class SensorDeviceServiceTest @Autowired constructor(
                 serialNumber = "serialNumber",
                 ip = "ip",
                 memo = "memo",
-                site = Site(id = 1L, name = "테스트-양파-제솔")
+                site = Site(id = 1L, crop = "양파", location = "테스트")
             )
         )
 

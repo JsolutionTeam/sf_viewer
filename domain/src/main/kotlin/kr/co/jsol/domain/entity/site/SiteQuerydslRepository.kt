@@ -16,9 +16,11 @@ import kr.co.jsol.domain.entity.opening.QOpening.Companion.opening
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.opening.dto.QOpeningResDto
 import kr.co.jsol.domain.entity.sensor.QSensor.Companion.sensor
+import kr.co.jsol.domain.entity.site.QSite.Companion.site
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
 import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
+import kr.co.jsol.domain.entity.user.QUser.Companion.user
 import kr.co.jsol.domain.entity.util.formatDateTemplate
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
@@ -83,17 +85,17 @@ class SiteQuerydslRepository(
 
         // micro는 호보, 인지 데이터 두 개가 있어 최신 데이터 판별하여 대입
         if (sensorDto != null && microDto != null) {
-            if(sensorDto.regTime.isAfter(microDto.regTime)) {
+            if (sensorDto.regTime.isAfter(microDto.regTime)) {
                 log.info("ing sensor 데이터가 좀 더 최신임")
                 response.setMicro(sensorDto)
             } else {
                 log.info("hobo sensor 데이터가 좀 더 최신임")
                 response.setMicro(microDto)
             }
-        }else if(sensorDto != null) {
+        } else if (sensorDto != null) {
             log.info("sensor 데이터만 있음")
             response.setMicro(sensorDto)
-        }else if(microDto != null) {
+        } else if (microDto != null) {
             log.info("hobo 데이터만 있음")
             response.setMicro(microDto)
         }

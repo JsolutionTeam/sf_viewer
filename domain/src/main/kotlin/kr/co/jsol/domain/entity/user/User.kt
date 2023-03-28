@@ -17,7 +17,7 @@ class User(
     @Enumerated(EnumType.STRING)
     var role: UserRoleType,
 
-    @ManyToOne(
+    @OneToOne(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
     )
@@ -46,11 +46,9 @@ class User(
     // ------------------------------------
     fun updateInfo(
         role: UserRoleType? = this.role,
-        site: Site? = this.site,
         locked: Boolean? = this.locked,
     ) {
         this.role = role ?: this.role
-        this.site = site ?: this.site
         this.locked = locked ?: this.locked
     }
 

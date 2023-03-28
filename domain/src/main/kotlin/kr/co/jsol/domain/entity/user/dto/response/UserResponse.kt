@@ -9,27 +9,9 @@ data class UserResponse(
     val role: UserRoleType,
     val site: SiteResponse,
 ) {
-    constructor(
-        username: String,
-        role: UserRoleType,
-        siteId: Long,
-        siteName: String,
-    ) : this(
-        username = username,
-        role = role,
-        site = SiteResponse(
-            id = siteId,
-            name = siteName,
-        ),
+    constructor(user: User) : this(
+        username = user.username,
+        role = user.role,
+        site = SiteResponse(user.site!!),
     )
-
-    companion object {
-        fun of(user: User): UserResponse {
-            return UserResponse(
-                username = user.username,
-                role = user.role,
-                site = SiteResponse.of(user.site!!),
-            )
-        }
-    }
 }
