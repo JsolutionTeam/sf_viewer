@@ -47,7 +47,7 @@ class Site(
         this.ip = ip ?: this.ip
     }
 
-    fun updateLastSensorIp(ip : String){
+    fun updateLastSensorIp(ip: String) {
         this.ip = ip
         this.siteIpUpdatedAt = LocalDateTime.now()
     }

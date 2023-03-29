@@ -2,7 +2,15 @@ package kr.co.jsol.domain.entity.micro
 
 import kr.co.jsol.domain.entity.site.Site
 import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.ConstraintMode
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.ForeignKey
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.Table
 
 @Entity
 @Table(name = "tb_micro_station")
@@ -45,7 +53,10 @@ class Micro(
 
     // 농장 정보
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "site_seq")
+    @JoinColumn(
+        name = "site_seq",
+        foreignKey = ForeignKey(value = ConstraintMode.NO_CONSTRAINT)
+    )
     val site: Site,
 
     // 기본키

@@ -12,7 +12,7 @@ data class UserUpdateRequest(
     @Schema(description = "변경할 사용자 권한", required = false)
     val role: UserRoleType?,
     @Schema(description = "변경할 사용자 농장 작물", required = false)
-    val siteCrop: String?,
+    val crop: String?,
     @Schema(description = "변경할 사용자 농장 지역", required = false)
-    val siteLocation: String?,
+    val location: String?,
 )

@@ -1,6 +1,5 @@
 package kr.co.jsol.domain.entity.sensor
 
-import kr.co.jsol.domain.entity.BaseEntity
 import kr.co.jsol.domain.entity.site.Site
 import org.hibernate.annotations.Comment
 import org.springframework.data.annotation.CreatedDate
@@ -67,7 +66,7 @@ class Sensor(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "site_seq",
-        foreignKey = ForeignKey(name = "fk_sensor_site_seq"),
+        foreignKey = ForeignKey(value = ConstraintMode.NO_CONSTRAINT)
     )
     @Comment("농가 정보")
     val site: Site,

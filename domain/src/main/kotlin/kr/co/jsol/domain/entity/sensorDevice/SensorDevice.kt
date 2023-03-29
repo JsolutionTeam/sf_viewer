@@ -40,7 +40,7 @@ class SensorDevice(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "site_seq",
-        foreignKey = ForeignKey(name = "fk_sensor_device_site_seq"),
+        foreignKey = ForeignKey(value = ConstraintMode.NO_CONSTRAINT),
     )
     @Comment("농가 정보")
     var site: Site,

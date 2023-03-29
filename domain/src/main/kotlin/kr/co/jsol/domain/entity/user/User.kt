@@ -23,7 +23,7 @@ class User(
     )
     @JoinColumn(
         name = "site_seq",
-        foreignKey = ForeignKey(name = "tb_user_site_seq_fk"),
+        foreignKey = ForeignKey(value = ConstraintMode.NO_CONSTRAINT),
     )
     var site: Site? = null,
 
