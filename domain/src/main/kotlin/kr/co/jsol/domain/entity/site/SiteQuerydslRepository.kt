@@ -16,11 +16,9 @@ import kr.co.jsol.domain.entity.opening.QOpening.Companion.opening
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.opening.dto.QOpeningResDto
 import kr.co.jsol.domain.entity.sensor.QSensor.Companion.sensor
-import kr.co.jsol.domain.entity.site.QSite.Companion.site
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
 import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
-import kr.co.jsol.domain.entity.user.QUser.Companion.user
 import kr.co.jsol.domain.entity.util.formatDateTemplate
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
