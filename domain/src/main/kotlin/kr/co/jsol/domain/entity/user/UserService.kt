@@ -58,7 +58,9 @@ class UserService(
             val newPassword = passwordEncoder.encode(password)
             user.updatePassword(newPassword)
         }
-        user.site!!.update(userUpdateRequest.crop, userUpdateRequest.location)
+        if (user.site != null) {
+            user.site!!.update(userUpdateRequest.crop, userUpdateRequest.location)
+        }
 
         val updateUser = userRepository.save(user)
 

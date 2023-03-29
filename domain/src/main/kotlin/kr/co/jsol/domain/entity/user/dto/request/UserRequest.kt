@@ -14,9 +14,9 @@ data class UserRequest(
     @Schema(description = "사용자 권한", required = true)
     @ValidEnum(enumClass = UserRoleType::class, message = "사용자 권한은 필수 입력입니다.")
     val role: UserRoleType,
-    @NotBlank(message = "사용자 아이디는 필수 입력입니다.")
+    @NotBlank(message = "사용자 농장 작물은 필수 입력입니다.")
     val crop: String,
-    @NotBlank(message = "사용자 아이디는 필수 입력입니다.")
+    @NotBlank(message = "사용자 농장 지역은 필수 입력입니다.")
     val location: String,
 ) {
 
