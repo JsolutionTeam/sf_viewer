@@ -13,6 +13,9 @@ class User(
     @Column(name = "password", length = 255, nullable = false)
     private var password: String,
 
+    @Column(name = "name", length = 255, nullable = false)
+    var name: String,
+
     @Column(name = "email", length = 255, nullable = false)
     var email: String,
 
@@ -54,6 +57,7 @@ class User(
 
     // ------------------------------------
     fun updateInfo(
+        name: String? = null,
         password: String? = null,
         email: String? = null,
         phone: String? = null,
@@ -61,6 +65,7 @@ class User(
         role: UserRoleType? = null,
         locked: Boolean? = null,
     ) {
+        this.name = name ?: this.name
         this.password = password ?: this.password
         this.email = email ?: this.email
         this.phone = phone ?: this.phone

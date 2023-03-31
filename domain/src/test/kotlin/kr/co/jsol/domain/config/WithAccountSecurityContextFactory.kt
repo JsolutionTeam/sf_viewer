@@ -35,6 +35,7 @@ class WithAccountSecurityContextFactory(
             userRepository.save(
                 User(
                     id = nickname,
+                    name = nickname,
                     password = nickname,
                     role = UserRoleType.ROLE_ADMIN,
                     email = nickname,

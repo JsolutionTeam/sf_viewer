@@ -40,7 +40,11 @@ class UserService(
         val existUser = userRepository.findByIdAndLockedIsFalse(userRequest.username)
         if (existUser != null) throw UserAlreadyExistException()
 
-        val site = Site(name = userRequest.name, crop = userRequest.crop, location = userRequest.location)
+        val site = Site(
+            name = userRequest.siteName,
+            crop = userRequest.siteCrop,
+            location = userRequest.siteLocation
+        )
         siteRepository.save(site)
 
         userRequest.setEncryptPassword(passwordEncoder.encode(userRequest.password))

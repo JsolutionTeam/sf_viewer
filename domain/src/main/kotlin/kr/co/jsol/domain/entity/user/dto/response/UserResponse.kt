@@ -5,6 +5,7 @@ import kr.co.jsol.domain.entity.user.User
 import kr.co.jsol.domain.entity.user.enums.UserRoleType
 
 data class UserResponse(
+    val name: String,
     val username: String,
     val role: UserRoleType,
     val email: String,
@@ -13,6 +14,7 @@ data class UserResponse(
     val site: SiteResponse,
 ) {
     constructor(user: User) : this(
+        name = user.name,
         username = user.username,
         role = user.role,
         email = user.email,

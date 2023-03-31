@@ -9,6 +9,8 @@ import javax.validation.constraints.NotBlank
 data class UserRequest(
     @NotBlank(message = "사용자 아이디는 필수 입력입니다.")
     val username: String,
+    @NotBlank(message = "사용자 이름은 필수 입력입니다.")
+    val name: String,
     @NotBlank(message = "사용자 비밀번호는 필수 입력입니다.")
     var password: String,
     @Schema(description = "사용자 권한", required = true)
@@ -21,11 +23,11 @@ data class UserRequest(
     @NotBlank(message = "사용자 주소는 필수 입력입니다.")
     val address: String,
     @NotBlank(message = "사용자 농장 이름은 필수 입력입니다.")
-    val name: String,
+    val siteName: String,
     @NotBlank(message = "사용자 농장 작물은 필수 입력입니다.")
-    val crop: String,
+    val siteCrop: String,
     @NotBlank(message = "사용자 농장 지역은 필수 입력입니다.")
-    val location: String,
+    val siteLocation: String,
 ) {
 
     @Schema(hidden = true)
@@ -36,6 +38,7 @@ data class UserRequest(
     fun toEntity(): User {
         return User(
             id = username,
+            name = name,
             password = password,
             role = role,
             email = email,
