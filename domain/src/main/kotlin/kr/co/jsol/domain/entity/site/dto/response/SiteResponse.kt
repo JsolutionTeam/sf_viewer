@@ -9,6 +9,8 @@ data class SiteResponse(
     @Schema(description = "농가 번호(인덱스)")
     val id: Long,
     @Schema(description = "농가 이름")
+    val name: String,
+    @Schema(description = "농가 작물")
     val crop: String,
     @Schema(description = "농가 지역")
     val location: String,
@@ -21,6 +23,7 @@ data class SiteResponse(
 ){
     constructor(site: Site) : this(
         id = site.id!!,
+        name = site.name,
         crop = site.crop,
         location = site.location,
         delay = site.delay,

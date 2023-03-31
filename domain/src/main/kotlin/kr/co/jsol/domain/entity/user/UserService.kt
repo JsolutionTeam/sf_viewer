@@ -7,7 +7,6 @@ import kr.co.jsol.domain.entity.site.SiteRepository
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
-import kr.co.jsol.domain.entity.user.enums.UserRoleType
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -34,7 +33,8 @@ class UserService(
         val existUser = userRepository.findByIdAndLockedIsFalse(userRequest.username)
         if (existUser != null) throw UserAlreadyExistException()
 
-        val site = siteRepository.save(Site(crop = userRequest.crop, location = userRequest.location))
+        val site = Site(name = userRequest.name, crop = userRequest.crop, location = userRequest.location)
+        siteRepository.save(site)
 
         userRequest.setEncryptPassword(passwordEncoder.encode(userRequest.password))
         val user: User = userRequest.toEntity()
@@ -49,30 +49,23 @@ class UserService(
         val user = userRepository.findByIdAndLockedIsFalse(userUpdateRequest.username)
             ?: throw UserDisableException()
 
-        val role: UserRoleType? = userUpdateRequest.role
-        val password = userUpdateRequest.password ?: ""
-
-        user.updateInfo(role = role)
-
-        if (password.isNotBlank()) {
-            val newPassword = passwordEncoder.encode(password)
-            user.updatePassword(newPassword)
-        }
+        user.updateInfo(
+            password = if (userUpdateRequest.password != null) passwordEncoder.encode(userUpdateRequest.password) else null,
+            role = userUpdateRequest.role,
+            email = userUpdateRequest.email,
+            phone = userUpdateRequest.phone,
+            address = userUpdateRequest.address
+        )
         if (user.site != null) {
             user.site!!.update(userUpdateRequest.crop, userUpdateRequest.location)
         }
 
-        val updateUser = userRepository.save(user)
+        userRepository.save(user)
 
-        return UserResponse(updateUser)
+        return UserResponse(user)
     }
 
     fun deleteUserById(id: String): Boolean {
-//        val user = userRepository.findByIdAndLockedIsFalse(id)
-//            ?: throw UserDisableException()
-//
-//        user.updateInfo(locked = true)
-//        userRepository.save(user)
         userRepository.deleteById(id)
         return true
     }

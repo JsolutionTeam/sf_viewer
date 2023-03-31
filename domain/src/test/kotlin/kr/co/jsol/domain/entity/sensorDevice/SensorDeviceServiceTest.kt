@@ -21,15 +21,13 @@ class SensorDeviceServiceTest @Autowired constructor(
 
     private val siteRepository: SiteRepository,
 ) {
+    private val site = Site(name = "양파", crop = "양파", location = "테스트")
 
     @BeforeEach
     fun setUp() {
         sensorDeviceRepository.deleteAll()
-        try{
-            // 기본 농가 정보를 등록한다.
-            siteRepository.save(Site(id = 1L, crop = "양파", location = "테스트"))
-        } catch (e: Exception) {
-        }
+        // 기본 농가 정보를 등록한다.
+        siteRepository.save(site)
     }
 
     @Test
@@ -41,7 +39,7 @@ class SensorDeviceServiceTest @Autowired constructor(
             serialNumber = "serialNumber",
             ip = "ip",
             memo = "memo",
-            siteSeq = 1L,
+            siteSeq = site.id!!,
         )
 
         // when
@@ -67,14 +65,14 @@ class SensorDeviceServiceTest @Autowired constructor(
                 serialNumber = "serialNumber",
                 ip = "ip",
                 memo = "memo",
-                site = Site(id = 1L, crop = "양파", location = "테스트")
+                site = site
             )
         )
 
         val sensorDeviceUpdateRequest = SensorDeviceUpdateRequest(
             ip = "ip2",
             memo = "memo2",
-            siteSeq = 1L,
+            siteSeq = site.id!!,
         )
 
         // when
@@ -100,7 +98,7 @@ class SensorDeviceServiceTest @Autowired constructor(
                 serialNumber = "serialNumber",
                 ip = "ip",
                 memo = "memo",
-                site = Site(id = 1L, crop = "양파", location = "테스트")
+                site = site
             )
         )
 

@@ -13,6 +13,15 @@ class User(
     @Column(name = "password", length = 255, nullable = false)
     private var password: String,
 
+    @Column(name = "email", length = 255, nullable = false)
+    var email: String,
+
+    @Column(name = "phone", length = 255, nullable = false)
+    var phone: String,
+
+    @Column(name = "address", length = 255, nullable = false)
+    var address: String,
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     var role: UserRoleType,
@@ -45,9 +54,17 @@ class User(
 
     // ------------------------------------
     fun updateInfo(
-        role: UserRoleType? = this.role,
-        locked: Boolean? = this.locked,
+        password: String? = null,
+        email: String? = null,
+        phone: String? = null,
+        address: String? = null,
+        role: UserRoleType? = null,
+        locked: Boolean? = null,
     ) {
+        this.password = password ?: this.password
+        this.email = email ?: this.email
+        this.phone = phone ?: this.phone
+        this.address = address ?: this.address
         this.role = role ?: this.role
         this.locked = locked ?: this.locked
     }
@@ -119,9 +136,5 @@ class User(
     override fun isEnabled(): Boolean {
         // 이메일이 인증되어 있고 계정이 잠겨있지 않으면 true
         return enabled
-    }
-
-    fun updatePassword(newPassword: String) {
-        this.password = newPassword
     }
 }

@@ -13,6 +13,9 @@ import javax.persistence.Table
 @Table(name = "tb_site")
 class Site(
     @Column(name = "site_nm")
+    var name: String,
+
+    @Column(name = "site_crop")
     var crop: String,
 
     @Column(name = "site_location")
@@ -36,12 +39,13 @@ class Site(
     var siteIpUpdatedAt: LocalDateTime? = null
 
     fun update(
+        name: String? = null,
         crop: String? = null,
         location: String? = null,
         delay: Long? = null,
         ip: String? = null,
     ) {
-        this.crop = crop ?: this.crop
+        this.name = name ?: this.name
         this.location = location ?: this.location
         this.delay = delay ?: this.delay
         this.ip = ip ?: this.ip
