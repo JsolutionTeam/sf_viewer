@@ -8,8 +8,10 @@ import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 class UserService(
@@ -25,8 +27,13 @@ class UserService(
         return userRepository.existsById(id)
     }
 
-    fun getAll(): List<UserResponse> {
+    fun getAllUser(): List<UserResponse> {
         return userQuerydslRepository.findAllBy().map { UserResponse(it) }
+    }
+
+    fun getUser(id: String): UserResponse {
+        val user = userRepository.findByIdAndLockedIsFalse(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        return UserResponse(user)
     }
 
     fun createUser(userRequest: UserRequest): UserResponse {

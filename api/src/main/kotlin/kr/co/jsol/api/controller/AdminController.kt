@@ -53,7 +53,20 @@ class AdminController(
     @GetMapping("/users")
     @ResponseStatus(value = HttpStatus.OK)
     fun getUserList(): List<UserResponse> {
-        return userService.getAll()
+        return userService.getAllUser()
+    }
+
+    @Operation(summary = "사용자 상세 조회")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공"),
+        ApiResponse(responseCode = "401", description = "유효하지 않은 토큰입니다."),
+        ApiResponse(responseCode = "403", description = "권한이 부족합니다."),
+        ApiResponse(responseCode = "404", description = "존재하지 않는 유저입니다."),
+    )
+    @GetMapping("/users/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    fun getUser(@PathVariable id: String): UserResponse {
+        return userService.getUser(id)
     }
 
     @Operation(summary = "사용자 수정")
