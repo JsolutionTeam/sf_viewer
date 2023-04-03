@@ -111,7 +111,7 @@ class ApiExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException::class)
     fun handleResponseStatusException(ex: ResponseStatusException): ResponseEntity<String> {
-        logger.error("handle ResponseStatusException - message : $ex.message")
+        logger.error("handle ResponseStatusException - message : ${ex.message}")
         return ResponseEntity<String>(
             ex.message,
             ex.status,
