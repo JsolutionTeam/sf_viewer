@@ -13,16 +13,20 @@ import javax.persistence.Table
 @Table(name = "tb_site")
 class Site(
     @Column(name = "site_nm")
+    @Comment("농가 이름")
     var name: String,
 
-    @Column(name = "site_crop")
+    @Column(name = "site_crop", nullable = false)
+    @Comment("농가 재배 작물 ex 감자")
     var crop: String,
 
-    @Column(name = "site_location")
+    @Column(name = "site_location", nullable = false)
+    @Comment("센서가 설치된 위치 ex 김제")
     var location: String,
 
     @Column(name = "logger_delay", nullable = false)
-    var delay: Long = 1000L,
+    @Comment("센서 데이터를 받는 주기(초)")
+    var delay: Long = 600L,
 
     // site ip -> 센서 장비의 네트워크 ip
     @Column(name = "site_ip")
