@@ -41,7 +41,7 @@ class SensorDeviceService(
         if (optional.isEmpty) {
             throw IllegalArgumentException("존재하지 않는 센서 기기 번호입니다.")
         }
-        return SensorDeviceResponse.of(optional.get())
+        return SensorDeviceResponse(optional.get())
     }
 
     fun updateSensorDevice(sensorDeviceId: Long, sensorDeviceUpdateRequest: SensorDeviceUpdateRequest): Unit {
@@ -52,6 +52,7 @@ class SensorDeviceService(
         }
         val sensorDevice = optional.get()
 
+        // 농장 정보를 변경한다면,
         if(sensorDeviceUpdateRequest.siteSeq != null) {
             val siteSeq = sensorDeviceUpdateRequest.siteSeq
             // siteSeq로 site 정보 가져오기
@@ -64,9 +65,18 @@ class SensorDeviceService(
             }
         }
 
+        // 센서 장비 정보 수정
         sensorDevice.updateDeviceInfo(
             ip = sensorDeviceUpdateRequest.ip,
             memo = sensorDeviceUpdateRequest.memo,
+        )
+
+        // 수집 센서 정보 수정
+        sensorDevice.updateSensorInfo(
+            type = sensorDeviceUpdateRequest.type,
+            unit = sensorDeviceUpdateRequest.unit,
+            modelName = sensorDeviceUpdateRequest.modelName,
+            serialNumber = sensorDeviceUpdateRequest.serialNumber,
         )
         sensorDevice.updatedBy("SMART_FARM") // 관리자만 수정함
         sensorDeviceRepository.save(sensorDevice)

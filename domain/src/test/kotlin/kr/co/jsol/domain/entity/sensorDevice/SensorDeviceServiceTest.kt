@@ -35,7 +35,9 @@ class SensorDeviceServiceTest @Autowired constructor(
     fun saveSensorDevice() {
         // given
         val sensorDeviceCreateRequest = SensorDeviceCreateRequest(
-            deviceNo = "deviceNo",
+            type = "type",
+            unit = "unit",
+            modelName = "modelName",
             serialNumber = "serialNumber",
             ip = "ip",
             memo = "memo",
@@ -47,7 +49,8 @@ class SensorDeviceServiceTest @Autowired constructor(
 
         // then
         val sensorDevice = sensorDeviceRepository.findById(sensorDeviceId).get()
-        assertThat(sensorDevice.deviceNo).isEqualTo("deviceNo")
+        assertThat(sensorDevice.type).isEqualTo("type")
+        assertThat(sensorDevice.modelName).isEqualTo("modelName")
         assertThat(sensorDevice.serialNumber).isEqualTo("serialNumber")
         assertThat(sensorDevice.ip).isEqualTo("ip")
         assertThat(sensorDevice.memo).isEqualTo("memo")
@@ -61,7 +64,9 @@ class SensorDeviceServiceTest @Autowired constructor(
         val saveSensorDevice = sensorDeviceRepository.save(
             SensorDevice(
                 id = 1L,
-                deviceNo = "deviceNo",
+                type = "type",
+                unit = "unit",
+                modelName = "modelName",
                 serialNumber = "serialNumber",
                 ip = "ip",
                 memo = "memo",
@@ -70,19 +75,24 @@ class SensorDeviceServiceTest @Autowired constructor(
         )
 
         val sensorDeviceUpdateRequest = SensorDeviceUpdateRequest(
+            type = "type2",
+            unit = "unit2",
+            modelName = "modelName2",
+            serialNumber = "serialNumber2",
             ip = "ip2",
             memo = "memo2",
             siteSeq = site.id!!,
         )
 
         // when
-        sensorDeviceService.updateSensorDevice(saveSensorDevice.id!!, sensorDeviceUpdateRequest,)
+        sensorDeviceService.updateSensorDevice(saveSensorDevice.id!!, sensorDeviceUpdateRequest)
 
         // then
         val sensorDevice = sensorDeviceRepository.findById(saveSensorDevice.id!!).get()
 
-        assertThat(sensorDevice.deviceNo).isEqualTo("deviceNo")
-        assertThat(sensorDevice.serialNumber).isEqualTo("serialNumber")
+        assertThat(sensorDevice.type).isEqualTo("type2")
+        assertThat(sensorDevice.modelName).isEqualTo("modelName2")
+        assertThat(sensorDevice.serialNumber).isEqualTo("serialNumber2")
         assertThat(sensorDevice.ip).isEqualTo("ip2")
         assertThat(sensorDevice.memo).isEqualTo("memo2")
     }
@@ -94,7 +104,9 @@ class SensorDeviceServiceTest @Autowired constructor(
         val saveSensorDevice = sensorDeviceRepository.save(
             SensorDevice(
                 id = 1L,
-                deviceNo = "deviceNo",
+                type = "type",
+                unit = "unit",
+                modelName = "modelName",
                 serialNumber = "serialNumber",
                 ip = "ip",
                 memo = "memo",

@@ -8,7 +8,6 @@ import kr.co.jsol.domain.entity.sensorDevice.QSensorDevice.Companion.sensorDevic
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceSearchCondition
 import kr.co.jsol.domain.entity.sensorDevice.dto.response.QSensorDeviceResponse
 import kr.co.jsol.domain.entity.sensorDevice.dto.response.SensorDeviceResponse
-import kr.co.jsol.domain.entity.site.QSite.Companion.site
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
@@ -26,7 +25,7 @@ class SensorDeviceCustomRepositoryImpl(
             .select(
                 QSensorDeviceResponse(
                     sensorDeviceId = sensorDevice.id,
-                    deviceNo = sensorDevice.deviceNo,
+                    modelName = sensorDevice.modelName,
                     serialNumber = sensorDevice.serialNumber,
                     ip = sensorDevice.ip,
                     memo = sensorDevice.memo,
@@ -46,7 +45,7 @@ class SensorDeviceCustomRepositoryImpl(
     private fun search(condition: SensorDeviceSearchCondition?): BooleanBuilder {
         val builder = BooleanBuilder()
         if(condition == null) return builder
-        condition.deviceNo?.let { builder.and(deviceNoContains(it)) }
+        condition.modelName?.let { builder.and(modelNameContains(it)) }
         condition.serialNumber?.let { builder.and(serialNumberContains(it)) }
         condition.ip?.let { builder.and(sensorDevice.ip.contains(it)) }
         condition.memo?.let { builder.and(sensorDevice.memo.contains(it)) }
@@ -59,8 +58,8 @@ class SensorDeviceCustomRepositoryImpl(
         return builder
     }
 
-    private fun deviceNoContains(deviceNo: String): BooleanExpression? {
-        return sensorDevice.deviceNo.contains(deviceNo) ?: null
+    private fun modelNameContains(modelName: String): BooleanExpression? {
+        return sensorDevice.modelName.contains(modelName) ?: null
     }
 
     private fun serialNumberContains(serialNumber: String): BooleanExpression? {

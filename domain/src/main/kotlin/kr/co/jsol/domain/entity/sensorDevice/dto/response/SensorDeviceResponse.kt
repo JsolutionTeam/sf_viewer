@@ -5,22 +5,13 @@ import kr.co.jsol.domain.entity.sensorDevice.SensorDevice
 
 data class SensorDeviceResponse @QueryProjection constructor(
     val sensorDeviceId: Long,
-    val deviceNo: String,
+    val modelName: String,
     val serialNumber: String,
     val ip: String,
     val memo: String,
     val siteSeq: Long,
 ) {
-    companion object {
-        fun of(
-            sensorDevice: SensorDevice
-        ): SensorDeviceResponse {
-            return of(sensorDevice.id!!, sensorDevice.deviceNo, sensorDevice.serialNumber, sensorDevice.ip, sensorDevice.memo, sensorDevice.site.id!!)
-        }
-
-        fun of(sensorDeviceId: Long, deviceNo: String, serialNumber: String, ip: String, memo: String, siteSeq: Long): SensorDeviceResponse {
-            return SensorDeviceResponse(sensorDeviceId, deviceNo, serialNumber, ip, memo, siteSeq)
-        }
-
-    }
+    constructor(
+        sensorDevice: SensorDevice
+    ) : this(sensorDevice.id!!, sensorDevice.modelName, sensorDevice.serialNumber, sensorDevice.ip, sensorDevice.memo, sensorDevice.site.id!!)
 }

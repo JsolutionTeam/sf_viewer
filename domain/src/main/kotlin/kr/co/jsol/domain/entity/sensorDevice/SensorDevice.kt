@@ -16,18 +16,28 @@ import javax.persistence.*
  */
 class SensorDevice(
 
-    // 기기 번호
-    @Column(name = "device_no", updatable = false)
-    @Comment("기기 번호")
-    var deviceNo: String,
+    // 센서 수집 데이터 타입 (지온, 지습 등..)
+    @Column(name = "type", length = 20, nullable = false,)
+    @Comment("센서 수집 데이터 타입 (지온, 지습 등..)")
+    var type: String,
+
+    // 센서 수집 데이터 타입의 단위 ex (℃, %)
+    @Column(name = "unit", length = 10, nullable = false,)
+    @Comment("센서 수집 데이터 타입의 단위")
+    var unit: String,
+
+    // 센서 기기 모델 명
+    @Column(name = "model_name", length = 30, nullable = false,)
+    @Comment("모델명")
+    var modelName: String,
 
     // 기기 자체 일련번호
-    @Column(name = "serial_number", updatable = false)
+    @Column(name = "serial_number", length = 255, nullable = false,)
     @Comment("기기 자체 일련번호, 빈 값 입력 시 UUID로 생성")
     var serialNumber: String,
 
     // 기기 현 IP 정보
-    @Column(name = "ip", length = 50)
+    @Column(name = "ip", length = 50,)
     @Comment("기기 현 IP 정보")
     var ip: String = "",
 
@@ -61,11 +71,23 @@ class SensorDevice(
         this.memo = memo ?: this.memo
     }
 
+    fun updateSensorInfo(
+        type: String? = null,
+        unit: String? = null,
+        modelName: String? = null,
+        serialNumber: String? = null,
+    ) {
+        this.type = type ?: this.type
+        this.unit = unit ?: this.unit
+        this.modelName = modelName ?: this.modelName
+        this.serialNumber = serialNumber ?: this.serialNumber
+    }
+
     fun updateSite(site: Site) {
         this.site = site
     }
 
     override fun toString(): String {
-        return "SensorDevice(deviceNo='$deviceNo', serialNumber='$serialNumber', ip='$ip', memo='$memo', site=$site, id=$id)"
+        return "SensorDevice(modelName='$modelName', serialNumber='$serialNumber', ip='$ip', memo='$memo', site=$site, id=$id)"
     }
 }
