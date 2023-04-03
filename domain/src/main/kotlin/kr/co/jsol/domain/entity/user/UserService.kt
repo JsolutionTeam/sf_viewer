@@ -9,8 +9,10 @@ import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 
 @Service
@@ -32,7 +34,7 @@ class UserService(
     }
 
     fun getUser(id: String): UserResponse {
-        val user = userRepository.findByIdAndLockedIsFalse(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        val user = userRepository.findByIdAndLockedIsFalse(id) ?: throw UsernameNotFoundException("해당 사용자를 찾을 수 없습니다.")
         return UserResponse(user)
     }
 
