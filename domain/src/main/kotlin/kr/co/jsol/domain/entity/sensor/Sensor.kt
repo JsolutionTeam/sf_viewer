@@ -13,7 +13,7 @@ import javax.persistence.*
 class Sensor(
 
     // 강우량
-    @Column(updatable = false)
+    @Column(name = "rainfall", updatable = false)
     @Comment("강우량")
     val rainfall: Double = 0.0,
 
@@ -23,7 +23,7 @@ class Sensor(
     val windSpeed: Double = 0.0,
 
     // 돌풍속도
-    @Column(name = "gust_spped", updatable = false)
+    @Column(name = "gust_speed", updatable = false)
     @Comment("돌풍속도")
     val gustSpeed: Double = 0.0,
 
