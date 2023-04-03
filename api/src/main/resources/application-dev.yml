@@ -1,7 +1,4 @@
 spring:
-    config:
-        activate:
-            on-profile: dev
     datasource:
 #        url: jdbc:mariadb://39.112.10.37:23307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
 #        username: faas
