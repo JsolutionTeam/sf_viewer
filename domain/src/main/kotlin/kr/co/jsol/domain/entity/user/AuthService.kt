@@ -1,7 +1,9 @@
 package kr.co.jsol.domain.entity.user
 
 import kr.co.jsol.common.jwt.JwtTokenProvider
+import kr.co.jsol.common.jwt.dto.JwtToken
 import kr.co.jsol.common.jwt.dto.RefreshTokenDto
+import kr.co.jsol.common.jwt.dto.RefreshTokenRequest
 import kr.co.jsol.domain.entity.user.dto.request.LoginRequest
 import kr.co.jsol.domain.entity.user.dto.response.LoginResponse
 import org.slf4j.LoggerFactory
@@ -25,8 +27,9 @@ class AuthService(
 
     private val log = LoggerFactory.getLogger(AuthService::class.java)
 
-    fun refreshToken(userId: String): RefreshTokenDto {
-        return RefreshTokenDto(jwtTokenProvider.createRefreshToken(userId))
+    fun refreshToken(refreshTokenRequest: RefreshTokenRequest): JwtToken {
+        val userPk = jwtTokenProvider.getUserPk(refreshTokenRequest.refreshToken)
+        return JwtToken(jwtTokenProvider.createAccessToken(userPk), jwtTokenProvider.createRefreshToken(userPk))
     }
 
     fun login(loginRequest: LoginRequest): LoginResponse {
