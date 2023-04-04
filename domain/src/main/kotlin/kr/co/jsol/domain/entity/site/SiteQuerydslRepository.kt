@@ -107,7 +107,7 @@ class SiteQuerydslRepository(
         // co2 데이터가 있다면 대입
         if (co2Dto != null) {
             log.info("co2 데이터가 있음")
-            response.setCo2(co2Dto)
+            response.updateCo2(co2Dto)
         }
 
         return response
