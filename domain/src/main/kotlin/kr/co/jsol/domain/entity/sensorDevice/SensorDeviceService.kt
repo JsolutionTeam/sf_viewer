@@ -1,6 +1,5 @@
 package kr.co.jsol.domain.entity.sensorDevice
 
-import kr.co.jsol.common.exception.MyEntityNotFoundException
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceCreateRequest
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceSearchCondition
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceUpdateRequest
@@ -44,7 +43,7 @@ class SensorDeviceService(
         return SensorDeviceResponse(optional.get())
     }
 
-    fun updateSensorDevice(sensorDeviceId: Long, sensorDeviceUpdateRequest: SensorDeviceUpdateRequest): Unit {
+    fun updateSensorDevice(sensorDeviceId: Long, sensorDeviceUpdateRequest: SensorDeviceUpdateRequest) {
         // sensorDeviceId로 sensorDevice 정보 가져오기
         val optional = sensorDeviceRepository.findById(sensorDeviceId)
         if (optional.isEmpty) {
@@ -53,7 +52,7 @@ class SensorDeviceService(
         val sensorDevice = optional.get()
 
         // 농장 정보를 변경한다면,
-        if(sensorDeviceUpdateRequest.siteSeq != null) {
+        if (sensorDeviceUpdateRequest.siteSeq != null) {
             val siteSeq = sensorDeviceUpdateRequest.siteSeq
             // siteSeq로 site 정보 가져오기
             siteRepository.findById(siteSeq).let {
@@ -82,7 +81,7 @@ class SensorDeviceService(
         sensorDeviceRepository.save(sensorDevice)
     }
 
-    fun deleteSensorDevice(sensorDeviceId: Long): Unit {
+    fun deleteSensorDevice(sensorDeviceId: Long) {
         val optional = sensorDeviceRepository.findById(sensorDeviceId)
         if (optional.isEmpty) {
             throw IllegalArgumentException("존재하지 않는 센서 기기 번호입니다.")

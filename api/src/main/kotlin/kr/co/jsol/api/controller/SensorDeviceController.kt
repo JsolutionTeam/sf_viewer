@@ -23,7 +23,7 @@ class SensorDeviceController(
     @ResponseStatus(value = HttpStatus.CREATED)
     fun createSensorDevice(
         @RequestBody sensorDeviceRequest: SensorDeviceCreateRequest,
-    ):Unit {
+    ) {
         sensorDeviceService.saveSensorDevice(sensorDeviceRequest)
     }
 
@@ -60,7 +60,7 @@ class SensorDeviceController(
         @Length(min = 1, message = "sensorDeviceId를 제대로 입력해주세요")
         @PathVariable sensorDeviceId: Long,
         @Validated @RequestBody sensorDeviceRequest: SensorDeviceUpdateRequest,
-    ): Unit {
+    ) {
         return sensorDeviceService.updateSensorDevice(sensorDeviceId, sensorDeviceRequest)
     }
 
@@ -70,7 +70,7 @@ class SensorDeviceController(
     fun deleteSensorDevice(
         @Length(min = 1, message = "sensorDeviceId를 제대로 입력해주세요")
         @PathVariable sensorDeviceId: Long,
-    ): Unit {
+    ) {
         return sensorDeviceService.deleteSensorDevice(sensorDeviceId)
     }
 }

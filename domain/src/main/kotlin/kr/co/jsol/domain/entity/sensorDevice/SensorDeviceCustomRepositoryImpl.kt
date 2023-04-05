@@ -25,11 +25,12 @@ class SensorDeviceCustomRepositoryImpl(
             .select(
                 QSensorDeviceResponse(
                     sensorDeviceId = sensorDevice.id,
+                    type = sensorDevice.type,
                     modelName = sensorDevice.modelName,
                     serialNumber = sensorDevice.serialNumber,
                     ip = sensorDevice.ip,
                     memo = sensorDevice.memo,
-                    siteSeq = sensorDevice.site.id,
+                    siteName = sensorDevice.site.name,
                 )
             )
             .from(sensorDevice)
