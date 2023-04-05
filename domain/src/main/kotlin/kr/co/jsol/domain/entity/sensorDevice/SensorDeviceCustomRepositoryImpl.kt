@@ -31,6 +31,7 @@ class SensorDeviceCustomRepositoryImpl(
                     ip = sensorDevice.ip,
                     memo = sensorDevice.memo,
                     siteName = sensorDevice.site.name,
+                    siteSeq = sensorDevice.site.id
                 )
             )
             .from(sensorDevice)
