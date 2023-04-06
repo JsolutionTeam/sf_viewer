@@ -18,7 +18,7 @@ class SensorDeviceController(
     private val sensorDeviceService: SensorDeviceService,
 ) {
 
-    @PostMapping("/sensorDevice")
+    @PostMapping("/sensor-device")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.CREATED)
     fun createSensorDevice(
@@ -27,7 +27,7 @@ class SensorDeviceController(
         sensorDeviceService.saveSensorDevice(sensorDeviceRequest)
     }
 
-    @GetMapping("/sensorDevices/{sensorDeviceId}")
+    @GetMapping("/sensor-devices/{sensorDeviceId}")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     @Operation(
@@ -44,7 +44,7 @@ class SensorDeviceController(
         return sensorDeviceService.getSensorDeviceById(sensorDeviceId)
     }
 
-    @GetMapping("/sensorDevices")
+    @GetMapping("/sensor-devices")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     fun getSensorDeviceList(
@@ -54,6 +54,7 @@ class SensorDeviceController(
     }
 
     @PutMapping("/sensorDevices/{sensorDeviceId}")
+    @PutMapping("/sensor-devices/{sensorDeviceId}")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     fun updateSensorDevice(
@@ -64,7 +65,7 @@ class SensorDeviceController(
         return sensorDeviceService.updateSensorDevice(sensorDeviceId, sensorDeviceRequest)
     }
 
-    @DeleteMapping("/sensorDevices/{sensorDeviceId}")
+    @DeleteMapping("/sensor-devices/{sensorDeviceId}")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     fun deleteSensorDevice(
