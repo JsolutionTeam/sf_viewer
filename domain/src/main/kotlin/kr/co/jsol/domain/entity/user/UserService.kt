@@ -5,6 +5,7 @@ import kr.co.jsol.common.exception.entities.user.UserDisableException
 import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
+import kr.co.jsol.domain.entity.user.dto.request.UserSearchCondition
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
 import org.slf4j.LoggerFactory
@@ -26,8 +27,8 @@ class UserService(
         return userRepository.existsById(id)
     }
 
-    fun getAllUser(): List<UserResponse> {
-        return userQuerydslRepository.findAllBy().map { UserResponse(it) }
+    fun getUsers(userSearchCondition: UserSearchCondition): List<UserResponse> {
+        return userQuerydslRepository.getUsers(userSearchCondition).map { UserResponse(it) }
     }
 
     fun getUser(id: String): UserResponse {

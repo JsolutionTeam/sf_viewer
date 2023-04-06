@@ -1,11 +1,14 @@
 package kr.co.jsol.domain.entity.user
 
+import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.DateTimePath
 import com.querydsl.jpa.impl.JPAQueryFactory
+import kr.co.jsol.domain.entity.sensorDevice.QSensorDevice
 import kr.co.jsol.domain.entity.site.QSite.Companion.site
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.user.QUser.Companion.user
+import kr.co.jsol.domain.entity.user.dto.request.UserSearchCondition
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -22,11 +25,26 @@ class UserQuerydslRepository(
 //
 //    }
 
-    fun findAllBy(): List<User> {
-        return queryFactory
+    fun getUsers(userSearchCondition: UserSearchCondition): List<User> {
+        val query = queryFactory
             .selectFrom(user)
             .from(user)
             .leftJoin(user.site, site)
+
+        val builder = BooleanBuilder()
+
+        userSearchCondition.name?.let { builder.and(user.name.contains(it)) }
+        userSearchCondition.siteSeq?.let { builder.and(user.site.id.eq(it)) }
+        userSearchCondition.siteCrop?.let { builder.and(user.site.crop.contains(it)) }
+        userSearchCondition.siteLocation?.let { builder.and(user.site.location.contains(it)) }
+        userSearchCondition.siteName?.let { builder.and(user.site.name.contains(it)) }
+
+        if (userSearchCondition.startTime != null && userSearchCondition.endTime != null) {
+            builder.and(betweenTime(QSensorDevice.sensorDevice.createdAt, userSearchCondition.startTime!!, userSearchCondition.endTime))
+        }
+
+        return query
+            .where(builder)
             .orderBy(user.id.desc())
             .fetch()
     }
