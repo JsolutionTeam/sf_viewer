@@ -12,6 +12,7 @@ data class SensorDeviceResponse @QueryProjection constructor(
     val memo: String,
     val siteName: String,
     val siteSeq: Long,
+    val imgPath: String,
 ) {
     constructor(
         sensorDevice: SensorDevice
@@ -23,6 +24,7 @@ data class SensorDeviceResponse @QueryProjection constructor(
         sensorDevice.ip,
         sensorDevice.memo,
         sensorDevice.site.name,
-        sensorDevice.site.id!!
+        sensorDevice.site.id!!,
+        sensorDevice.imgPath,
     )
 }
