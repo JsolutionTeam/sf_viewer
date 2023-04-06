@@ -46,6 +46,11 @@ class SensorDevice(
     @Comment("메모")
     var memo: String = "",
 
+    // 이미지 요청 경로
+    @Column(name = "img_path", length = 255)
+    @Comment("이미지 요청 경로")
+    var imgPath: String = "",
+
     // 농장 정보
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -81,6 +86,10 @@ class SensorDevice(
         this.unit = unit ?: this.unit
         this.modelName = modelName ?: this.modelName
         this.serialNumber = serialNumber ?: this.serialNumber
+    }
+
+    fun updateImage(filePath: String){
+        this.imgPath = filePath
     }
 
     fun updateSite(site: Site) {

@@ -12,10 +12,17 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.mock.web.MockMultipartFile
+import org.springframework.mock.web.MockPart
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.multipart
+import java.nio.charset.StandardCharsets
 
 @SpringBootTest
 @DisplayName("센서 기기 테스트")
 class SensorDeviceServiceTest @Autowired constructor(
+//    private val mockMvc: MockMvc,
+
     private val sensorDeviceRepository: SensorDeviceRepository,
     private val sensorDeviceService: SensorDeviceService,
 
@@ -122,4 +129,27 @@ class SensorDeviceServiceTest @Autowired constructor(
 
         assertThat(sensorDevice.isEmpty).isTrue
     }
+
+//    @Test
+//    @DisplayName("업로드 테스트")
+//    fun `Board 저장 - 파일업로드 포함`() {
+//
+//        val imagePart = MockMultipartFile("file","test.txt" , "text/plain" , "hello file".byteInputStream(StandardCharsets.UTF_8))
+//
+//        mockMvc.multipart("/api/boards")
+//        {
+//            file(imagePart)
+//                .part(MockPart("title", "title1".toByteArray(StandardCharsets.UTF_8)))
+//                .part(MockPart("content", "content1".toByteArray(StandardCharsets.UTF_8)))
+//            headers {
+////                header("Authorization", "bearer ".plus(token))
+//            }
+//        }
+//            .andDo {
+//                print()
+//            }
+//            .andExpect {
+//                status { isOk() }
+//            }
+//    }
 }

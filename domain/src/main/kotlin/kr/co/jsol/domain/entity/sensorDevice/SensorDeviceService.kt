@@ -1,17 +1,27 @@
 package kr.co.jsol.domain.entity.sensorDevice
 
+import kr.co.jsol.domain.common.FileUploadService
+import kr.co.jsol.domain.common.FileUtils
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceCreateRequest
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceSearchCondition
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceUpdateRequest
 import kr.co.jsol.domain.entity.sensorDevice.dto.response.SensorDeviceResponse
 import kr.co.jsol.domain.entity.site.SiteRepository
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
+import java.io.File
 
 @Service
 class SensorDeviceService(
     private val sensorDeviceRepository: SensorDeviceRepository,
     private val siteRepository: SiteRepository,
+    private val fileUploadService: FileUploadService,
 ) {
+
+    @Value("\${file.uploadDir}")
+    private lateinit var uploadDir: String
+
     fun saveSensorDevice(sensorDeviceCreateRequest: SensorDeviceCreateRequest): Long {
         val siteSeq = sensorDeviceCreateRequest.siteSeq!!
 
@@ -77,6 +87,19 @@ class SensorDeviceService(
             modelName = sensorDeviceUpdateRequest.modelName,
             serialNumber = sensorDeviceUpdateRequest.serialNumber,
         )
+        sensorDevice.updatedBy("SMART_FARM") // 관리자만 수정함
+        sensorDeviceRepository.save(sensorDevice)
+    }
+
+    fun updateSensorDeviceImage(sensorDeviceId: Long, imgFile: MultipartFile) {
+        val optional = sensorDeviceRepository.findById(sensorDeviceId)
+        if (optional.isEmpty) {
+            throw IllegalArgumentException("존재하지 않는 센서 기기 번호입니다.")
+        }
+        val sensorDevice: SensorDevice = optional.get()
+
+        val fileName = fileUploadService.uploadFile(imgFile, "sensorDevice/${sensorDeviceId}/")
+        sensorDevice.updateImage(fileName)
         sensorDevice.updatedBy("SMART_FARM") // 관리자만 수정함
         sensorDeviceRepository.save(sensorDevice)
     }

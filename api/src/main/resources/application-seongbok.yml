@@ -11,5 +11,5 @@ server:
   port: 18080
 
 file:
-    uploadDir: /Users/사용자/Pictures/sfviewer/ # 무조건 /로 끝내야 함.
+    uploadDir: /Users/leeseongbok/Pictures/sfviewer/ # 무조건 /로 끝내야 함.
     loadPath: /media
