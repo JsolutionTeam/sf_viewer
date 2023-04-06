@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import kr.co.jsol.domain.entity.user.UserService
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
+import kr.co.jsol.domain.entity.user.dto.request.UserSearchCondition
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
 import org.springframework.http.HttpStatus
@@ -52,8 +53,10 @@ class AdminController(
     )
     @GetMapping("/users")
     @ResponseStatus(value = HttpStatus.OK)
-    fun getUserList(): List<UserResponse> {
-        return userService.getAllUser()
+    fun getUserList(
+        userSearchCondition: UserSearchCondition,
+    ): List<UserResponse> {
+        return userService.getUsers(userSearchCondition)
     }
 
     @Operation(summary = "사용자 상세 조회")
