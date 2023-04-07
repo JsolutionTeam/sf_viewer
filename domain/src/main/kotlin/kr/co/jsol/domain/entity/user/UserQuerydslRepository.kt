@@ -1,14 +1,14 @@
 package kr.co.jsol.domain.entity.user
 
-import com.querydsl.core.types.Projections
+import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.DateTimePath
 import com.querydsl.jpa.impl.JPAQueryFactory
-import kr.co.jsol.domain.entity.site.QSite
+import kr.co.jsol.domain.entity.sensorDevice.QSensorDevice
 import kr.co.jsol.domain.entity.site.QSite.Companion.site
-import kr.co.jsol.domain.entity.site.dto.request.SearchCondition
+import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.user.QUser.Companion.user
-import kr.co.jsol.domain.entity.user.dto.response.UserResponse
+import kr.co.jsol.domain.entity.user.dto.request.UserSearchCondition
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -25,24 +25,31 @@ class UserQuerydslRepository(
 //
 //    }
 
-    fun findAllBy(): List<UserResponse> {
-        return queryFactory
-            .select(
-                Projections.constructor(
-                    UserResponse::class.java,
-                    user.id,
-                    user.role,
-                    site.id,
-                    site.name,
-                )
-            )
+    fun getUsers(userSearchCondition: UserSearchCondition): List<User> {
+        val query = queryFactory
+            .selectFrom(user)
             .from(user)
             .leftJoin(user.site, site)
+
+        val builder = BooleanBuilder()
+
+        userSearchCondition.name?.let { builder.and(user.name.contains(it)) }
+        userSearchCondition.siteSeq?.let { builder.and(user.site.id.eq(it)) }
+        userSearchCondition.siteCrop?.let { builder.and(user.site.crop.contains(it)) }
+        userSearchCondition.siteLocation?.let { builder.and(user.site.location.contains(it)) }
+        userSearchCondition.siteName?.let { builder.and(user.site.name.contains(it)) }
+
+        if (userSearchCondition.startTime != null && userSearchCondition.endTime != null) {
+            builder.and(betweenTime(QSensorDevice.sensorDevice.createdAt, userSearchCondition.startTime!!, userSearchCondition.endTime))
+        }
+
+        return query
+            .where(builder)
             .orderBy(user.id.desc())
             .fetch()
     }
 
-    private fun checkTime(condition: SearchCondition): SearchCondition {
+    private fun checkTime(condition: SiteSearchCondition): SiteSearchCondition {
         var startTime = condition.startTime
         var endTime = condition.endTime
 
@@ -55,7 +62,7 @@ class UserQuerydslRepository(
         if (endTime == null) endTime =
             LocalDateTime.of(endDate, time)
 
-        return SearchCondition(
+        return SiteSearchCondition(
             condition.siteSeq,
             startTime = startTime,
             endTime = endTime,

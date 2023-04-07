@@ -55,7 +55,7 @@ class TcpServerThread(
         try { // server socket try
 
             serverSocket = ServerSocket(port)
-            serverSocket.soTimeout = 5000 // accept 할 때 X ms간 인식이 없으면 SocketTimeoutException 발생
+            serverSocket.soTimeout = Int.MAX_VALUE - 10006 // accept 할 때 X ms간 인식이 없으면 SocketTimeoutException 발생
             var socket: Socket?
             while (true) {
                 // 연결 수락

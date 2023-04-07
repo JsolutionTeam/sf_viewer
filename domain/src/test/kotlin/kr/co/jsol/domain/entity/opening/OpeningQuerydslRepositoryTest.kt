@@ -19,15 +19,15 @@ class OpeningQuerydslRepositoryTest @Autowired constructor(
     private val siteRepository: SiteRepository,
 ) {
 
+    private val site = Site(name = "테스트", crop = "양파", location = "테스트")
+
     @Test
     @DisplayName(value = "사이트 번호로 가장 최신 개폐 데이터가 조회된다.")
     @WithAccount
     @Transactional
     fun getRealTimeBySiteSeq() {
         // given
-        val siteSeq = 2L
-
-        val site = siteRepository.save(Site(id = 2, name = "테스트-양파-제솔"))
+        val site = siteRepository.save(site)
 
         // 5분 데이터 생성
         val first = LocalDateTime.of(2023, 2, 6, 11, 5, 30)

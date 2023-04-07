@@ -2,7 +2,6 @@ package kr.co.jsol.domain.entity.site.dto.response
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
-import kr.co.jsol.common.util.removeMinute
 import kr.co.jsol.domain.entity.co2.dto.Co2Dto
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.micro.dto.MicroDto
@@ -56,7 +55,7 @@ data class RealTimeResponse(
     var openDataRegTime: LocalDateTime? = null,
 ) {
 
-    fun setCo2(dto: Co2Dto) {
+    fun updateCo2(dto: Co2Dto) {
         this.co2 = dto.co2
         this.co2RegTime = dto.regTime
     }

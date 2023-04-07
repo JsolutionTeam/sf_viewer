@@ -7,15 +7,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import kr.co.jsol.domain.entity.user.UserService
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
+import kr.co.jsol.domain.entity.user.dto.request.UserSearchCondition
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
 import org.springframework.http.HttpStatus
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/admin")
-@Schema(description = "관리자 API",
-    )
+@Schema(
+    description = "관리자 API",
+)
 class AdminController(
     private val userService: UserService,
 ) {
@@ -27,6 +30,7 @@ class AdminController(
     )
     @PostMapping("/user")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Transactional
     fun createUser(@RequestBody userRequest: UserRequest): UserResponse {
         return userService.createUser(userRequest)
     }
@@ -49,8 +53,23 @@ class AdminController(
     )
     @GetMapping("/users")
     @ResponseStatus(value = HttpStatus.OK)
-    fun getUserList(): List<UserResponse> {
-        return userService.getAll()
+    fun getUserList(
+        userSearchCondition: UserSearchCondition,
+    ): List<UserResponse> {
+        return userService.getUsers(userSearchCondition)
+    }
+
+    @Operation(summary = "사용자 상세 조회")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공"),
+        ApiResponse(responseCode = "401", description = "유효하지 않은 토큰입니다."),
+        ApiResponse(responseCode = "403", description = "권한이 부족합니다."),
+        ApiResponse(responseCode = "404", description = "존재하지 않는 유저입니다."),
+    )
+    @GetMapping("/users/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    fun getUser(@PathVariable id: String): UserResponse {
+        return userService.getUser(id)
     }
 
     @Operation(summary = "사용자 수정")
@@ -60,8 +79,9 @@ class AdminController(
     )
     @PutMapping("/user")
     @ResponseStatus(value = HttpStatus.OK)
-    fun putUser(@RequestBody userUpdateRequest: UserUpdateRequest,): Unit {
-        userService.updateUser(userUpdateRequest)
+    @Transactional
+    fun putUser(@RequestBody userUpdateRequest: UserUpdateRequest): UserResponse {
+        return userService.updateUser(userUpdateRequest)
     }
 
     @Operation(summary = "사용자 삭제")
@@ -71,6 +91,7 @@ class AdminController(
     )
     @DeleteMapping("/user/{id}")
     @ResponseStatus(value = HttpStatus.OK)
+    @Transactional
     fun deleteUser(@PathVariable id: String): Boolean {
         return userService.deleteUserById(id)
     }

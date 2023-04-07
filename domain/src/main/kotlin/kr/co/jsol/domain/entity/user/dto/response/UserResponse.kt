@@ -5,31 +5,21 @@ import kr.co.jsol.domain.entity.user.User
 import kr.co.jsol.domain.entity.user.enums.UserRoleType
 
 data class UserResponse(
+    val name: String,
     val username: String,
     val role: UserRoleType,
+    val email: String,
+    val phone: String,
+    val address: String,
     val site: SiteResponse,
 ) {
-    constructor(
-        username: String,
-        role: UserRoleType,
-        siteId: Long,
-        siteName: String,
-    ) : this(
-        username = username,
-        role = role,
-        site = SiteResponse(
-            id = siteId,
-            name = siteName,
-        ),
+    constructor(user: User) : this(
+        name = user.name,
+        username = user.username,
+        role = user.role,
+        email = user.email,
+        phone = user.phone,
+        address = user.address,
+        site = SiteResponse(user.site!!),
     )
-
-    companion object {
-        fun of(user: User): UserResponse {
-            return UserResponse(
-                username = user.username,
-                role = user.role,
-                site = SiteResponse.of(user.site!!),
-            )
-        }
-    }
 }

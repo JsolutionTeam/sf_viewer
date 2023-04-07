@@ -2,8 +2,6 @@ package kr.co.jsol.domain.entity.sensor
 
 import kr.co.jsol.domain.entity.sensor.dto.SensorTcpDto
 import kr.co.jsol.domain.entity.site.SiteRepository
-import kr.co.jsol.domain.entity.site.SiteService
-import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
 import org.springframework.stereotype.Service
 
 @Service

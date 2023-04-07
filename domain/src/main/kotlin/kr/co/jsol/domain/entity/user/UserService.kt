@@ -2,31 +2,20 @@ package kr.co.jsol.domain.entity.user
 
 import kr.co.jsol.common.exception.entities.user.UserAlreadyExistException
 import kr.co.jsol.common.exception.entities.user.UserDisableException
-import kr.co.jsol.common.jwt.JwtTokenProvider
-import kr.co.jsol.common.jwt.dto.RefreshTokenDto
 import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
-import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
-import kr.co.jsol.domain.entity.user.dto.request.LoginRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
+import kr.co.jsol.domain.entity.user.dto.request.UserSearchCondition
 import kr.co.jsol.domain.entity.user.dto.request.UserUpdateRequest
-import kr.co.jsol.domain.entity.user.dto.response.LoginResponse
 import kr.co.jsol.domain.entity.user.dto.response.UserResponse
-import kr.co.jsol.domain.entity.user.enums.UserRoleType
-import kr.co.jsol.domain.entity.util.findByIdOrThrow
 import org.slf4j.LoggerFactory
-import org.springframework.data.repository.findByIdOrNull
-import org.springframework.http.HttpStatus
-import org.springframework.security.authentication.*
-import org.springframework.security.core.AuthenticationException
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserService(
-    private val jwtTokenProvider: JwtTokenProvider,
-    private val authenticationManager: AuthenticationManager,
     private val userRepository: UserRepository,
     private val userQuerydslRepository: UserQuerydslRepository,
     private val siteRepository: SiteRepository,
@@ -35,115 +24,64 @@ class UserService(
 
     private val log = LoggerFactory.getLogger(UserService::class.java)
 
-    fun refreshToken(userId: String): RefreshTokenDto {
-        return RefreshTokenDto(jwtTokenProvider.createRefreshToken(userId))
-    }
-
-    fun login(loginRequest: LoginRequest): LoginResponse {
-        val user: User = userRepository.findByIdAndLockedIsFalse(loginRequest.username)
-            ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
-
-        try {
-            log.info("username : ${user.username}\npassword : ${loginRequest.password}")
-            authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken(
-                    user.username,
-                    loginRequest.password
-                )
-            )
-        } catch (e: AuthenticationException) {
-            e.printStackTrace()
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
-        } catch (e: LockedException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 잠겨 있습니다.")
-        } catch (e: DisabledException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 비활성화 상태입니다.")
-        } catch (e: CredentialsExpiredException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 만료 되었습니다.")
-        } catch (e: AccountExpiredException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, "계정이 만료되었습니다.")
-        }
-
-        return LoginResponse(
-            role = user.role,
-            siteSeq = user.site!!.id,
-            accessToken = jwtTokenProvider.createAccessToken(user.username),
-            refreshToken = jwtTokenProvider.createRefreshToken(user.username),
-        )
-    }
-
     fun isExistUserById(id: String): Boolean {
         return userRepository.existsById(id)
     }
 
-    fun getById(id: String): User {
-        return userRepository.findByIdOrThrow(id, "계정 정보를 찾을 수 없습니다.")
+    fun getUsers(userSearchCondition: UserSearchCondition): List<UserResponse> {
+        return userQuerydslRepository.getUsers(userSearchCondition).map { UserResponse(it) }
     }
 
-    fun getAll(): List<UserResponse> {
-        return userQuerydslRepository.findAllBy()
+    fun getUser(id: String): UserResponse {
+        val user = userRepository.findByIdAndLockedIsFalse(id) ?: throw UsernameNotFoundException("해당 사용자를 찾을 수 없습니다.")
+        return UserResponse(user)
     }
 
     fun createUser(userRequest: UserRequest): UserResponse {
+        val existUser = userRepository.findByIdAndLockedIsFalse(userRequest.username)
+        if (existUser != null) throw UserAlreadyExistException()
 
-        val encodePw = passwordEncoder.encode(userRequest.password)
-        userRequest.setEncryptPassword(encodePw)
-
-        val user: User = userRequest.toEntity()
-
-        try {
-            val existUser = userRepository.findByIdAndLockedIsFalse(user.username)
-            if (existUser != null) throw UserAlreadyExistException()
-        } catch (_: Exception) {
-        }
-
-        val site = siteRepository.findByIdOrThrow(userRequest.siteSeq, "농장 정보를 다시 확인해주세요.")
-
-        user.updateInfo(site = site)
-        val saveUser = userRepository.save(user)
-
-        return UserResponse(
-            username = saveUser.username,
-            role = saveUser.role,
-            site = SiteResponse.of(site),
+        val site = Site(
+            name = userRequest.siteName,
+            crop = userRequest.siteCrop,
+            location = userRequest.siteLocation
         )
+        siteRepository.save(site)
+
+        userRequest.setEncryptPassword(passwordEncoder.encode(userRequest.password))
+        val user: User = userRequest.toEntity()
+        user.site = site
+
+        userRepository.save(user)
+
+        return UserResponse(user)
     }
 
     fun updateUser(userUpdateRequest: UserUpdateRequest): UserResponse {
         val user = userRepository.findByIdAndLockedIsFalse(userUpdateRequest.username)
             ?: throw UserDisableException()
 
-        val site: Site? = if (userUpdateRequest.siteSeq != null) {
-            siteRepository.findByIdOrNull(userUpdateRequest.siteSeq)
-        } else {
-            null
-        }
-        val role: UserRoleType? = userUpdateRequest.role
-        val password = userUpdateRequest.password ?: ""
-
-
         user.updateInfo(
-            role = role,
-            site = site,
+            password = if (userUpdateRequest.password != null) passwordEncoder.encode(userUpdateRequest.password) else null,
+            role = userUpdateRequest.role,
+            email = userUpdateRequest.email,
+            phone = userUpdateRequest.phone,
+            address = userUpdateRequest.address
         )
-
-        if(password.isNotBlank()){
-            val newPassword = passwordEncoder.encode(password)
-            user.updatePassword(newPassword)
+        if (user.site != null) {
+            user.site!!.update(userUpdateRequest.crop, userUpdateRequest.location)
         }
 
-        val updateUser = userRepository.save(user)
+        userRepository.save(user)
 
-        return UserResponse.of(updateUser)
+        return UserResponse(user)
     }
 
+    @Transactional
     fun deleteUserById(id: String): Boolean {
-//        val user = userRepository.findByIdAndLockedIsFalse(id)
-//            ?: throw UserDisableException()
-//
-//        user.updateInfo(locked = true)
-//        userRepository.save(user)
-        userRepository.deleteById(id)
+        val user: User = userRepository.findById(id).orElseThrow { UsernameNotFoundException("해당 사용자를 찾을 수 없습니다.") }
+        user.site?.let { siteRepository.delete(it) }
+        userRepository.delete(user)
         return true
     }
 }

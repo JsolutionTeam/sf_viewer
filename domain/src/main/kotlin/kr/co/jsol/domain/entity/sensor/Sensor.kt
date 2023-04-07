@@ -1,6 +1,5 @@
 package kr.co.jsol.domain.entity.sensor
 
-import kr.co.jsol.domain.entity.BaseEntity
 import kr.co.jsol.domain.entity.site.Site
 import org.hibernate.annotations.Comment
 import org.springframework.data.annotation.CreatedDate
@@ -14,7 +13,7 @@ import javax.persistence.*
 class Sensor(
 
     // 강우량
-    @Column(updatable = false)
+    @Column(name = "rainfall", updatable = false)
     @Comment("강우량")
     val rainfall: Double = 0.0,
 
@@ -24,7 +23,7 @@ class Sensor(
     val windSpeed: Double = 0.0,
 
     // 돌풍속도
-    @Column(name = "gust_spped", updatable = false)
+    @Column(name = "gust_speed", updatable = false)
     @Comment("돌풍속도")
     val gustSpeed: Double = 0.0,
 
@@ -67,7 +66,7 @@ class Sensor(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "site_seq",
-        foreignKey = ForeignKey(name = "fk_sensor_site_seq"),
+        foreignKey = ForeignKey(value = ConstraintMode.NO_CONSTRAINT)
     )
     @Comment("농가 정보")
     val site: Site,

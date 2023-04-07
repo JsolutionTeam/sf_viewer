@@ -4,35 +4,35 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import io.swagger.v3.oas.annotations.security.SecurityRequirement
-import kr.co.jsol.domain.entity.user.User
-import kr.co.jsol.domain.entity.user.UserService
+import kr.co.jsol.common.jwt.dto.JwtToken
+import kr.co.jsol.common.jwt.dto.RefreshTokenRequest
+import kr.co.jsol.domain.entity.user.AuthService
 import kr.co.jsol.domain.entity.user.dto.request.LoginRequest
-import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import kr.co.jsol.domain.entity.user.dto.response.LoginResponse
-import kr.co.jsol.domain.entity.user.dto.response.UserResponse
-import kr.co.jsol.common.jwt.dto.RefreshTokenDto
 import org.springframework.http.HttpStatus
-import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/auth")
 class AuthController(
-    private val userService: UserService,
+    private val authService: AuthService
 ) {
 
-    @Operation(summary = "토큰 재발급")
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "성공"),
-        ApiResponse(responseCode = "403", description = "유효하지 않은 토큰입니다.", content = [Content()])
+        ApiResponse(
+            responseCode = "403",
+            description = "유효하지 않은 토큰입니다.",
+            content = [Content()]
+        )
     )
-    @GetMapping("refresh")
+    @Operation(
+        summary = "토큰 재발급 주의, Authorization Bearer토큰은 보내지 않아야 함.",
+    )
+    @PostMapping("/refresh")
     @ResponseStatus(value = HttpStatus.OK)
-    // PreAuthorize를 사용하지 않으려면 security config 에서 정의한다.
-    fun refreshToken(@AuthenticationPrincipal userDetails: User): RefreshTokenDto {
-        return userService.refreshToken(userDetails.username)
+    fun refreshToken(@RequestBody refreshTokenRequest: RefreshTokenRequest): JwtToken {
+        return authService.refreshToken(refreshTokenRequest)
     }
 
     @Operation(summary = "로그인")
@@ -43,6 +43,6 @@ class AuthController(
     @PostMapping("/login")
     @ResponseStatus(value = HttpStatus.OK)
     fun login(@RequestBody loginRequest: LoginRequest): LoginResponse {
-        return userService.login(loginRequest)
+        return authService.login(loginRequest)
     }
 }

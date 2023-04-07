@@ -14,14 +14,23 @@ import javax.persistence.*
 @EntityListeners(AuditingEntityListener::class)
 open class BaseEntity {
     @field:CreatedDate
+    @Column(name = "created_at", updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
+
+    @Column(name = "created_by")
     private var createdBy: String? = null
 
     @field:LastModifiedDate
+    @Column(name = "updated_at")
     var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    @Column(name = "updated_by")
     private var updatedBy: String? = null
 
+    @Column(name = "deleted_at")
     private var deletedAt: LocalDateTime? = null
+
+    @Column(name = "deleted_by")
     private var deletedBy: String? = null
 
     fun createdBy(username: String) {

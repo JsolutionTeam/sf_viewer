@@ -13,8 +13,6 @@ import org.springdoc.core.GroupedOpenApi
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
-
-
 @Component
 class SwaggerConfig {
 
@@ -39,8 +37,7 @@ class SwaggerConfig {
             .type(SecurityScheme.Type.HTTP)
             .`in`(SecurityScheme.In.HEADER)
             .bearerFormat("JWT")
-            .scheme("bearer");
-
+            .scheme("bearer")
         val info = Info()
             .title("Jsolution 환경정보 모니터링 관리 API")
             .description("제이솔루션 2022 경북농기원 외주사업 APIDOC")

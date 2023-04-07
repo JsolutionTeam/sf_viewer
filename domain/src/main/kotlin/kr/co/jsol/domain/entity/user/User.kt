@@ -13,17 +13,29 @@ class User(
     @Column(name = "password", length = 255, nullable = false)
     private var password: String,
 
+    @Column(name = "name", length = 255, nullable = false)
+    var name: String,
+
+    @Column(name = "email", length = 255, nullable = false)
+    var email: String,
+
+    @Column(name = "phone", length = 255, nullable = false)
+    var phone: String,
+
+    @Column(name = "address", length = 255, nullable = false)
+    var address: String,
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     var role: UserRoleType,
 
-    @ManyToOne(
+    @OneToOne(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
     )
     @JoinColumn(
         name = "site_seq",
-        foreignKey = ForeignKey(name = "tb_user_site_seq_fk"),
+        foreignKey = ForeignKey(value = ConstraintMode.NO_CONSTRAINT),
     )
     var site: Site? = null,
 
@@ -45,12 +57,20 @@ class User(
 
     // ------------------------------------
     fun updateInfo(
-        role: UserRoleType? = this.role,
-        site: Site? = this.site,
-        locked: Boolean? = this.locked,
+        name: String? = null,
+        password: String? = null,
+        email: String? = null,
+        phone: String? = null,
+        address: String? = null,
+        role: UserRoleType? = null,
+        locked: Boolean? = null,
     ) {
+        this.name = name ?: this.name
+        this.password = password ?: this.password
+        this.email = email ?: this.email
+        this.phone = phone ?: this.phone
+        this.address = address ?: this.address
         this.role = role ?: this.role
-        this.site = site ?: this.site
         this.locked = locked ?: this.locked
     }
 
@@ -121,9 +141,5 @@ class User(
     override fun isEnabled(): Boolean {
         // 이메일이 인증되어 있고 계정이 잠겨있지 않으면 true
         return enabled
-    }
-
-    fun updatePassword(newPassword: String) {
-        this.password = newPassword
     }
 }

@@ -1,12 +1,11 @@
 package kr.co.jsol.domain.config
 
-import kr.co.jsol.domain.entity.user.UserRepository
-import kr.co.jsol.domain.entity.user.UserService
-import kr.co.jsol.domain.entity.user.enums.UserRoleType
 import kr.co.jsol.common.exception.entities.user.UserAlreadyExistException
 import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
 import kr.co.jsol.domain.entity.user.User
+import kr.co.jsol.domain.entity.user.UserRepository
+import kr.co.jsol.domain.entity.user.enums.UserRoleType
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
@@ -27,19 +26,26 @@ class WithAccountSecurityContextFactory(
             Site(
                 id = 1L,
                 name = "사이트001",
+                crop = "사이트001",
+                location = "사이트001",
             )
         )
 
         try {
             userRepository.save(
                 User(
-                    id=nickname,
+                    id = nickname,
+                    name = nickname,
                     password = nickname,
                     role = UserRoleType.ROLE_ADMIN,
+                    email = nickname,
+                    phone = nickname,
+                    address = nickname,
                     site = site001,
                 )
             )
-        } catch (ignore: UserAlreadyExistException) {}
+        } catch (ignore: UserAlreadyExistException) {
+        }
 
 
         val principal: UserDetails = userService.loadUserByUsername(nickname)
