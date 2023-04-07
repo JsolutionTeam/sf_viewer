@@ -12,4 +12,4 @@ server:
 
 file:
     uploadDir: /Users/leeseongbok/Pictures/sfviewer/ # 무조건 /로 끝내야 함.
-    loadPath: /media
+    loadPath: /api/media
