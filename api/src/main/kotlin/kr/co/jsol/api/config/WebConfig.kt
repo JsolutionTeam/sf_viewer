@@ -21,11 +21,11 @@ class WebConfig : WebMvcConfigurer {
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        registry.addResourceHandler("${LOAD_PATH}/**") // /media로 오는 데이터를
+        registry.addResourceHandler("$LOAD_PATH/**") // /media로 오는 데이터를
             // DOWNLOAD_PATH 에서 찾는다.
             // media/abc.mp4  -> DOWNLOAD_PATH/abc.mp4
             // .addResourceLocations("file:///C:/Users/Administrator/Desktop/view/TOMCAT9/webapps/media/")
-            .addResourceLocations("file:////${DOWNLOAD_PATH}") // .addResourceLocations("file:////Users/jo/dev/jsol/RE-KNUH/video/")
+            .addResourceLocations("file:////$DOWNLOAD_PATH") // .addResourceLocations("file:////Users/jo/dev/jsol/RE-KNUH/video/")
             .setCachePeriod(20)
     }
 }
