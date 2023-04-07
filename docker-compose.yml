@@ -1,0 +1,60 @@
+version: "3.8"
+services:
+  sfviewer:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    image: server
+    restart: always
+    ports:
+      - "18081:18080"
+    volumes:
+        - server:/app
+    working_dir: /app
+    environment:
+        - TZ=Asia/Seoul
+        - "SPRING_PROFILES_ACTIVE=prod"
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        delay: 10s
+        failure_action: rollback
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    # knuh-db container가 생성된 후에 생성등록 및 네트워크 연결
+    depends_on:
+      - sfviewr_mariadb
+    networks:
+        - sfviewr
+
+  sfviewr_mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: wpdlthffntus750jsolution750
+#     knuh database와 knuh 사용자를 생성하고 비밀번호는 knuh1234로 설정
+      # 세 변수는 세트로 사용할때 좋다.
+      MARIADB_DATABASE: sfviewer
+      MARIADB_USER: sfviewer
+      MARIADB_PASSWORD: sfviewer1234!@#$$ # $는 $$로 써줘야 한다.
+    ports:
+      - '11306:3306'
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+    volumes:
+      - mariadb:/var/lib/mysql
+    # 네트워크 설정
+    networks:
+      - sfviewr
+
+volumes:
+  server:
+  mariadb:
+
+networks:
+    sfviewr:
+        driver: bridge
