@@ -7,7 +7,7 @@ services:
     image: server
     restart: always
     ports:
-      - "18081:18080"
+      - "18080:18080"
     volumes:
         - server:/app
     working_dir: /app
