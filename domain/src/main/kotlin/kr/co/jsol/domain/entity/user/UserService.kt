@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserService(
@@ -76,8 +77,11 @@ class UserService(
         return UserResponse(user)
     }
 
+    @Transactional
     fun deleteUserById(id: String): Boolean {
-        userRepository.deleteById(id)
+        val user: User = userRepository.findById(id).orElseThrow { UsernameNotFoundException("해당 사용자를 찾을 수 없습니다.") }
+        user.site?.let { siteRepository.delete(it) }
+        userRepository.delete(user)
         return true
     }
 }
