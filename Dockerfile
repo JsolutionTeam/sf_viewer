@@ -8,9 +8,6 @@
 # Start with a base image containing Java runtime
 FROM openjdk:11
 # slim 버전
-# FROM openjdk:17-jdk-slim
-
-RUN docker image rm sfviewer-prod-server:latest || true
 
 # /app 디렉토리 생성 CMD 명령어를 통해 생성
 RUN mkdir -p /app
@@ -19,7 +16,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 # 현재 디렉터리에 있는 파일들을 이미지 내부 /app 디렉터리에 추가함
-ADD    . /app
+ADD . /app
 
 # Add Author info
 LABEL maintainer="jsolution"
