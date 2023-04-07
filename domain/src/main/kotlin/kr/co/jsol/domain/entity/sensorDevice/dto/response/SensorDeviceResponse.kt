@@ -10,8 +10,8 @@ data class SensorDeviceResponse @QueryProjection constructor(
     val serialNumber: String,
     val ip: String,
     val memo: String,
-    val siteName: String,
-    val siteSeq: Long,
+    val siteName: String?, // site가 삭제되면 null일 수 있음
+    val siteSeq: Long?, // site가 삭제되면 null일 수 있음
     val imgPath: String,
 ) {
     constructor(

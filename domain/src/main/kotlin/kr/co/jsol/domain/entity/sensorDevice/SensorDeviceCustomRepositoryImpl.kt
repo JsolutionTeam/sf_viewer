@@ -8,6 +8,7 @@ import kr.co.jsol.domain.entity.sensorDevice.QSensorDevice.Companion.sensorDevic
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceSearchCondition
 import kr.co.jsol.domain.entity.sensorDevice.dto.response.QSensorDeviceResponse
 import kr.co.jsol.domain.entity.sensorDevice.dto.response.SensorDeviceResponse
+import kr.co.jsol.domain.entity.site.QSite.Companion.site
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
@@ -30,12 +31,13 @@ class SensorDeviceCustomRepositoryImpl(
                     serialNumber = sensorDevice.serialNumber,
                     ip = sensorDevice.ip,
                     memo = sensorDevice.memo,
-                    siteName = sensorDevice.site.name,
-                    siteSeq = sensorDevice.site.id,
+                    siteName = site.name,
+                    siteSeq = site.id,
                     imgPath = sensorDevice.imgPath,
                 )
             )
             .from(sensorDevice)
+            .leftJoin(site).on(sensorDevice.site.id.eq(site.id)).fetchJoin()
             .where(
                 search(siteSearchCondition),
             )
