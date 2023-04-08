@@ -14,9 +14,9 @@ services:
         environment:
             - TZ=Asia/Seoul
             - SPRING_PROFILES_ACTIVE=prod
-            - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/sfviewer?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
-            - SPRING_DATASOURCE_USERNAME="sfviewer"
-            - SPRING_DATASOURCE_PASSWORD="1234"
+            - SPRING_DATASOURCE_URL=jdbc:mariadb://sfviewer_mariadb:3306/sfviewer?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+            - SPRING_DATASOURCE_USERNAME=sfviewer
+            - SPRING_DATASOURCE_PASSWORD=1234
         deploy:
             mode: replicated
             replicas: 1
@@ -25,34 +25,18 @@ services:
                 order: start-first
                 delay: 10s
                 failure_action: rollback
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
         # knuh-db container가 생성된 후에 생성등록 및 네트워크 연결
         depends_on:
             - sfviewer_mariadb
-        networks:
-            - sfviewer
 
-#    sfviewer_mariadb:
-#        image: mariadb
-#        restart: always
-#        environment:
-#            MARIADB_ROOT_PASSWORD: 1234
-#            #     knuh database와 knuh 사용자를 생성하고 비밀번호는 knuh1234로 설정
-#            # 세 변수는 세트로 사용할때 좋다.
-#            MARIADB_DATABASE: sfviewer
-#            MARIADB_USER: sfviewer
-#            MARIADB_PASSWORD: 1234 # $는 $$로 써줘야 한다.
-#        command:
-#            - '--character-set-server=utf8mb4'
-#            - '--collation-server=utf8mb4_unicode_ci'
-#        # 네트워크 설정
-#        networks:
-#            - sfviewer
+    sfviewer_mariadb:
+        image: mariadb
+        restart: always
+        environment:
+            MARIADB_ROOT_PASSWORD: 1234
+            MARIADB_DATABASE: sfviewer
+            MARIADB_USER: sfviewer
+            MARIADB_PASSWORD: 1234
 
 volumes:
     sfviewer-prod-server:
-
-networks:
-    sfviewer:
-        driver: bridge
