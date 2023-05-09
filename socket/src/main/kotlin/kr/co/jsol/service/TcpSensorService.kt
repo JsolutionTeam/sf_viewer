@@ -37,50 +37,43 @@ class TcpSensorService(
         if (!isValidMessage(payload)) {
             throw RuntimeException("Invalid message")
         }
-
         /*
-            001 -> 센서장치
-                1. 농가번호
-                2. 장비번호
-                3. 기상대 강우량
-                4. 기상대 풍속
-                5. 기상대 풍향
-                6. 기상대 온도
-                7. 기상대 습도
-                8. 기상대 지온
-                9. 기상대 일사량
-                10. 기상대 지습
-                11. 내부 카운터( 데이터 보낼때마다 카운트 증가, 0이면 장비가 리셋 됨을 의미함 )
-            002 -> 개폐장치
-         */
-        val split = payload.split(messageDelimiter)
+            01. 농가번호 001
+            02. 고유번호 (001->센서, 002->개폐장치) 001
+            03. 수집시간 (yyyyMMddHHmmss) 20230509124600
+            04. 강우량 0.00
+            05. 풍속 1.25
+            06. 풍향 90.00
+            07. 태양광량 21.00
+            08. 대기작물근접온도 20.00
+            09. 작물대기습도 19.00
+            10. 대지온도 20.00
+            11. 대지수분함수율 44.60
+        */
+        val split = payload.split(messageDelimiter).map {
+            it.trim() //의도치않은 공백 제거
+        }
         log.info("split : $split, size: ${split.size}")
 
         // 이 부분부터 분기가 시작되어야 함.
         // 고유번호에 따라 개폐장치 처리 혹은 센서장치 처리
-        val processKey = split[1]
-        when (processKey) {
+        when (split[1]) {
             // 001 => 센서장치
             "001" -> {
                 log.info("001, 센서장치, 처리 시작, ip: $clientIp")
                 if (!isValidSensorData(split)) {
                     throw RuntimeException("Invalid sensor data")
                 }
-                val sensorDto: SensorTcpDto = SensorTcpDto().parseSplitMessageToSensorTcpDto(split)
-                log.info("sensorDto : $sensorDto")
+                val sensorDto = SensorTcpDto(split)
                 return sensorService.saveSensor(sensorDto, clientIp)
             }
             // 002 => 개폐장치
             "002" -> {
                 log.info("002, 개폐장치, 처리 시작, ip: $clientIp")
-                //        val rateOfOpeningMessage = split[1]
-//        val openSignalMessage = split[2]
-//
-//        val siteSeq: Long = parseSiteSeq(siteSeqMessage)
-//        val rateOfOpening: Double = parseRateOfOpening(rateOfOpeningMessage)
-//        val openSignal: Int = parseOpenSignal(openSignalMessage)
-//
-//        openingService.saveInGSystem(siteSeq, rateOfOpening, openSignal, clientIp)
+                val siteSeq = split[0].toLong()
+                val rateOfOpening = split[3].toDouble()
+                val openSignal = split[4].toInt()
+                openingService.saveInGSystem(siteSeq, rateOfOpening, openSignal, clientIp)
                 return defaultDelay
             }
             // 그 외에는 처리하지 않음
@@ -115,12 +108,6 @@ class TcpSensorService(
             log.error("'$messageDelimiter'가 포함되어 있어야 합니다.")
             return false
         }
-
-        // 구분자가 ${countOfComma} 개로 나뉘어 지는가?
-//        if (!isDelimiterCountEq(str, countOfComma)) {
-//            log.error("'$messageDelimiter'로 $countOfComma 개로 나누어져야 합니다.")
-//            return false
-//        }
 
         return true
     }

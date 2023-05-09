@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
-@Table(name = "tb_InG_system")
+@Table(name = "tb_opening")
 class Opening(
 
     // 개폐장치 움직인 정도 값

@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration
 import java.io.*
 import java.net.ServerSocket
 import java.net.Socket
-import java.net.SocketTimeoutException
 import kotlin.system.exitProcess
 
 @Configuration
@@ -47,6 +46,7 @@ class TcpServerThread(
             |=======================================
             |[TCP 서버 시작]
             | - 기본 정보 출력
+            |   - TCP 서버 포트 : ${port}
             |   - 최대 지연시간 : ${(maxDelay * 2 + 10)} sec
             |   - socketTimeout = $socketTimeout
             |=======================================
@@ -61,7 +61,7 @@ class TcpServerThread(
                 // 연결 수락
                 try {
                     socket = serverSocket.accept() // 클라이언트가 접속해 오기를 기다리고, 접속이 되면 통신용 socket 을 리턴한다.
-                } catch (e: SocketTimeoutException) {
+                } catch (e: Exception) {
                     continue
                 }
                 log.info(
@@ -83,16 +83,6 @@ class TcpServerThread(
 
                 log.info("[첫 데이터 전송 완료] - Thread 생성 및 시작")
 
-//                val t = Thread {
-//                    try {
-// //                        process(socket)
-//                    } catch (e: IOException) {
-//                        e.printStackTrace()
-//                    } finally {
-//                    }
-//                }
-//                t.start()
-
                 val inProcessThread = InProcessThread(socket)
                 Thread(inProcessThread).start()
                 val outProcessThread = OutProcessThread(socket)
@@ -104,7 +94,7 @@ class TcpServerThread(
         } catch (e: IOException) { // server socket catch
             e.printStackTrace()
             log.error("[소켓 서버 처리 중 에러 발생] - ${e.message}")
-        } finally { // server socket finally
+        } finally {
             log.info(
                 """
 
@@ -194,7 +184,7 @@ class TcpServerThread(
             )
 
             try {
-                socket?.let {
+                socket.let {
                     if (it is Closeable && !it.isClosed) {
                         socket?.inputStream?.let { inputStream ->
                             if (inputStream != null && inputStream is Closeable) {

@@ -1,15 +1,24 @@
 spring:
+    config:
+        activate:
+            on-profile: local
     datasource:
-#        url: jdbc:mariadb://39.112.10.37:23307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
-#        username: faas
-#        password: qweR1234@!
         url: jdbc:mariadb://localhost:3306/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
         username: root
         password: 1234
         driver-class-name: org.mariadb.jdbc.Driver
 
+
+    jpa:
+        hibernate:
+            ddl-auto: create
 server:
-  port: 18080
+    port: 18081
+
+logging:
+    level:
+        com.zaxxer.hikari: TRACE
+        com.zaxxer.hikari.HikariConfig: DEBUG
 
 file:
     uploadDir: /Users/사용자/Pictures/sfviewer/ # 무조건 /로 끝내야 함.

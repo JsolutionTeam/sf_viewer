@@ -19,7 +19,7 @@ class Micro(
     @Column(insertable = false, updatable = false)
     val temperature: Double = 0.0,
 
-    // 습도
+    // 대기 습도
     @Column(name = "relative_humidity", insertable = false, updatable = false)
     val relativeHumidity: Double = 0.0,
 
