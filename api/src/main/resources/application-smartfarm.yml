@@ -7,3 +7,6 @@ spring:
 server:
     port: 15005
 
+file:
+    uploadDir: C:/jsolution/files/ # 무조건 /로 끝내야 함.
+    loadPath: /api/media

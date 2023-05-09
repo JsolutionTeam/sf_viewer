@@ -19,9 +19,6 @@ class SensorDeviceService(
     private val fileUploadService: FileUploadService,
 ) {
 
-    @Value("\${file.uploadDir}")
-    private lateinit var uploadDir: String
-
     fun saveSensorDevice(sensorDeviceCreateRequest: SensorDeviceCreateRequest): Long {
         val siteSeq = sensorDeviceCreateRequest.siteSeq!!
 

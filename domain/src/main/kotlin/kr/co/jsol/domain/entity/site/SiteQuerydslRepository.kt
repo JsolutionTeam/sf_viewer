@@ -1,5 +1,7 @@
 package kr.co.jsol.domain.entity.site
 
+import com.querydsl.core.types.Expression
+import com.querydsl.core.types.ExpressionUtils
 import com.querydsl.core.types.Projections
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.DateTemplate
@@ -224,6 +226,8 @@ private val qMicro = QMicroDto(
     micro.solarRadiation.`as`("solarRadiation"),
     micro.rainfall.`as`("rainfall"),
     micro.earthTemperature.`as`("earthTemperature"),
+    // null 입력
+    ExpressionUtils.`as`(null, "earthHumidity"),
     micro.windDirection.`as`("windDirection"),
     micro.windSpeed.`as`("windSpeed"),
 )
@@ -232,10 +236,11 @@ private val qSensor = QMicroDto(
     sensor.site.id.`as`("siteSeq"),
     sensor.createdAt,
     sensor.temperature.`as`("temperature"),
-    sensor.relativeHumidity.`as`("relativeHumidity"),
+    sensor.humidity.`as`("relativeHumidity"),
     sensor.solarRadiation.`as`("solarRadiation"),
     sensor.rainfall.`as`("rainfall"),
     sensor.earthTemperature.`as`("earthTemperature"),
+    sensor.earthHumidity.`as`("earthHumidity"),
     sensor.windDirection.`as`("windDirection"),
     sensor.windSpeed.`as`("windSpeed"),
 )

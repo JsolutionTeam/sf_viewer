@@ -11,6 +11,7 @@ data class MicroDto @QueryProjection constructor(
     val solarRadiation: Double,
     val rainfall: Double,
     val earthTemperature: Double,
+    val earthHumidity: Double? = 0.0,
     val windDirection: Double,
     val windSpeed: Double,
 )

@@ -16,7 +16,6 @@ class OpeningService(
 
     private val log = LoggerFactory.getLogger(OpeningService::class.java)
 
-    // trasnactional이 없으면 site가 조회 안되고 생성됨 왜지?
     @Transactional
     fun saveInGSystem(
         siteSeq: Long,
