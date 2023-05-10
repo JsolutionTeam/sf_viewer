@@ -46,7 +46,7 @@ class TcpServerThread(
             |=======================================
             |[TCP 서버 시작]
             | - 기본 정보 출력
-            |   - TCP 서버 포트 : ${port}
+            |   - TCP 서버 포트 : $port
             |   - 최대 지연시간 : ${(maxDelay * 2 + 10)} sec
             |   - socketTimeout = $socketTimeout
             |=======================================

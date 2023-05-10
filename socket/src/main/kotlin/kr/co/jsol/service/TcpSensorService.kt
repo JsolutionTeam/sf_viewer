@@ -51,7 +51,7 @@ class TcpSensorService(
             11. 대지수분함수율 44.60
         */
         val split = payload.split(messageDelimiter).map {
-            it.trim() //의도치않은 공백 제거
+            it.trim() // 의도치않은 공백 제거
         }
         log.info("split : $split, size: ${split.size}")
 
