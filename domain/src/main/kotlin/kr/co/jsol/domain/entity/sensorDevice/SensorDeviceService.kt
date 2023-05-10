@@ -6,6 +6,7 @@ import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceCreateReque
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceSearchCondition
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceUpdateRequest
 import kr.co.jsol.domain.entity.sensorDevice.dto.response.SensorDeviceResponse
+import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -20,19 +21,11 @@ class SensorDeviceService(
 ) {
 
     fun saveSensorDevice(sensorDeviceCreateRequest: SensorDeviceCreateRequest): Long {
-        val siteSeq = sensorDeviceCreateRequest.siteSeq!!
-
-        // siteSeq로 site 정보 가져오기
-        val optional = siteRepository.findById(siteSeq)
-        if (optional.isEmpty) {
-            throw IllegalArgumentException("존재하지 않는 농장 번호입니다.")
+        val site = sensorDeviceCreateRequest.siteSeq?.let {
+            siteRepository.findById(it).orElse(null)
         }
-        val site = optional.get()
 
-        // site의 ip 정보 업데이트
-
-        // dto to entity
-        val sensorDevice = sensorDeviceCreateRequest.toEntity(site)
+        val sensorDevice: SensorDevice = sensorDeviceCreateRequest.toEntity(site)
         sensorDevice.createdBy("SMART_FARM") // 관리자만 등록함
 
         return sensorDeviceRepository.save(sensorDevice).id!!
@@ -59,17 +52,8 @@ class SensorDeviceService(
         val sensorDevice = optional.get()
 
         // 농장 정보를 변경한다면,
-        if (sensorDeviceUpdateRequest.siteSeq != null) {
-            val siteSeq = sensorDeviceUpdateRequest.siteSeq
-            // siteSeq로 site 정보 가져오기
-            siteRepository.findById(siteSeq).let {
-                if (it.isEmpty) {
-                    throw IllegalArgumentException("존재하지 않는 농장 번호입니다.")
-                }
-                val site = it.get()
-                sensorDevice.updateSite(site)
-            }
-        }
+        val site: Site? = siteRepository.findById(sensorDeviceUpdateRequest.siteSeq ?: 0).orElse(null)
+        sensorDevice.updateSite(site)
 
         // 센서 장비 정보 수정
         sensorDevice.updateDeviceInfo(
