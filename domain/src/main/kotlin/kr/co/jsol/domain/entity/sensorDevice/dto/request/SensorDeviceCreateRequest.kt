@@ -37,14 +37,14 @@ data class SensorDeviceCreateRequest(
     @Length(min = 1, message = "농가 번호를 제대로 입력해주세요.")
     val siteSeq: Long?,
 ) {
-    fun toEntity(site: Site): SensorDevice {
+    fun toEntity(site: Site?): SensorDevice {
         return SensorDevice(
             type = type!!,
             unit = unit ?: "",
             modelName = modelName!!,
             serialNumber = serialNumber!!,
             ip = ip!!,
-            memo = memo!!,
+            memo = memo ?: "",
             site = site,
         )
     }

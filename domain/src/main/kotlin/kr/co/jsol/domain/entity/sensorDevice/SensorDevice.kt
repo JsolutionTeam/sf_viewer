@@ -58,7 +58,7 @@ class SensorDevice(
         foreignKey = ForeignKey(value = ConstraintMode.NO_CONSTRAINT),
     )
     @Comment("농가 정보")
-    var site: Site,
+    var site: Site? = null,
 
     // 기본키
     @Id
@@ -92,7 +92,7 @@ class SensorDevice(
         this.imgPath = filePath
     }
 
-    fun updateSite(site: Site) {
+    fun updateSite(site: Site?) {
         this.site = site
     }
 

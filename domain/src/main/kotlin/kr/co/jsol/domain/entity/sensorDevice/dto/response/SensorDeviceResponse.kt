@@ -15,16 +15,16 @@ data class SensorDeviceResponse @QueryProjection constructor(
     val imgPath: String,
 ) {
     constructor(
-        sensorDevice: SensorDevice
+        sensorDevice: SensorDevice,
     ) : this(
-        sensorDevice.id!!,
-        sensorDevice.type,
-        sensorDevice.modelName,
-        sensorDevice.serialNumber,
-        sensorDevice.ip,
-        sensorDevice.memo,
-        sensorDevice.site.name,
-        sensorDevice.site.id!!,
-        sensorDevice.imgPath,
+        sensorDeviceId = sensorDevice.id!!,
+        type = sensorDevice.type,
+        modelName = sensorDevice.modelName,
+        serialNumber = sensorDevice.serialNumber,
+        ip = sensorDevice.ip,
+        memo = sensorDevice.memo,
+        siteName = sensorDevice.site?.name,
+        siteSeq = sensorDevice.site?.id,
+        imgPath = sensorDevice.imgPath,
     )
 }
