@@ -1,6 +1,6 @@
 package kr.co.jsol.socket
 
-import kr.co.jsol.service.TcpSensorService
+import kr.co.jsol.socket.service.TcpSensorService
 import kr.co.jsol.socket.interfaces.InGTcpHandler
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
