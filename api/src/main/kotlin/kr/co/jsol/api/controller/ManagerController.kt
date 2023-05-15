@@ -27,7 +27,7 @@ class ManagerController {
     @GetMapping("/health-check")
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    fun healthCheck(@RequestBody userRequest: UserRequest): String {
+    fun healthCheck(): String {
         return "GOOD"
     }
 }
