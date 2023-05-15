@@ -21,11 +21,11 @@ class SwaggerConfig {
     @Bean
     fun openAPI(@Value("\${springdoc.version:0.0.0}") appVersion: String?): OpenAPI {
         val localServer = Server()
-        localServer.url = "http://localhost:18080"
+        localServer.url = "http://localhost:15005"
         localServer.description = "Server URL in Local environment"
 
         val localServer2 = Server()
-        localServer2.url = "http://localhost:18081"
+        localServer2.url = "http://localhost:15006"
         localServer2.description = "Server URL in Local environment test 2"
 
         val prodServer = Server()

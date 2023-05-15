@@ -1,4 +1,4 @@
-package kr.co.jsol.service
+package kr.co.jsol.socket.service
 
 import kr.co.jsol.domain.entity.opening.OpeningService
 import kr.co.jsol.domain.entity.sensor.SensorService
