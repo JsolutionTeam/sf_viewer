@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
@@ -24,7 +24,7 @@ class ManagerController {
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "서버 작동 중"),
     )
-    @PostMapping("/health-check")
+    @GetMapping("/health-check")
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     fun healthCheck(@RequestBody userRequest: UserRequest): String {
