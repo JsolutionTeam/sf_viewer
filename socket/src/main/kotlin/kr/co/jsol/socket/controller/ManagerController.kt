@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/manage")
+@RequestMapping("/socket/manage")
 @Schema(
     description = "서버 관리 API",
 )
