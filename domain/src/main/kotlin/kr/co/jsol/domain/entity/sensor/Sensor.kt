@@ -6,6 +6,11 @@ import org.springframework.data.annotation.CreatedDate
 import java.time.LocalDateTime
 import javax.persistence.*
 
+/*
+    데이터 포맷 변경 이력
+        2023-05-16 데이터 포맷 : *농가번호,고유코드, 수집시간, 강우, 풍속, 풍향, 대기온도,대기습도, 태양광량, 작물근접온도, 작물대기습도, 대지온도,대지수분함수율#
+
+ */
 @Entity
 @Table(
     name = "tb_sensor",
@@ -27,20 +32,30 @@ class Sensor(
     @Comment("풍향")
     val windDirection: Double = 0.0,
 
+    // 대기 온도
+    @Column(name = "temperature", updatable = false)
+    @Comment("대기 온도")
+    val temperature: Double = 0.0,
+
+    // 대기 습도
+    @Column(name = "humidity", updatable = false)
+    @Comment("대기 습도")
+    val humidity: Double = 0.0,
+
     // 일사량(태양광량)
     @Column(name = "solar_radiation", updatable = false)
     @Comment("일사량")
     val solarRadiation: Double = 0.0,
 
-    // 대기 온도
-    @Column(updatable = false)
+    // 작물 근접 온도 (작물과 가까운 센서에 수집된 온도)
+    @Column(name = "crop_temperature", updatable = false)
     @Comment("대기 온도")
-    val temperature: Double = 0.0,
+    val cropTemperature: Double = 0.0,
 
-    // 대기 습도
-    @Column(updatable = false)
+    // 작물 근접 습도 (작물과 가까운 센서에 수집된 습도)
+    @Column(name = "crop_humidity", updatable = false)
     @Comment("대기 습도")
-    val humidity: Double = 0.0,
+    val cropHumidity: Double = 0.0,
 
     // 대지 온도
     @Column(name = "earth_temperature", updatable = false)
@@ -80,7 +95,6 @@ class Sensor(
         this.createdBy = createdBy
     }
 
-    override fun toString(): String {
-        return "Sensor(rainfall=$rainfall, windSpeed=$windSpeed, windDirection=$windDirection, solarRadiation=$solarRadiation, temperature=$temperature, humidity=$humidity, earthTemperature=$earthTemperature, earthHumidity=$earthHumidity, site=$site, createdAt=$createdAt, id=$id, createdBy=$createdBy)"
-    }
+    override fun toString(): String =
+        "Sensor(rainfall=$rainfall, windSpeed=$windSpeed, windDirection=$windDirection, temperature=$temperature, humidity=$humidity, solarRadiation=$solarRadiation, cropTemperature=$cropTemperature, cropHumidity=$cropHumidity, earthTemperature=$earthTemperature, earthHumidity=$earthHumidity, site=$site, createdAt=$createdAt, id=$id, createdBy=$createdBy)"
 }

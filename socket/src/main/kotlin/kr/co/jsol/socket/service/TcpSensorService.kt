@@ -22,6 +22,9 @@ class TcpSensorService(
     @Value("\${ingsystem.message.default-delay:60}")
     private val defaultDelay: Long = 60L
 
+    @Value("\${sensors}")
+    private val sensors: List<String> = listOf()
+
     fun getSiteDelayByIp(ip: String): Long {
         return siteService.getDelayByIp(ip)
     }
@@ -38,17 +41,20 @@ class TcpSensorService(
             throw RuntimeException("Invalid message")
         }
         /*
-            01. 농가번호 001
-            02. 고유번호 (001->센서, 002->개폐장치) 001
+            01. 농가번호        001
+            02. 고유코드        (001->센서, 002->개폐장치) 001
             03. 수집시간 (yyyyMMddHHmmss) 20230509124600
-            04. 강우량 0.00
-            05. 풍속 1.25
-            06. 풍향 90.00
-            07. 태양광량 21.00
-            08. 대기작물근접온도 20.00
-            09. 작물대기습도 19.00
-            10. 대지온도 20.00
-            11. 대지수분함수율 44.60
+
+            04. 강우           0.00
+            05. 풍속           3.00
+            06. 풍향           1.25
+            07. 대기온도        90.00
+            08. 대기습도        21.00
+            09. 태양광량        20.00
+            10. 작물근접온도     19.00
+            11. 작물대기습도     20.00
+            12. 대지온도        13.00
+            13. 대지수분함수율    30.00
         */
         val split = payload.split(messageDelimiter).map {
             it.trim() // 의도치않은 공백 제거
@@ -85,13 +91,8 @@ class TcpSensorService(
     }
 
     private fun isValidSensorData(split: List<String>): Boolean {
-        // 총 데이터 개수가 11개여야 함.
-        if (split.size != 11) {
-            log.error("데이터 개수가 11개가 아닙니다.")
-            return false
-        }
-
-        return true
+        log.info("데이터 개수 : ${sensors.size}개")
+        return split.size == sensors.size
     }
 
     private fun isValidMessage(str: String): Boolean {
