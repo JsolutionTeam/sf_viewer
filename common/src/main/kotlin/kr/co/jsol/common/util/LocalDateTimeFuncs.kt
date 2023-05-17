@@ -14,3 +14,10 @@ fun LocalDateTime.removeMinute(): LocalDateTime {
 fun LocalDateTime.removeSecond(): LocalDateTime {
     return this.withSecond(0).withNano(0)
 }
+inline fun safeLocalDateTimeValue(block: () -> LocalDateTime): LocalDateTime {
+    return try {
+        block()
+    } catch (_: Exception) {
+        LocalDateTime.now()
+    }
+}

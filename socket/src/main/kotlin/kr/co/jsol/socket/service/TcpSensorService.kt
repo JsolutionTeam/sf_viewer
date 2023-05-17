@@ -41,6 +41,7 @@ class TcpSensorService(
             throw RuntimeException("Invalid message")
         }
         /*
+            번호  키           예시값
             01. 농가번호        001
             02. 고유코드        (001->센서, 002->개폐장치) 001
             03. 수집시간 (yyyyMMddHHmmss) 20230509124600
@@ -92,7 +93,8 @@ class TcpSensorService(
 
     private fun isValidSensorData(split: List<String>): Boolean {
         log.info("데이터 개수 : ${sensors.size}개")
-        return split.size == sensors.size
+        // 지정된 개수 이상이어야 한다.
+        return split.size >= sensors.size
     }
 
     private fun isValidMessage(str: String): Boolean {

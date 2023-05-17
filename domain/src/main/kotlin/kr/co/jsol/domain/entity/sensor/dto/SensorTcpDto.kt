@@ -2,6 +2,8 @@ package kr.co.jsol.domain.entity.sensor.dto
 
 import kr.co.jsol.common.util.parseDouble
 import kr.co.jsol.common.util.parseLong
+import kr.co.jsol.common.util.safeDoubleValue
+import kr.co.jsol.common.util.safeLocalDateTimeValue
 import kr.co.jsol.domain.entity.sensor.Sensor
 import kr.co.jsol.domain.entity.sensor.enums.SensorProperty
 import kr.co.jsol.domain.entity.site.Site
@@ -39,17 +41,17 @@ data class SensorTcpDto(
 
     fun toEntity(site: Site): Sensor {
         return Sensor(
-            rainfall = this.rainfall,
-            windSpeed = this.windSpeed,
-            windDirection = this.windDirection,
-            temperature = this.temperature,
-            humidity = this.humidity,
-            solarRadiation = this.solarRadiation,
-            cropTemperature = this.cropTemperature,
-            cropHumidity = this.cropHumidity,
-            earthTemperature = this.earthTemperature,
-            earthHumidity = this.earthHumidity,
-            createdAt = try {
+            rainfall = safeDoubleValue { this.rainfall },
+            windSpeed = safeDoubleValue { this.windSpeed },
+            windDirection = safeDoubleValue { this.windDirection },
+            temperature = safeDoubleValue { this.temperature },
+            humidity = safeDoubleValue { this.humidity },
+            solarRadiation = safeDoubleValue { this.solarRadiation },
+            cropTemperature = safeDoubleValue { this.cropTemperature },
+            cropHumidity = safeDoubleValue { this.cropHumidity },
+            earthTemperature = safeDoubleValue { this.earthTemperature },
+            earthHumidity = safeDoubleValue { this.earthHumidity },
+            createdAt = safeLocalDateTimeValue {
                 LocalDateTime.of(
                     this.collectedAt.substring(0, 4).toInt(), // yyyy
                     this.collectedAt.substring(4, 6).toInt(), // MM
@@ -58,8 +60,6 @@ data class SensorTcpDto(
                     this.collectedAt.substring(10, 12).toInt(), // mm
                     this.collectedAt.substring(12, 14).toInt(), // ss
                 )
-            } catch (e: Exception) {
-                LocalDateTime.now()
             },
             site = site,
         )
