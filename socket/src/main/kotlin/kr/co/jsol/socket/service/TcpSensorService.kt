@@ -41,6 +41,7 @@ class TcpSensorService(
             throw RuntimeException("Invalid message")
         }
         /*
+            번호  키           예시값
             01. 농가번호        001
             02. 고유코드        (001->센서, 002->개폐장치) 001
             03. 수집시간 (yyyyMMddHHmmss) 20230509124600
