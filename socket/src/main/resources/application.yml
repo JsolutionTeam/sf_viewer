@@ -10,7 +10,7 @@ ingsystem:
         length: 20
         delimiter: ','
         delimiter-count: 2
-        default-delay: 120
+        default-delay: 60
         min-delay: 10 # 현재 최소 입력 값 10 초 (초단위)
         max-delay: 600 # 현재 최대 입력 값 10 분 (초단위)
         send-delay: 60 # 각 센서에 서버시간, 지연시간 보내는 주기 (초단위)

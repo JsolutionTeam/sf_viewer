@@ -29,9 +29,9 @@ class TcpServerThread(
     @Value("\${ingsystem.message.send-delay:60}") // 서버 -> 센서 지연시간을 보내는 주기
     private var sendDelay: Int = 60
 
-    // 잦은 요청은 broken pipe exception의 원인이다. 120초 이상으로 줘야 그나마 덜 발생한다.
-    @Value("\${ingsystem.message.default-delay:120}") // 센서 기본 지연시간
-    private val defaultSensorDelay: Long = 120
+    // 잦은 요청은 broken pipe exception의 원인이다.
+    @Value("\${ingsystem.message.default-delay:60}") // 센서 기본 지연시간
+    private val defaultSensorDelay: Long = 60
 
     @Bean
     fun tcpServer() = Thread {
