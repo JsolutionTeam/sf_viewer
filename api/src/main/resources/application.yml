@@ -64,3 +64,5 @@ springdoc:
 file:
     uploadDir: /media/ # 무조건 /로 끝내야 함.
     loadPath: /api/media # 끝에 /를 안 붙여야 함
+
+sensors: 농가번호,고유코드,수집시간,강우,풍속,풍향,대기온도,대기습도,태양광량,작물근접온도,작물대기습도,대지온도,대지수분함수율
