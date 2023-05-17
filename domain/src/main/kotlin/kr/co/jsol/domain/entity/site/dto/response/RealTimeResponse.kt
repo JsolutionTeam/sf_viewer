@@ -21,6 +21,12 @@ data class RealTimeResponse(
     @Schema(description = "습도 / 단위 %")
     var relativeHumidity: Double? = 0.0,
 
+    @Schema(description = "작물 근접 온도 / 단위 ℃")
+    var cropTemperature: Double? = 0.0,
+
+    @Schema(description = "작물 근접 습도 / 단위 %")
+    var cropHumidity: Double? = 0.0,
+
     @Schema(description = "일사량 / 단위 W/㎡")
     var solarRadiation: Double? = 0.0,
 
@@ -63,6 +69,8 @@ data class RealTimeResponse(
     fun setMicro(dto: MicroDto) {
         temperature = dto.temperature
         relativeHumidity = dto.relativeHumidity
+        cropTemperature = dto.cropTemperature
+        cropHumidity = dto.cropHumidity
         solarRadiation = dto.solarRadiation
         rainfall = dto.rainfall
         earthTemperature = dto.earthTemperature

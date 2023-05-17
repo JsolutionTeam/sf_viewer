@@ -226,10 +226,12 @@ private val qMicro = QMicroDto(
     micro.solarRadiation.`as`("solarRadiation"),
     micro.rainfall.`as`("rainfall"),
     micro.earthTemperature.`as`("earthTemperature"),
-    // null 입력
-    ExpressionUtils.`as`(null, "earthHumidity"),
+    // 0.0 입력
+    Expressions.asNumber(0.0).`as`("earthHumidity"),
     micro.windDirection.`as`("windDirection"),
     micro.windSpeed.`as`("windSpeed"),
+    Expressions.asNumber(0.0).`as`("cropTemperature"),
+    Expressions.asNumber(0.0).`as`("cropHumidity"),
 )
 
 private val qSensor = QMicroDto(
@@ -243,6 +245,8 @@ private val qSensor = QMicroDto(
     sensor.earthHumidity.`as`("earthHumidity"),
     sensor.windDirection.`as`("windDirection"),
     sensor.windSpeed.`as`("windSpeed"),
+    sensor.cropTemperature.`as`("cropTemperature"),
+    sensor.cropHumidity.`as`("cropHumidity"),
 )
 
 private val qCo2 = QCo2Dto(

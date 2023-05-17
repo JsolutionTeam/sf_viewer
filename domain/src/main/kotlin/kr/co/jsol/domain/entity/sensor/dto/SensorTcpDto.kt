@@ -49,14 +49,18 @@ data class SensorTcpDto(
             cropHumidity = this.cropHumidity,
             earthTemperature = this.earthTemperature,
             earthHumidity = this.earthHumidity,
-            createdAt = LocalDateTime.of(
-                this.collectedAt.substring(0, 4).toInt(), // yyyy
-                this.collectedAt.substring(4, 6).toInt(), // MM
-                this.collectedAt.substring(6, 8).toInt(), // dd
-                this.collectedAt.substring(8, 10).toInt(), // HH
-                this.collectedAt.substring(10, 12).toInt(), // mm
-                this.collectedAt.substring(12, 14).toInt(), // ss
-            ),
+            createdAt = try {
+                LocalDateTime.of(
+                    this.collectedAt.substring(0, 4).toInt(), // yyyy
+                    this.collectedAt.substring(4, 6).toInt(), // MM
+                    this.collectedAt.substring(6, 8).toInt(), // dd
+                    this.collectedAt.substring(8, 10).toInt(), // HH
+                    this.collectedAt.substring(10, 12).toInt(), // mm
+                    this.collectedAt.substring(12, 14).toInt(), // ss
+                )
+            } catch (e: Exception) {
+                LocalDateTime.now()
+            },
             site = site,
         )
     }
