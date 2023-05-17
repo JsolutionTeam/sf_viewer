@@ -93,7 +93,8 @@ class TcpSensorService(
 
     private fun isValidSensorData(split: List<String>): Boolean {
         log.info("데이터 개수 : ${sensors.size}개")
-        return split.size == sensors.size
+        // 지정된 개수 이상이어야 한다.
+        return split.size >= sensors.size
     }
 
     private fun isValidMessage(str: String): Boolean {
