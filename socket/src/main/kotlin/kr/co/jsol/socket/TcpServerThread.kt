@@ -1,6 +1,5 @@
 package kr.co.jsol.socket
 
-import kr.co.jsol.domain.entity.site.Site
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -78,7 +77,7 @@ class TcpServerThread(
                 log.info("[연결 수락함] $hostAddress, ${socket.port}")
                 // 연결 성공 시 초기화 용 데이터 전송 현재 시간, 지연 시간
                 val site = tcpRequestHandler.findSiteByIp(hostAddress).let {
-                    if( it != null ){
+                    if (it != null) {
                         socketDelay[it.id!!] = it.delay
                     }
                     it
@@ -235,13 +234,15 @@ class TcpServerThread(
                     tcpResponseHandler.handle(socket, outputStream!!, delay)
 
                     // sendDelay(15초)마다 각 기기에 딜레이 시간 변경하도록 수정
-                    log.info("""
+                    log.info(
+                        """
 
                         [데이터 전송 완료] ${socket.inetAddress.hostAddress}:${socket.port}
                         siteSeq : $siteSeq
                         socketDelay[$siteSeq] : ${socketDelay[siteSeq]}
                         delay : $delay
-                    """)
+                    """
+                    )
                     Thread.sleep(15 * 1000) // 서버에서 클라이언트로는 15초마다 보낸다.
                     log.info("[지연 종료]")
                 }
