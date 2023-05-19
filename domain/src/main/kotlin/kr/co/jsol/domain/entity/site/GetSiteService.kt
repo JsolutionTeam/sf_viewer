@@ -20,11 +20,11 @@ class GetSiteService(
     private val defaultDelay: Long = 60
 
     fun findByIp(ip: String): Site? {
-        return siteRepository.findByIp(ip)
+        return siteRepository.findFirstByIpOrderBySiteIpUpdatedAtDesc(ip)
     }
 
     fun getDelayByIp(ip: String): Long {
-        val site = siteRepository.findFirstByIpOrderBySiteIpUpdatedAtDesc(ip) ?: return defaultDelay
+        val site = findByIp(ip) ?: return defaultDelay
         return site.delay
     }
 
