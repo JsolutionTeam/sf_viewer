@@ -64,14 +64,13 @@ class TcpServerThread(
                     continue
                 }
 
-
-                try{
+                try {
                     log.info(
                         """
 
                     [현재 접속 정보] ${socket.inetAddress.hostAddress}, ${socket.port}
                     [현재 실행중인 스레드 수] ${Thread.activeCount()}
-                    """.trimIndent()
+                        """.trimIndent()
                     )
 
                     socket.soTimeout = socketTimeout
@@ -100,7 +99,7 @@ class TcpServerThread(
 
                     // 현재 실행중인 스레드 수 표시
                     log.info("[현재 실행중인 스레드 수] ${Thread.activeCount()}")
-                }catch (e: Exception){
+                } catch (e: Exception) {
                     log.error("[소켓 서버 처리 중 에러 발생] - ${e.message}")
                     continue
                 }
