@@ -1,5 +1,6 @@
 package kr.co.jsol.socket
 
+import kr.co.jsol.domain.entity.site.Site
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -20,8 +21,7 @@ class TcpServerThread(
     @Value("\${tcp.server.port:2332}")
     private val port: Int = 2332
 
-    // socket 접속 정보
-    private var socketDelay: HashMap<Socket, Long?> = hashMapOf()
+    private var socketDelay: HashMap<Long, Long> = hashMapOf()
 
     @Value("\${ingsystem.message.max-delay:600}")
     private val maxDelay: Int = 600
@@ -77,15 +77,23 @@ class TcpServerThread(
                 val hostAddress = socket.inetAddress.hostAddress
                 log.info("[연결 수락함] $hostAddress, ${socket.port}")
                 // 연결 성공 시 초기화 용 데이터 전송 현재 시간, 지연 시간
-                val siteDelay = tcpRequestHandler.getSiteDelayByIp(hostAddress)
+                val site = tcpRequestHandler.findSiteByIp(hostAddress).let {
+                    if( it != null ){
+                        socketDelay[it.id!!] = it.delay
+                    }
+                    it
+                }
+                val siteDelay = site?.delay ?: defaultSensorDelay
                 log.info("[첫 데이터 전송] - 지연 시간 : $siteDelay")
                 tcpResponseHandler.handle(socket, socket.getOutputStream(), siteDelay)
 
                 log.info("[첫 데이터 전송 완료] - Thread 생성 및 시작")
 
+                log.info("현재 socketDelay : $socketDelay")
+
                 val inProcessThread = InProcessThread(socket)
                 Thread(inProcessThread).start()
-                val outProcessThread = OutProcessThread(socket)
+                val outProcessThread = OutProcessThread(socket, site?.id)
                 Thread(outProcessThread).start()
 
                 // 현재 실행중인 스레드 수 표시
@@ -159,8 +167,8 @@ class TcpServerThread(
                             throw Exception("데이터 처리 실패")
                         }
                         // 데이터 처리
-                        val delay = tcpRequestHandler.handle(socket!!, message!!)
-                        socketDelay[socket] = delay
+                        val site = tcpRequestHandler.handle(socket!!, message!!)
+                        socketDelay[site.id!!] = site.delay
                     }
                 }
 
@@ -177,8 +185,8 @@ class TcpServerThread(
                             |=======================================
                             |[데이터 처리 종료]
                             | - SOCKET 정보 출력
-                            | - ${socket?.inetAddress?.hostAddress}, ${socket?.port}
-                            | - socket is closed: ${socket!!.isClosed}
+                            | - ${socket.inetAddress?.hostAddress}, ${socket.port}
+                            | - socket is closed: ${socket.isClosed}
                             |=======================================
                 """.trimIndent()
             )
@@ -208,42 +216,33 @@ class TcpServerThread(
         }
     }
 
-    inner class OutProcessThread(socket: Socket) : Runnable {
+    inner class OutProcessThread(socket: Socket, siteSeq: Long?) : Runnable {
         private val socket: Socket = socket
-        private lateinit var outputStream: OutputStream
+        var siteSeq = siteSeq
+        private var outputStream: OutputStream? = null
 
         init {
             log.info("Out Process Thread 생성")
         }
 
         override fun run() {
-
             try {
+                // 계속 데이터를 보내기 위해선 반복해야 한다.
                 while (true) {
-                    // 계속 데이터를 보내기 위해선 반복해야 한다.
-                    log.info(
-                        """
-
-                        ============ out process thread ==============
-                        Thread Id : ${Thread.currentThread().id}
-                        socket Info : ${socket.inetAddress.hostAddress}, ${socket.port}
-                        ==========================================
-                        """.trimIndent()
-                    )
                     // delay 단위로 데이터 전송
-
-                    if (socketDelay[socket] == null) {
-                        Thread.sleep(5 * 1000) // socketDelay가 null이면 n 초간 대기를 반복해서 delay를 가져오는 것을 기다린다.
-                    }
-
                     this.outputStream = socket.getOutputStream()
-                    log.info("socketDelay[socket] : ${socketDelay[socket]}")
-                    val delay: Long = socketDelay[socket] ?: defaultSensorDelay
-                    tcpResponseHandler.handle(socket, outputStream, delay)
+                    val delay: Long = socketDelay[siteSeq] ?: defaultSensorDelay
+                    tcpResponseHandler.handle(socket, outputStream!!, delay)
 
                     // sendDelay(15초)마다 각 기기에 딜레이 시간 변경하도록 수정
-                    log.info("[데이터 전송 완료] - #${socket.inetAddress.hostAddress}:${socket.port}# ${sendDelay}만큼 지연됩니다.")
-                    Thread.sleep((sendDelay * 1000).toLong())
+                    log.info("""
+
+                        [데이터 전송 완료] ${socket.inetAddress.hostAddress}:${socket.port}
+                        siteSeq : $siteSeq
+                        socketDelay[$siteSeq] : ${socketDelay[siteSeq]}
+                        delay : $delay
+                    """)
+                    Thread.sleep(15 * 1000) // 서버에서 클라이언트로는 15초마다 보낸다.
                     log.info("[지연 종료]")
                 }
             } catch (e: Exception) {
@@ -251,8 +250,8 @@ class TcpServerThread(
                 log.error("[데이터 전송 에러] ${e.message}")
             } finally {
                 log.info("[데이터 전송 종료] - ")
-                if (outputStream is Flushable) outputStream?.flush()
-                if (outputStream is Closeable) outputStream?.close()
+                outputStream?.flush()
+                outputStream?.close()
             }
         }
     }
