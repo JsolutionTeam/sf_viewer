@@ -26,7 +26,7 @@ class Site(
 
     @Column(name = "logger_delay", nullable = false)
     @Comment("센서 데이터를 받는 주기(초)")
-    var delay: Long = 600L,
+    var delay: Long = 60L,
 
     // site ip -> 센서 장비의 네트워크 ip
     @Column(name = "site_ip")
