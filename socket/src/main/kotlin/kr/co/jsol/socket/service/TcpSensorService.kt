@@ -4,6 +4,7 @@ import kr.co.jsol.domain.entity.opening.OpeningService
 import kr.co.jsol.domain.entity.sensor.SensorService
 import kr.co.jsol.domain.entity.sensor.dto.SensorTcpDto
 import kr.co.jsol.domain.entity.site.GetSiteService
+import kr.co.jsol.domain.entity.site.Site
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -25,11 +26,15 @@ class TcpSensorService(
     @Value("\${sensors}")
     private val sensors: List<String> = listOf()
 
+    fun findSiteByIp(ip: String): Site? {
+        return siteService.findByIp(ip)
+    }
+
     fun getSiteDelayByIp(ip: String): Long {
         return siteService.getDelayByIp(ip)
     }
 
-    fun handleTcpMessage(message: String, clientIp: String): Long {
+    fun handleTcpMessage(message: String, clientIp: String): Site {
         // serial deserial을 거쳐서 나온 message를 처리하는 곳
         val payload = message.trim()
         // 빈 값이 넘어오면 처리하지 않음
@@ -80,13 +85,11 @@ class TcpSensorService(
                 val siteSeq = split[0].toLong()
                 val rateOfOpening = split[3].toDouble()
                 val openSignal = split[4].toInt()
-                openingService.saveInGSystem(siteSeq, rateOfOpening, openSignal, clientIp)
-                return defaultDelay
+                return openingService.saveOpening(siteSeq, rateOfOpening, openSignal, clientIp)
             }
             // 그 외에는 처리하지 않음
             else -> {
-                log.info("InGSystem 데이터 추가 완료")
-                return defaultDelay
+                throw IllegalArgumentException("Invalid unique code")
             }
         }
     }

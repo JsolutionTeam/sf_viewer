@@ -30,6 +30,7 @@ class UserQuerydslRepository(
             .selectFrom(user)
             .from(user)
             .leftJoin(user.site, site)
+            .orderBy(user.id.asc())
 
         val builder = BooleanBuilder()
 

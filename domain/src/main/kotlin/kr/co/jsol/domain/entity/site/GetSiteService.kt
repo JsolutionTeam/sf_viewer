@@ -19,6 +19,10 @@ class GetSiteService(
     @Value("\${inGSystem.message.default-delay:60}")
     private val defaultDelay: Long = 60
 
+    fun findByIp(ip: String): Site? {
+        return siteRepository.findByIp(ip)
+    }
+
     fun getDelayByIp(ip: String): Long {
         val site = siteRepository.findFirstByIpOrderBySiteIpUpdatedAtDesc(ip) ?: return defaultDelay
         return site.delay

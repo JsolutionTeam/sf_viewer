@@ -1,11 +1,11 @@
 package kr.co.jsol.domain.entity.opening
 
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
+import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.lang.RuntimeException
 
 @Service
 class OpeningService(
@@ -17,14 +17,14 @@ class OpeningService(
     private val log = LoggerFactory.getLogger(OpeningService::class.java)
 
     @Transactional
-    fun saveInGSystem(
+    fun saveOpening(
         siteSeq: Long,
         rateOfOpening: Double,
         openSignal: Int,
         clientIp: String? = null,
-    ): String {
+    ): Site {
+        val site = siteRepository.findById(siteSeq).orElseThrow { RuntimeException("Site not found") }
         try {
-            val site = siteRepository.findById(siteSeq).orElseThrow { RuntimeException("Site not found") }
             val opening = Opening(
                 rateOfOpening = rateOfOpening,
                 openSignal = openSignal,
@@ -33,14 +33,13 @@ class OpeningService(
             )
 
             log.info("site : $site")
-            log.info("inGSystem : $opening")
+            log.info("opening : $opening")
 
             openingRepository.save(opening)
         } catch (e: Exception) {
             log.error("개폐장치 데이터 등록 중 에러발생 trace : ${e.stackTraceToString()}")
-//            throw RuntimeException("InGSystem 데이터 저장 중 에러 발생, message : ${e.message}")
         }
-        return "200 OK, save success"
+        return site
     }
 
     fun getOpeningBySiteSeq(siteSeq: Long): OpeningResDto? {
