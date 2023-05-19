@@ -63,40 +63,47 @@ class TcpServerThread(
                 } catch (e: Exception) {
                     continue
                 }
-                log.info(
-                    """
+
+
+                try{
+                    log.info(
+                        """
 
                     [현재 접속 정보] ${socket.inetAddress.hostAddress}, ${socket.port}
                     [현재 실행중인 스레드 수] ${Thread.activeCount()}
                     """.trimIndent()
-                )
+                    )
 
-                socket.soTimeout = socketTimeout
-                socket.keepAlive = true
-                val hostAddress = socket.inetAddress.hostAddress
-                log.info("[연결 수락함] $hostAddress, ${socket.port}")
-                // 연결 성공 시 초기화 용 데이터 전송 현재 시간, 지연 시간
-                val site = tcpRequestHandler.findSiteByIp(hostAddress).let {
-                    if (it != null) {
-                        socketDelay[it.id!!] = it.delay
+                    socket.soTimeout = socketTimeout
+                    socket.keepAlive = true
+                    val hostAddress = socket.inetAddress.hostAddress
+                    log.info("[연결 수락함] $hostAddress, ${socket.port}")
+                    // 연결 성공 시 초기화 용 데이터 전송 현재 시간, 지연 시간
+                    val site = tcpRequestHandler.findSiteByIp(hostAddress).let {
+                        if (it != null) {
+                            socketDelay[it.id!!] = it.delay
+                        }
+                        it
                     }
-                    it
+                    val siteDelay = site?.delay ?: defaultSensorDelay
+                    log.info("[첫 데이터 전송] - 지연 시간 : $siteDelay")
+                    tcpResponseHandler.handle(socket, socket.getOutputStream(), siteDelay)
+
+                    log.info("[첫 데이터 전송 완료] - Thread 생성 및 시작")
+
+                    log.info("현재 socketDelay : $socketDelay")
+
+                    val inProcessThread = InProcessThread(socket)
+                    Thread(inProcessThread).start()
+                    val outProcessThread = OutProcessThread(socket, site?.id)
+                    Thread(outProcessThread).start()
+
+                    // 현재 실행중인 스레드 수 표시
+                    log.info("[현재 실행중인 스레드 수] ${Thread.activeCount()}")
+                }catch (e: Exception){
+                    log.error("[소켓 서버 처리 중 에러 발생] - ${e.message}")
+                    continue
                 }
-                val siteDelay = site?.delay ?: defaultSensorDelay
-                log.info("[첫 데이터 전송] - 지연 시간 : $siteDelay")
-                tcpResponseHandler.handle(socket, socket.getOutputStream(), siteDelay)
-
-                log.info("[첫 데이터 전송 완료] - Thread 생성 및 시작")
-
-                log.info("현재 socketDelay : $socketDelay")
-
-                val inProcessThread = InProcessThread(socket)
-                Thread(inProcessThread).start()
-                val outProcessThread = OutProcessThread(socket, site?.id)
-                Thread(outProcessThread).start()
-
-                // 현재 실행중인 스레드 수 표시
-                log.info("[현재 실행중인 스레드 수] ${Thread.activeCount()}")
             }
         } catch (e: IOException) { // server socket catch
             e.printStackTrace()
