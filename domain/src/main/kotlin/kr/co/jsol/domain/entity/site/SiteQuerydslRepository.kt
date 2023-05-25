@@ -76,7 +76,7 @@ class SiteQuerydslRepository(
             )
             .from(opening)
             .where(opening.site.id.eq(siteSeq))
-            .orderBy(opening.id.desc())
+                .orderBy(opening.regTime.desc())
             .limit(1)
             .fetchOne()
 
