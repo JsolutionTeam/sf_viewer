@@ -1,23 +1,20 @@
 package kr.co.jsol.domain.entity.sensorDevice
 
-import kr.co.jsol.domain.common.FileUploadService
-import kr.co.jsol.domain.common.FileUtils
+import kr.co.jsol.domain.common.FileService
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceCreateRequest
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceSearchCondition
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceUpdateRequest
 import kr.co.jsol.domain.entity.sensorDevice.dto.response.SensorDeviceResponse
 import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
 
 @Service
 class SensorDeviceService(
     private val sensorDeviceRepository: SensorDeviceRepository,
     private val siteRepository: SiteRepository,
-    private val fileUploadService: FileUploadService,
+    private val fileService: FileService,
 ) {
 
     fun saveSensorDevice(sensorDeviceCreateRequest: SensorDeviceCreateRequest): Long {
@@ -79,7 +76,7 @@ class SensorDeviceService(
         }
         val sensorDevice: SensorDevice = optional.get()
 
-        val fileName = fileUploadService.uploadFile(imgFile, "sensorDevice/${sensorDeviceId}/")
+        val fileName = fileService.uploadFile(imgFile, "sensorDevice/${sensorDeviceId}/")
         sensorDevice.updateImage(fileName)
         sensorDevice.updatedBy("SMART_FARM") // 관리자만 수정함
         sensorDeviceRepository.save(sensorDevice)
@@ -92,9 +89,14 @@ class SensorDeviceService(
         }
         val sensorDevice: SensorDevice = optional.get()
 
-        sensorDevice.softDelete("SMART_FARM") // 관리자만 삭제함
+        // 파일도 같이 삭제돼야함.
+        fileService.deleteFile(sensorDevice.imgPath)
 
-        sensorDeviceRepository.save(sensorDevice)
+        // 어차피 실제 이미지 파일도 삭제되기 때문에 하드 딜리트로 변경해도 상관 없을 것 같음.
+//        sensorDevice.softDelete("SMART_FARM") // 관리자만 삭제함
+//        sensorDeviceRepository.save(sensorDevice)
+
+        sensorDeviceRepository.delete(sensorDevice)
     }
 
 }

@@ -33,7 +33,10 @@ data class RealTimeResponse(
     @Schema(description = "강우량 / 단위 mm")
     var rainfall: Double? = 0.0,
 
-    @Schema(description = "지온 / 단위 ℃")
+    @Schema(description = "대지 습도 / 단위 ℃")
+    var earthHumidity: Double? = 0.0,
+
+    @Schema(description = "대지 온도 / 단위 ℃")
     var earthTemperature: Double? = 0.0,
 
     @Schema(description = "풍향 / 단위 ˚(각도)")
@@ -67,15 +70,16 @@ data class RealTimeResponse(
     }
 
     fun setMicro(dto: MicroDto) {
-        temperature = dto.temperature
-        relativeHumidity = dto.relativeHumidity
-        cropTemperature = dto.cropTemperature
-        cropHumidity = dto.cropHumidity
-        solarRadiation = dto.solarRadiation
-        rainfall = dto.rainfall
-        earthTemperature = dto.earthTemperature
-        windDirection = dto.windDirection
-        windSpeed = dto.windSpeed
+        this.temperature = dto.temperature
+        this.relativeHumidity = dto.relativeHumidity
+        this.cropTemperature = dto.cropTemperature
+        this.cropHumidity = dto.cropHumidity
+        this.solarRadiation = dto.solarRadiation
+        this.rainfall = dto.rainfall
+        this.earthHumidity = dto.earthHumidity
+        this.earthTemperature = dto.earthTemperature
+        this.windDirection = dto.windDirection
+        this.windSpeed = dto.windSpeed
         this.microRegTime = dto.regTime
     }
 

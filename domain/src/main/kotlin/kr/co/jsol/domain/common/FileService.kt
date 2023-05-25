@@ -7,10 +7,9 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.IOException
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Service
-class FileUploadService(
+class FileService(
     private val fileUtils: FileUtils,
 ) {
     private val log = getLogger(this.javaClass)
@@ -46,7 +45,7 @@ class FileUploadService(
 
         val fileSeparator = File.separator
         var imgPath = "$LOAD_PATH/$subDir"
-        if(isNotEndsWithSlash(imgPath)) {
+        if (isNotEndsWithSlash(imgPath)) {
             imgPath += fileSeparator
         }
 
@@ -56,6 +55,7 @@ class FileUploadService(
     private fun isNotEndsWithSlash(dir: String): Boolean {
         return !dir.endsWith("/")
     }
+
     private fun getOriginalFileName(file: MultipartFile): String? {
         var originalFilename: String? = file.originalFilename
         if (originalFilename?.contains("\\") == true) {
@@ -82,6 +82,43 @@ class FileUploadService(
                 // 폴더를 생성한다
                 file.mkdirs()
             }
+        }
+    }
+
+    fun deleteFile(imgPath: String) {
+        try {
+            // imgPath = /api/media/sensorDevice/3/a72fbcf7-12d3-4466-9f3b-cc89ca7e16bf.JPG
+            val fileUri = imgPath.replace(LOAD_PATH, "") // /api/media -> ""
+            // fileUri = /sensorDevice/3/a72fbcf7-12d3-4466-9f3b-cc89ca7e16bf.JPG
+            val filePath = (UPLOAD_DIR + fileUri).replace("//", "/")
+            // fileUri = C:/jsolution/files/sensorDevice/3/a72fbcf7-12d3-4466-9f3b-cc89ca7e16bf.JPG
+
+            // "/" 로 split 했을 때 제일 뒤에서 두 개의 요소를 판단하여 삭제하면 폴더까지 삭제할 수 있다.
+            // ex) /sensorDevice/3/a72fbcf7-12d3-4466-9f3b-cc89ca7e16bf.JPG
+            // -> UPLOAD_DIR + /sensorDevice/3
+            // -> UPLOAD_DIR + /sensorDevice/3/a72fbcf7-12d3-4466-9f3b-cc89ca7e16bf.JPG
+
+            val folderPath = filePath.split("/").dropLast(1).joinToString("/")
+            // folderPath = C:/jsolution/files/sensorDevice/3
+            val file = File(folderPath) // 경로로 삭제할 폴더 로드
+            log.info("folderPath : $folderPath")
+            log.info("folder.exists() : ${file.exists()}")
+            if (file.isDirectory && file.exists()) { // 폴더가 존재한다면 삭제
+                log.info("폴더 삭제 로직 진행")
+                // 하위 파일들 삭제
+                file.listFiles()?.forEach {
+                    log.info("하위 파일 삭제 ${it.name}")
+                    if (it.exists()) it.delete()
+                }
+
+                log.info("폴더 삭제")
+                file.delete()
+            } else if (file.isFile && file.exists()) {
+                log.info("단일 파일 삭제")
+                file.delete()
+            }
+        } catch (_: Exception) {
+            log.error("$imgPath 파일 삭제 실패")
         }
     }
 }
