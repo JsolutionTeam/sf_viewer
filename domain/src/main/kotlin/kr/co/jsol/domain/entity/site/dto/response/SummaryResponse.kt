@@ -33,7 +33,10 @@ data class SummaryResponse(
     @Schema(description = "강우량 / 단위 mm")
     var rainfall: Double? = 0.0,
 
-    @Schema(description = "지온 / 단위 ℃")
+    @Schema(description = "대지 습도 / 단위 ℃")
+    var earthHumidity: Double? = 0.0,
+
+    @Schema(description = "대지 온도 / 단위 ℃")
     var earthTemperature: Double? = 0.0,
 
     @Schema(description = "풍향 / 단위 ˚(각도)")
@@ -57,19 +60,19 @@ data class SummaryResponse(
     }
 
     fun setMicro(dto: MicroDto) {
-        temperature = dto.temperature
-        relativeHumidity = dto.relativeHumidity
-        solarRadiation = dto.solarRadiation
-        rainfall = dto.rainfall
-        earthTemperature = dto.earthTemperature
-        windDirection = dto.windDirection
-        windSpeed = dto.windSpeed
+        this.temperature = dto.temperature
+        this.relativeHumidity = dto.relativeHumidity
+        this.solarRadiation = dto.solarRadiation
+        this.rainfall = dto.rainfall
+        this.earthHumidity = dto.earthHumidity
+        this.earthTemperature = dto.earthTemperature
+        this.windDirection = dto.windDirection
+        this.windSpeed = dto.windSpeed
         this.microRegTime = dto.regTime
     }
 
     companion object {
-
-        fun of(siteSeq: Long, co2: List<Co2Dto>, micro: List<MicroDto>): List<SummaryResponse> {
+        fun grouping(siteSeq: Long, co2: List<Co2Dto>, micro: List<MicroDto>): List<SummaryResponse> {
             val result = mutableListOf<SummaryResponse>()
             val co2Map = co2.groupBy { it.regTime.removeMinute() }
             val microMap = micro.groupBy { it.regTime.removeMinute() }
@@ -94,6 +97,7 @@ data class SummaryResponse(
                         relativeHumidity = microDto?.relativeHumidity,
                         solarRadiation = microDto?.solarRadiation,
                         rainfall = microDto?.rainfall,
+                        earthHumidity = microDto?.earthHumidity,
                         earthTemperature = microDto?.earthTemperature,
                         windDirection = microDto?.windDirection,
                         windSpeed = microDto?.windSpeed,
