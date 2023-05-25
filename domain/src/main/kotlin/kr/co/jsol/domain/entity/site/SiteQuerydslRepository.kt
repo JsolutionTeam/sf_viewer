@@ -1,7 +1,5 @@
 package kr.co.jsol.domain.entity.site
 
-import com.querydsl.core.types.Expression
-import com.querydsl.core.types.ExpressionUtils
 import com.querydsl.core.types.Projections
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.DateTemplate
@@ -45,7 +43,7 @@ class SiteQuerydslRepository(
             .select(qCo2)
             .from(co2Logger)
             .where(co2Logger.site.id.eq(siteSeq))
-            .orderBy(co2Logger.id.desc())
+            .orderBy(co2Logger.regTime.desc())
             .limit(1)
             .fetchOne()
 
@@ -53,7 +51,7 @@ class SiteQuerydslRepository(
             .select(qMicro)
             .from(micro)
             .where(micro.site.id.eq(siteSeq))
-            .orderBy(micro.id.desc())
+            .orderBy(micro.regTime.desc())
             .limit(1)
             .fetchOne()
 
@@ -61,7 +59,7 @@ class SiteQuerydslRepository(
             .select(qSensor)
             .from(sensor)
             .where(sensor.site.id.eq(siteSeq))
-            .orderBy(sensor.id.desc())
+            .orderBy(sensor.createdAt.desc())
             .limit(1)
             .fetchOne()
 
@@ -166,7 +164,7 @@ class SiteQuerydslRepository(
         log.info("sensor.size : ${sensor.size}")
 
         val microList = microDto + sensor
-        return SummaryResponse.of(siteSeq, co2List, microList)
+        return SummaryResponse.grouping(siteSeq, co2List, microList)
     }
 
     fun getDoorSummaryBySearchCondition(condition: SiteSearchCondition): List<OpeningResDto> {
@@ -211,7 +209,7 @@ class SiteQuerydslRepository(
     private fun betweenTime(
         value: DateTimePath<LocalDateTime>,
         startTime: LocalDateTime,
-        endTime: LocalDateTime
+        endTime: LocalDateTime,
     ): BooleanExpression? {
         return value.between(startTime, endTime) ?: null
     }
@@ -220,7 +218,7 @@ class SiteQuerydslRepository(
 
 private val qMicro = QMicroDto(
     micro.site.id.`as`("siteSeq"),
-    micro.regTime,
+    micro.regTime.`as`("regTime"),
     micro.temperature.`as`("temperature"),
     micro.relativeHumidity.`as`("relativeHumidity"),
     micro.solarRadiation.`as`("solarRadiation"),
@@ -236,7 +234,7 @@ private val qMicro = QMicroDto(
 
 private val qSensor = QMicroDto(
     sensor.site.id.`as`("siteSeq"),
-    sensor.createdAt,
+    sensor.createdAt.`as`("regTime"),
     sensor.temperature.`as`("temperature"),
     sensor.humidity.`as`("relativeHumidity"),
     sensor.solarRadiation.`as`("solarRadiation"),
