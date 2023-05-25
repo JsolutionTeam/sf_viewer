@@ -92,9 +92,11 @@ class SensorDeviceService(
         // 파일도 같이 삭제돼야함.
         fileService.deleteFile(sensorDevice.imgPath)
 
-        sensorDevice.softDelete("SMART_FARM") // 관리자만 삭제함
+        // 어차피 실제 이미지 파일도 삭제되기 때문에 하드 딜리트로 변경해도 상관 없을 것 같음.
+//        sensorDevice.softDelete("SMART_FARM") // 관리자만 삭제함
+//        sensorDeviceRepository.save(sensorDevice)
 
-        sensorDeviceRepository.save(sensorDevice)
+        sensorDeviceRepository.delete(sensorDevice)
     }
 
 }
