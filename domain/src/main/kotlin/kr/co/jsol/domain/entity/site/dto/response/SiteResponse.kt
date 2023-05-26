@@ -16,6 +16,8 @@ data class SiteResponse(
     val location: String,
     @Schema(description = "농가 인지시스템 센서장비 데이터 수신 주기")
     val delay: Long = 1000L,
+    @Schema(description = "농가 인지시스템 센서장비 농촌진흥청 API KEY")
+    val apiKey: String = "",
     @Schema(description = "농가 인지시스템 센서장비 마지막 수신 네트워크 ip")
     val ip: String? = null,
     @Schema(description = "농가 인지시스템 센서장비 마지막 수신 시간")

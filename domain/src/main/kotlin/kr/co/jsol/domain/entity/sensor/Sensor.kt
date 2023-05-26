@@ -80,6 +80,11 @@ class Sensor(
     @field:CreatedDate
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
+    // 농촌진흥청 데이터 전송 여부
+    @Column(name = "is_send", updatable = false)
+    @Comment("농촌진흥청 데이터 전송 여부")
+    val isSend: Boolean = false,
+
     // 기본키
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,4 +1,4 @@
-package kr.co.jsol.api.config
+package kr.co.jsol.rda.config
 
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
@@ -15,9 +15,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 @Component
 class SwaggerConfig {
-
-    private val log = LoggerFactory.getLogger(SwaggerConfig::class.java)
-
     @Bean
     fun openAPI(@Value("\${springdoc.version:0.0.0}") appVersion: String?): OpenAPI {
         val jwtScheme: SecurityScheme = SecurityScheme()
@@ -40,41 +37,5 @@ class SwaggerConfig {
             )
             .info(info)
             .security(listOf(SecurityRequirement().addList("Authorization")))
-    }
-
-//    @Bean
-//    fun securityItemCustomizer(): OpenApiCustomiser {
-//        return OpenApiCustomiser { openApi: OpenAPI ->
-//            openApi.paths.values.stream()
-//                .map {
-//                    log.info("path : {}", it)
-//                    it
-//                }
-//                .flatMap { pathItem: PathItem ->
-//                    pathItem.readOperations().stream()
-//                }
-//                .forEach { operation: Operation ->
-//                    operation.addSecurityItem(
-//                        SecurityRequirement().addList("Authorization")
-//                    )
-//                }
-//        }
-//    }
-
-    @Bean
-    fun userApi(): GroupedOpenApi {
-        return GroupedOpenApi.builder()
-            .group("v1 user")
-            .pathsToMatch("/api/**")
-            .pathsToExclude("/api/admin/**")
-            .build()
-    }
-
-    @Bean
-    fun adminApi(): GroupedOpenApi {
-        return GroupedOpenApi.builder()
-            .group("v1 admin")
-            .pathsToMatch("/api/admin/**", "/api/auth/**")
-            .build()
     }
 }

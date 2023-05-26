@@ -1,6 +1,6 @@
 package kr.co.jsol.socket
 
-import kr.co.jsol.domain.entity.site.GetSiteService
+import kr.co.jsol.domain.entity.site.SiteService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 @Component
 class TcpServerRunner(
     private val tcpServer: Thread,
-    private val siteService: GetSiteService,
+    private val siteService: SiteService,
 ) : ApplicationRunner {
 
     private val log = LoggerFactory.getLogger(TcpServerRunner::class.java)

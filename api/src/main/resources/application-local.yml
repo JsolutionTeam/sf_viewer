@@ -8,8 +8,13 @@ spring:
         password: 1234
         driver-class-name: org.mariadb.jdbc.Driver
 server:
-  port: 18081
+  port: 18080
+
 
 file:
     uploadDir: /Users/leeseongbok/Pictures/sfviewer/ # 무조건 /로 끝내야 함.
     loadPath: /api/media
+logging:
+    config: classpath:logback-local.xml
+
+

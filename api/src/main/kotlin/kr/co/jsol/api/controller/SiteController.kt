@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
-import kr.co.jsol.domain.entity.site.GetSiteService
+import kr.co.jsol.domain.entity.site.SiteService
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
 import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping("/api/v1")
 class SiteController(
-    private val siteService: GetSiteService
+    private val siteService: SiteService
 ) {
 
     private val log = LoggerFactory.getLogger(SiteController::class.java)

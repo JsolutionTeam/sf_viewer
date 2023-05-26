@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
-class GetSiteService(
+class SiteService(
     private val siteRepository: SiteRepository,
     private val siteQuerydslRepository: SiteQuerydslRepository,
     private val openingService: OpeningService,

@@ -1,6 +1,6 @@
 package kr.co.jsol.socket
 
-import kr.co.jsol.domain.entity.site.GetSiteService
+import kr.co.jsol.domain.entity.site.SiteService
 import kr.co.jsol.socket.interfaces.InGTcpHandler
 import kr.co.jsol.socket.interfaces.TcpResponseHandlerInterface
 import org.slf4j.LoggerFactory
@@ -11,7 +11,7 @@ import java.nio.charset.Charset
 
 @Component
 class TcpResponseHandler(
-    private val siteService: GetSiteService,
+    private val siteService: SiteService,
 ) : TcpResponseHandlerInterface, InGTcpHandler {
 
     private val log = LoggerFactory.getLogger(TcpResponseHandler::class.java)

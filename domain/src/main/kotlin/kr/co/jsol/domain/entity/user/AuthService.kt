@@ -37,7 +37,6 @@ class AuthService(
             ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
 
         try {
-            log.info("username : ${user.username}\npassword : ${loginRequest.password}")
             authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(
                     user.username,
@@ -45,6 +44,7 @@ class AuthService(
                 )
             )
         } catch (e: AuthenticationException) {
+            log.error("[로그인 실패 사용자 정보] username : ${user.username}password : ${loginRequest.password}")
             e.printStackTrace()
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
         } catch (e: LockedException) {
