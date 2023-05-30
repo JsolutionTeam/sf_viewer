@@ -19,6 +19,7 @@ import kr.co.jsol.domain.entity.sensor.QSensor.Companion.sensor
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
 import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
+import kr.co.jsol.domain.entity.site.dto.response.ToSendRDAResponse
 import kr.co.jsol.domain.entity.util.formatDateTemplate
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
@@ -76,7 +77,7 @@ class SiteQuerydslRepository(
             )
             .from(opening)
             .where(opening.site.id.eq(siteSeq))
-                .orderBy(opening.regTime.desc())
+            .orderBy(opening.regTime.desc())
             .limit(1)
             .fetchOne()
 
@@ -111,6 +112,60 @@ class SiteQuerydslRepository(
         }
 
         return response
+    }
+
+    fun getDataToSendForRDA(condition: SiteSearchCondition): List<ToSendRDAResponse> {
+
+        // 하나의 쿼리에서 두 개의 테이블을 조인하고 가져오는것이 굉장히 오래걸림.
+        // 그러므로 시간단위로 그룹바이한 값을 두 개를 조회해서 dto에 세팅하는 것으로 변경
+
+        val siteSeq = condition.siteSeq
+        val initDto = initTime(condition)
+        val startTime: LocalDateTime = initDto.startTime!!
+        val endTime: LocalDateTime = initDto.endTime!!
+
+
+        val co2List: List<Co2Dto> = queryFactory
+            .select(qCo2)
+            .from(co2Logger)
+            .where(
+                co2Logger.site.id.eq(siteSeq),
+                betweenTime(co2Logger.regTime, startTime, endTime)
+            )
+            .groupBy(co2Logger.regTime)
+            .orderBy(co2Logger.regTime.desc())
+            .fetch()
+
+
+        val microDto: List<MicroDto> = queryFactory
+            .select(qMicro)
+            .from(micro)
+            .where(
+                micro.site.id.eq(siteSeq),
+                betweenTime(micro.regTime, startTime, endTime)
+            )
+            .groupBy(micro.regTime)
+            .orderBy(micro.regTime.desc())
+            .fetch()
+
+
+        val sensor: List<MicroDto> = queryFactory.select(
+            qSensor
+        ).from(sensor)
+            .where(
+                sensor.site.id.eq(siteSeq),
+                betweenTime(sensor.createdAt, startTime, endTime)
+            )
+            .groupBy(sensor.createdAt)
+            .orderBy(sensor.createdAt.desc())
+            .fetch()
+
+        // ing + hobo
+        log.info("microDto.size : ${microDto.size}")
+        log.info("sensor.size : ${sensor.size}")
+
+        val microList = microDto + sensor
+        return SummaryResponse.grouping(siteSeq, co2List, microList)
     }
 
     fun getSummaryBySearchCondition(condition: SiteSearchCondition): List<SummaryResponse> {

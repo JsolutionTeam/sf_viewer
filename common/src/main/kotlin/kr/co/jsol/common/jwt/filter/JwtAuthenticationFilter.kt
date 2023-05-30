@@ -54,10 +54,7 @@ class JwtAuthenticationFilter(
     }
 
     private fun checkTokenPasser(requestURI: String): Boolean {
-        log.debug("[checkTokenPasser] requestURI : $requestURI")
-        log.debug("[checkTokenPasser] tokenPasser : $TOKEN_PASSER")
         return TOKEN_PASSER.any {
-            log.debug("[checkTokenPasser] it : $it")
             if (it.startsWith("/")) requestURI.startsWith(it)
             else requestURI.contains(it)
         }

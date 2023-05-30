@@ -2,10 +2,11 @@ package kr.co.jsol.domain.entity.site
 
 import kr.co.jsol.domain.entity.opening.OpeningService
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
-import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
-import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
+import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
+import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
+import kr.co.jsol.domain.entity.site.dto.response.ToSendRDAResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -42,7 +43,11 @@ class SiteService(
         return siteQuerydslRepository.getDoorSummaryBySearchCondition(condition)
     }
 
-    fun getSiteList(): List<SiteResponse> {
+    fun getDataToSendForRDA(condition: SiteSearchCondition): List<ToSendRDAResponse> {
+        return siteQuerydslRepository.getDataToSendForRDA(condition)
+    }
+
+    fun list(): List<SiteResponse> {
         return siteRepository.findAllByOrderByIdAsc()
     }
 }

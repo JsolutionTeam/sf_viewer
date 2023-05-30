@@ -49,12 +49,12 @@ class Sensor(
 
     // 작물 근접 온도 (작물과 가까운 센서에 수집된 온도)
     @Column(name = "crop_temperature", updatable = false)
-    @Comment("대기 온도")
+    @Comment("작물 근접 온도")
     val cropTemperature: Double = 0.0,
 
     // 작물 근접 습도 (작물과 가까운 센서에 수집된 습도)
     @Column(name = "crop_humidity", updatable = false)
-    @Comment("대기 습도")
+    @Comment("작물 근접 습도")
     val cropHumidity: Double = 0.0,
 
     // 대지 온도

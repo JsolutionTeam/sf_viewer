@@ -54,23 +54,6 @@ data class SummaryResponse(
     var co2RegTime: LocalDateTime? = null,
 ) {
 
-    fun setCo2Info(dto: Co2Dto) {
-        this.co2 = dto.co2
-        this.co2RegTime = dto.regTime
-    }
-
-    fun setMicro(dto: MicroDto) {
-        this.temperature = dto.temperature
-        this.relativeHumidity = dto.relativeHumidity
-        this.solarRadiation = dto.solarRadiation
-        this.rainfall = dto.rainfall
-        this.earthHumidity = dto.earthHumidity
-        this.earthTemperature = dto.earthTemperature
-        this.windDirection = dto.windDirection
-        this.windSpeed = dto.windSpeed
-        this.microRegTime = dto.regTime
-    }
-
     companion object {
         fun grouping(siteSeq: Long, co2: List<Co2Dto>, micro: List<MicroDto>): List<SummaryResponse> {
             val result = mutableListOf<SummaryResponse>()

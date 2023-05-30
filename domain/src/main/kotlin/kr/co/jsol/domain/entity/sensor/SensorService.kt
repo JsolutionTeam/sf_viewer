@@ -34,4 +34,7 @@ class SensorService(
         return site
     }
 
+    fun findSendDataHashMapById(siteSeq: Long): List<HashMap<String, Any>> {
+        return sensorRepository.findAllBySite_IdAndIsSendIsFalsy(siteSeq)
+    }
 }

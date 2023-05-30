@@ -30,7 +30,7 @@ class SiteController(
     @GetMapping("/site/list")
     @ResponseStatus(value = HttpStatus.OK)
     fun getSiteList(): List<SiteResponse> {
-        return siteService.getSiteList()
+        return siteService.list()
     }
 
     @Operation(summary = "농장 별 기간 수집 데이터(개폐장치 외) 조회", description = "startTime은 기본 값이 금월 1일 endTime은 금월 마지막 일")

@@ -16,7 +16,7 @@ class TcpServerRunner(
     init {
         println("TcpServerRunner init")
         // 데이터베이스 첫 커넥션이 오래걸리기 때문에 미리 site 조회를 한 번 해본다.
-        siteService.getSiteList().forEach {
+        siteService.list().forEach {
             log.info("site: $it")
         }
     }

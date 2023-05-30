@@ -18,7 +18,8 @@ import javax.servlet.http.HttpServletRequest
 class JwtTokenProvider(private val userDetailsService: UserDetailsService) {
     val log: Logger = LoggerFactory.getLogger(JwtTokenProvider::class.java)
 
-    private var secretKey: Key = Keys.secretKeyFor(SignatureAlgorithm.HS256)
+//    private var secretKey: Key = Keys.secretKeyFor(SignatureAlgorithm.HS256)
+    private var secretKey: Key = Keys.hmacShaKeyFor("abcdefghijklmnopqrstuvwxyz1234567890".toByteArray())
 
     private val accessTokenValidTime = 30 * 60 * 1000L
 
