@@ -1,6 +1,7 @@
 package kr.co.jsol.domain.entity.micro
 
 import kr.co.jsol.domain.entity.site.Site
+import org.hibernate.annotations.Comment
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.ConstraintMode
@@ -50,6 +51,11 @@ class Micro(
     // 마크 시간
     @Column(name = "mark_tm", insertable = false, updatable = false)
     val markTime: LocalDateTime,
+
+    // 농촌진흥청 데이터 전송 여부
+    @Column(name = "is_send", nullable = false)
+    @Comment("농촌진흥청 데이터 전송 여부")
+    val isSend: Boolean = false,
 
     // 농장 정보
     @ManyToOne(fetch = FetchType.LAZY)
