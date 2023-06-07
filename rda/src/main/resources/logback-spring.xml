@@ -7,19 +7,36 @@
     </appender>
 
     <appender name="INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/application.log</file>
+        <file>./logs/rda.log</file>
         <encoder>
             <pattern>%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-5level [%logger{0}:%line] - %msg %n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/zip/application.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
+            <fileNamePattern>logs/zip/rda.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
+            <maxHistory>168</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="DEBUG_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/rda_debug.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-5level [%logger{0}:%line] - %msg %n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/zip/rda_debug.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
             <maxHistory>168</maxHistory>
             <totalSizeCap>5GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
     <appender name="WARN_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/warn.log</file>
+        <file>logs/rda_warn.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
             <onMatch>ACCEPT</onMatch>
@@ -29,14 +46,14 @@
             <pattern>%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-5level [%logger{0}:%line] - %msg %n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/zip/warn.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
+            <fileNamePattern>logs/zip/rda_warn.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
             <maxHistory>168</maxHistory>
             <totalSizeCap>5GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
     <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/error.log</file>
+        <file>logs/rda_error.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>Error</level>
             <onMatch>ACCEPT</onMatch>
@@ -46,13 +63,13 @@
             <pattern>%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-5level [%logger{0}:%line] - %msg %n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/zip/error.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
+            <fileNamePattern>logs/zip/rda_error.log.%d{yyyy-MM-dd HH}.gz</fileNamePattern>
             <maxHistory>168</maxHistory>
             <totalSizeCap>5GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
-    <!-- <appender name="LogstashAppender" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <!-- <appender name="LogstashAppender" class="net.logstash.logback.appender.LogstashTcprdaAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
@@ -72,17 +89,23 @@
     <logger name="jdbc.resultsettable" level="OFF" />
     <logger name="jdbc.connection" level="OFF" />
 
-    <root level="debug">
+<!--  org.springframework.integration.ip.tcp 패키지 아래의 모든 클래스에 대해 로그 수준을 Debug로 설정한다.  -->
+    <logger name="org.springframework.integration.ip.tcp" level="DEBUG" additivity="false"/>
+
+<!--    <root level="debug">-->
 <!--         <appender-ref ref="STDOUT"/>-->
-        <appender-ref ref="ERROR_LOG"/>
-        <appender-ref ref="WARN_LOG"/>
-        <!-- <appender-ref ref="LogstashAppender"/> -->
-    </root>
+<!--        <appender-ref ref="INFO_LOG" />-->
+<!--        <appender-ref ref="ERROR_LOG"/>-->
+<!--        <appender-ref ref="WARN_LOG"/>-->
+<!--    </root>-->
 
     <!-- 로그가 너무 많이 나오면 이 곳을 확인하시오!! -->
     <root level="info">
-        <appender-ref ref="INFO_LOG" />
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="INFO_LOG" />
+        <appender-ref ref="DEBUG_LOG" />
+        <appender-ref ref="ERROR_LOG"/>
+        <appender-ref ref="WARN_LOG"/>
     </root>
 </configuration>
 
