@@ -39,9 +39,6 @@ spring:
                 show-sql: true # sql log 보이게 설정
                 format_sql: true
 
-jwt:
-    secret: asdfbjahdslfjh2edoiughdivjhsxlkjvcahxclksdfhieduwhgowieurhgoeirufhsdlfddjvkahlsxckvjhasdlkjvchlkj34htop23i4uythoiuerwjhgasdvdgouasyv987d6v987
-
 springdoc:
     version: 1.0.2
     api-docs:
@@ -67,3 +64,6 @@ file:
 
 # 현재 13개
 sensors: 농가번호,고유코드,수집시간,강우,풍속,풍향,대기온도,대기습도,태양광량,작물근접온도,작물대기습도,대지온도,대지수분함수율
+
+jwt:
+    paths: /api/v1, /api/v2, /api/v3

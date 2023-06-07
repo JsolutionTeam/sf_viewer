@@ -10,6 +10,16 @@ spring:
 server:
   port: 18081
 
+
 file:
     uploadDir: /Users/leeseongbok/Pictures/sfviewer/ # 무조건 /로 끝내야 함.
     loadPath: /api/media
+logging:
+    level:
+        root: debug
+        kr.co.jsol: debug
+        org:
+            hibernate:
+                loader:
+                    Loader: info
+

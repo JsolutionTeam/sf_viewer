@@ -7,7 +7,6 @@ import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
-import io.swagger.v3.oas.models.servers.Server
 import org.slf4j.LoggerFactory
 import org.springdoc.core.GroupedOpenApi
 import org.springframework.beans.factory.annotation.Value
@@ -20,18 +19,6 @@ class SwaggerConfig {
 
     @Bean
     fun openAPI(@Value("\${springdoc.version:0.0.0}") appVersion: String?): OpenAPI {
-        val localServer = Server()
-        localServer.url = "http://localhost:15005"
-        localServer.description = "Server URL in Local environment"
-
-        val localServer2 = Server()
-        localServer2.url = "http://localhost:15006"
-        localServer2.description = "Server URL in Local environment test 2"
-
-        val prodServer = Server()
-        prodServer.url = "http://39.112.10.37:3000"
-        prodServer.description = "Server URL in Production environment"
-
         val jwtScheme: SecurityScheme = SecurityScheme()
             .name("Authorization")
             .type(SecurityScheme.Type.HTTP)
@@ -51,12 +38,6 @@ class SwaggerConfig {
                 )
             )
             .info(info)
-            .servers(
-                listOf(
-                    localServer, prodServer,
-                    localServer2,
-                )
-            )
             .security(listOf(SecurityRequirement().addList("Authorization")))
     }
 

@@ -12,11 +12,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.mock.web.MockMultipartFile
-import org.springframework.mock.web.MockPart
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.multipart
-import java.nio.charset.StandardCharsets
 
 @SpringBootTest
 @DisplayName("센서 기기 테스트")
@@ -142,7 +137,7 @@ class SensorDeviceServiceTest @Autowired constructor(
 //                .part(MockPart("title", "title1".toByteArray(StandardCharsets.UTF_8)))
 //                .part(MockPart("content", "content1".toByteArray(StandardCharsets.UTF_8)))
 //            headers {
-////                header("Authorization", "bearer ".plus(token))
+// //                header("Authorization", "bearer ".plus(token))
 //            }
 //        }
 //            .andDo {

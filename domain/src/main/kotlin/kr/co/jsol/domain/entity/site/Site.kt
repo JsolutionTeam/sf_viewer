@@ -32,6 +32,9 @@ class Site(
     @Column(name = "site_ip")
     var ip: String = "",
 
+    @Column(name = "api_key")
+    var apiKey: String = "",
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "site_seq", updatable = false)
@@ -47,16 +50,21 @@ class Site(
         crop: String? = null,
         location: String? = null,
         delay: Long? = null,
-        ip: String? = null,
+        apiKey: String? = null,
     ) {
         this.name = name ?: this.name
         this.location = location ?: this.location
+        this.crop = crop ?: this.crop
         this.delay = delay ?: this.delay
-        this.ip = ip ?: this.ip
+        this.apiKey = apiKey ?: this.apiKey
     }
 
     fun updateLastSensorIp(ip: String) {
         this.ip = ip
         this.siteIpUpdatedAt = LocalDateTime.now()
+    }
+
+    fun isAbleToSendRda(): Boolean {
+        return this.apiKey.isNotEmpty()
     }
 }

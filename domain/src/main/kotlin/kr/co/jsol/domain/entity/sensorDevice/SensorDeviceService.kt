@@ -76,7 +76,7 @@ class SensorDeviceService(
         }
         val sensorDevice: SensorDevice = optional.get()
 
-        val fileName = fileService.uploadFile(imgFile, "sensorDevice/${sensorDeviceId}/")
+        val fileName = fileService.uploadFile(imgFile, "sensorDevice/$sensorDeviceId/")
         sensorDevice.updateImage(fileName)
         sensorDevice.updatedBy("SMART_FARM") // 관리자만 수정함
         sensorDeviceRepository.save(sensorDevice)
@@ -98,5 +98,4 @@ class SensorDeviceService(
 
         sensorDeviceRepository.delete(sensorDevice)
     }
-
 }

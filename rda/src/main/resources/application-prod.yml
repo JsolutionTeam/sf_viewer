@@ -1,0 +1,18 @@
+spring:
+    datasource:
+    #    java -jar로 배포할 때
+    #    url: jdbc:mariadb://localhost:58806/laundry?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+    #    Docker container로 배포할 때
+#        url: jdbc:mariadb://sfviewr_mariadb:3306/sfviewer?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+#        username: sfviewer
+#        password: sfviewer1234!@#$
+        driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+        maximum-pool-size: 50 # 커넥션 풀 50개 설정
+        connection-timeout: 5000 # 커넥션 타임아웃 5초
+    jpa:
+        hibernate:
+            ddl-auto: update
+
+server:
+    port: 18080

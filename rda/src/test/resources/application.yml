@@ -1,0 +1,77 @@
+server:
+    servlet:
+        context-path: /
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+            force-response: true
+    tomcat:
+        accesslog:
+            directory: log
+            enabled: true
+            file-date-format: .yyyy-MM-dd
+            max-days: 14
+            pattern: '%h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"' #combined
+            prefix: access
+            rotate: true
+            suffix: .log
+#    basedir: logs
+
+spring:
+    profiles:
+        active: smartfarm
+
+    servlet:
+        multipart:
+            max-file-size: 30MB # 최대 파일 사이즈
+            max-request-size: 30MB
+
+    mvc:
+        pathmatch:
+            matching-strategy: ant_path_matcher
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                show-sql: true # sql log 보이게 설정
+                format_sql: true
+
+jwt:
+    secret: asdfbjahdslfjh2edoiughdivjhsxlkjvcahxclksdfhieduwhgowieurhgoeirufhsdlfddjvkahlsxckvjhasdlkjvchlkj34htop23i4uythoiuerwjhgasdvdgouasyv987d6v987
+    paths: /swagger,login
+
+springdoc:
+    version: 1.0.2
+    api-docs:
+        path: /api-docs
+        # 아래 설정을 넣으니 모든 요청이 기본적으로 application/json으로 설정됨
+        # Ex) Parameter 콘텐츠는 @Operation(parameters=[])로 설정해야 함.
+    #    default-consumes-media-type: application/json
+    #    default-produces-media-type: application/json
+    swagger-ui:
+        operations-sorter: alpha
+        tags-sorter: alpha
+        path: /swagger-ui.html
+        disable-swagger-default-url: true
+        display-query-params-without-oauth2: true
+        doc-expansion: none
+        persist-authorization: true
+    paths-to-match:
+        - /api/**
+
+file:
+    uploadDir: /media/ # 무조건 /로 끝내야 함.
+    loadPath: /api/media # 끝에 /를 안 붙여야 함
+
+# 현재 13개
+sensors: 농가번호,고유코드,수집시간,강우,풍속,풍향,대기온도,대기습도,태양광량,작물근접온도,작물대기습도,대지온도,대지수분함수율
+
+rda:
+    scheme: "http"
+    host: "iot.rda.go.kr"
+    port: 12345
+    path: "/colct/api/registData.do"
+

@@ -18,52 +18,52 @@ import javax.persistence.*
 class Sensor(
 
     // 강우량
-    @Column(name = "rainfall", updatable = false)
+    @Column(name = "rainfall", nullable = false, updatable = false)
     @Comment("강우량")
     val rainfall: Double = 0.0,
 
     // 풍속
-    @Column(name = "wind_speed", updatable = false)
+    @Column(name = "wind_speed", nullable = false, updatable = false)
     @Comment("풍속")
     val windSpeed: Double = 0.0,
 
     // 풍향
-    @Column(name = "wind_direction", updatable = false)
+    @Column(name = "wind_direction", nullable = false, updatable = false)
     @Comment("풍향")
     val windDirection: Double = 0.0,
 
     // 대기 온도
-    @Column(name = "temperature", updatable = false)
+    @Column(name = "temperature", nullable = false, updatable = false)
     @Comment("대기 온도")
     val temperature: Double = 0.0,
 
     // 대기 습도
-    @Column(name = "humidity", updatable = false)
+    @Column(name = "humidity", nullable = false, updatable = false)
     @Comment("대기 습도")
     val humidity: Double = 0.0,
 
     // 일사량(태양광량)
-    @Column(name = "solar_radiation", updatable = false)
+    @Column(name = "solar_radiation", nullable = false, updatable = false)
     @Comment("일사량")
     val solarRadiation: Double = 0.0,
 
     // 작물 근접 온도 (작물과 가까운 센서에 수집된 온도)
-    @Column(name = "crop_temperature", updatable = false)
-    @Comment("대기 온도")
+    @Column(name = "crop_temperature", nullable = false, updatable = false)
+    @Comment("작물 근접 온도")
     val cropTemperature: Double = 0.0,
 
     // 작물 근접 습도 (작물과 가까운 센서에 수집된 습도)
-    @Column(name = "crop_humidity", updatable = false)
-    @Comment("대기 습도")
+    @Column(name = "crop_humidity", nullable = false, updatable = false)
+    @Comment("작물 근접 습도")
     val cropHumidity: Double = 0.0,
 
     // 대지 온도
-    @Column(name = "earth_temperature", updatable = false)
+    @Column(name = "earth_temperature", nullable = false, updatable = false)
     @Comment("대지 온도")
     val earthTemperature: Double = 0.0,
 
     // 대지 습도
-    @Column(name = "earth_humidity", updatable = false)
+    @Column(name = "earth_humidity", nullable = false, updatable = false)
     @Comment("대지 습도")
     val earthHumidity: Double = 0.0,
 
@@ -78,7 +78,14 @@ class Sensor(
 
     // 정보 수집 시간
     @field:CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @Comment("수집 시간")
     val createdAt: LocalDateTime = LocalDateTime.now(),
+
+    // 농촌진흥청 데이터 전송 여부
+    @Column(name = "is_send", nullable = false)
+    @Comment("농촌진흥청 데이터 전송 여부")
+    val isSend: Boolean = false,
 
     // 기본키
     @Id
@@ -96,5 +103,7 @@ class Sensor(
     }
 
     override fun toString(): String =
-        "Sensor(rainfall=$rainfall, windSpeed=$windSpeed, windDirection=$windDirection, temperature=$temperature, humidity=$humidity, solarRadiation=$solarRadiation, cropTemperature=$cropTemperature, cropHumidity=$cropHumidity, earthTemperature=$earthTemperature, earthHumidity=$earthHumidity, site=$site, createdAt=$createdAt, id=$id, createdBy=$createdBy)"
+        "Sensor(rainfall=$rainfall, windSpeed=$windSpeed, windDirection=$windDirection, temperature=$temperature, humidity=$humidity, " +
+            "solarRadiation=$solarRadiation, cropTemperature=$cropTemperature, cropHumidity=$cropHumidity, earthTemperature=$earthTemperature, " +
+            "earthHumidity=$earthHumidity, site=$site, createdAt=$createdAt, id=$id, createdBy=$createdBy)"
 }

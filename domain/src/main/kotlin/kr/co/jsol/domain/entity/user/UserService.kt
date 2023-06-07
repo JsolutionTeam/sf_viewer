@@ -69,7 +69,13 @@ class UserService(
             address = userUpdateRequest.address
         )
         if (user.site != null) {
-            user.site!!.update(userUpdateRequest.crop, userUpdateRequest.location)
+            user.site!!.update(
+                name = userUpdateRequest.siteName,
+                crop = userUpdateRequest.siteCrop,
+                location = userUpdateRequest.siteLocation,
+                delay = userUpdateRequest.siteDelay,
+                apiKey = userUpdateRequest.siteApiKey,
+            )
         }
 
         userRepository.save(user)

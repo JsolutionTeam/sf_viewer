@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 import kr.co.jsol.domain.entity.sensorDevice.SensorDevice
 import kr.co.jsol.domain.entity.site.Site
 import org.hibernate.validator.constraints.Length
-import javax.validation.constraints.Max
 import javax.validation.constraints.NotBlank
 
 data class SensorDeviceCreateRequest(

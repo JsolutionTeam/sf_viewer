@@ -5,5 +5,4 @@ import kr.co.jsol.domain.entity.sensorDevice.dto.response.SensorDeviceResponse
 
 interface SensorDeviceCustomRepository {
     fun getSensorDeviceList(siteSearchCondition: SensorDeviceSearchCondition?): List<SensorDeviceResponse>
-
 }

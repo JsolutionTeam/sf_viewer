@@ -3,7 +3,7 @@ package kr.co.jsol.socket.service
 import kr.co.jsol.domain.entity.opening.OpeningService
 import kr.co.jsol.domain.entity.sensor.SensorService
 import kr.co.jsol.domain.entity.sensor.dto.SensorTcpDto
-import kr.co.jsol.domain.entity.site.GetSiteService
+import kr.co.jsol.domain.entity.site.SiteService
 import kr.co.jsol.domain.entity.site.Site
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 class TcpSensorService(
     private val openingService: OpeningService,
     private val sensorService: SensorService,
-    private val siteService: GetSiteService,
+    private val siteService: SiteService,
 ) {
     val log = LoggerFactory.getLogger(TcpSensorService::class.java)
 

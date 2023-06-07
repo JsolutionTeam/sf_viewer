@@ -40,7 +40,7 @@ dependencies {
 
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1")
 
-    //apt
+    // apt
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa") // 이게 없으면 build해도 Q class가 생성되지 않는다.
 

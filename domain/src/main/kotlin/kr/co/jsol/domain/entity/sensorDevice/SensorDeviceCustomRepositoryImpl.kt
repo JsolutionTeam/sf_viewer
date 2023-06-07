@@ -44,12 +44,11 @@ class SensorDeviceCustomRepositoryImpl(
             .fetch()
     }
 
-
-    ///////////////// [ 조건식 ] /////////////////
+    // /////////////// [ 조건식 ] /////////////////
 
     private fun search(condition: SensorDeviceSearchCondition?): BooleanBuilder {
         val builder = BooleanBuilder()
-        if(condition == null) return builder
+        if (condition == null) return builder
         condition.type?.let { builder.and(sensorDevice.type.contains(condition.type)) }
         condition.modelName?.let { builder.and(modelNameContains(it)) }
         condition.serialNumber?.let { builder.and(serialNumberContains(it)) }

@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
-import kr.co.jsol.domain.entity.site.GetSiteService
+import kr.co.jsol.domain.entity.site.SiteService
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
 import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping("/api/v1")
 class SiteController(
-    private val siteService: GetSiteService
+    private val siteService: SiteService
 ) {
 
     private val log = LoggerFactory.getLogger(SiteController::class.java)
@@ -30,7 +30,7 @@ class SiteController(
     @GetMapping("/site/list")
     @ResponseStatus(value = HttpStatus.OK)
     fun getSiteList(): List<SiteResponse> {
-        return siteService.getSiteList()
+        return siteService.list()
     }
 
     @Operation(summary = "농장 별 기간 수집 데이터(개폐장치 외) 조회", description = "startTime은 기본 값이 금월 1일 endTime은 금월 마지막 일")

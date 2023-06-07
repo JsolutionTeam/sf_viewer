@@ -47,7 +47,6 @@ class WithAccountSecurityContextFactory(
         } catch (ignore: UserAlreadyExistException) {
         }
 
-
         val principal: UserDetails = userService.loadUserByUsername(nickname)
         val authentication: Authentication = UsernamePasswordAuthenticationToken(
             principal, principal.password, principal.authorities

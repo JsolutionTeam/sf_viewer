@@ -29,10 +29,56 @@ import java.time.YearMonth
 @Repository
 class SiteQuerydslRepository(
     private val queryFactory: JPAQueryFactory,
+    private val siteRepository: SiteRepository,
 ) {
 
     // JPAQueryFactory를 사용하려면 QueryDslConfig 파일에 Bean 등록 해줘야함.
     private val log = LoggerFactory.getLogger(SiteQuerydslRepository::class.java)
+
+    private val qMicro = QMicroDto(
+        micro.site.id.`as`("siteSeq"),
+        micro.regTime.`as`("regTime"),
+        micro.temperature.`as`("temperature"),
+        micro.relativeHumidity.`as`("relativeHumidity"),
+        micro.solarRadiation.`as`("solarRadiation"),
+        micro.rainfall.`as`("rainfall"),
+        micro.earthTemperature.`as`("earthTemperature"),
+        // 0.0 입력
+        Expressions.asNumber(0.0).`as`("earthHumidity"),
+        micro.windDirection.`as`("windDirection"),
+        micro.windSpeed.`as`("windSpeed"),
+        Expressions.asNumber(0.0).`as`("cropTemperature"),
+        Expressions.asNumber(0.0).`as`("cropHumidity"),
+    )
+
+    private val qSensor = QMicroDto(
+        sensor.site.id.`as`("siteSeq"),
+        sensor.createdAt.`as`("regTime"),
+        sensor.temperature.`as`("temperature"),
+        sensor.humidity.`as`("relativeHumidity"),
+        sensor.solarRadiation.`as`("solarRadiation"),
+        sensor.rainfall.`as`("rainfall"),
+        sensor.earthTemperature.`as`("earthTemperature"),
+        sensor.earthHumidity.`as`("earthHumidity"),
+        sensor.windDirection.`as`("windDirection"),
+        sensor.windSpeed.`as`("windSpeed"),
+        sensor.cropTemperature.`as`("cropTemperature"),
+        sensor.cropHumidity.`as`("cropHumidity"),
+    )
+
+    private val qCo2 = QCo2Dto(
+        co2Logger.site.id.`as`("siteSeq"),
+        co2Logger.regTime,
+        co2Logger.co2.`as`("co2"),
+    )
+
+    private val qOpening = QOpeningResDto(
+        opening.site.id,
+        opening.rateOfOpening,
+        opening.openSignal,
+        opening.regTime,
+        opening.machineId,
+    )
 
     fun getRealTime(condition: SiteSearchCondition): RealTimeResponse {
         val (siteSeq) = condition
@@ -76,10 +122,9 @@ class SiteQuerydslRepository(
             )
             .from(opening)
             .where(opening.site.id.eq(siteSeq))
-                .orderBy(opening.regTime.desc())
+            .orderBy(opening.regTime.desc())
             .limit(1)
             .fetchOne()
-
 
         // micro는 호보, 인지 데이터 두 개가 있어 최신 데이터 판별하여 대입
         if (sensorDto != null && microDto != null) {
@@ -123,7 +168,6 @@ class SiteQuerydslRepository(
         val startTime: LocalDateTime = initDto.startTime!!
         val endTime: LocalDateTime = initDto.endTime!!
 
-
         val co2List: List<Co2Dto> = queryFactory
             .select(qCo2)
             .from(co2Logger)
@@ -135,7 +179,6 @@ class SiteQuerydslRepository(
             .orderBy(co2Logger.regTime.desc())
             .fetch()
 
-
         val microDto: List<MicroDto> = queryFactory
             .select(qMicro)
             .from(micro)
@@ -146,7 +189,6 @@ class SiteQuerydslRepository(
             .groupBy(micro.regTime)
             .orderBy(micro.regTime.desc())
             .fetch()
-
 
         val sensor: List<MicroDto> = queryFactory.select(
             qSensor
@@ -174,7 +216,6 @@ class SiteQuerydslRepository(
         val initDto = initTime(condition)
         val startTime: LocalDateTime = initDto.startTime!!
         val endTime: LocalDateTime = initDto.endTime!!
-
 
         return queryFactory.select(qOpening).from(opening)
             .where(
@@ -214,49 +255,3 @@ class SiteQuerydslRepository(
         return value.between(startTime, endTime) ?: null
     }
 }
-
-
-private val qMicro = QMicroDto(
-    micro.site.id.`as`("siteSeq"),
-    micro.regTime.`as`("regTime"),
-    micro.temperature.`as`("temperature"),
-    micro.relativeHumidity.`as`("relativeHumidity"),
-    micro.solarRadiation.`as`("solarRadiation"),
-    micro.rainfall.`as`("rainfall"),
-    micro.earthTemperature.`as`("earthTemperature"),
-    // 0.0 입력
-    Expressions.asNumber(0.0).`as`("earthHumidity"),
-    micro.windDirection.`as`("windDirection"),
-    micro.windSpeed.`as`("windSpeed"),
-    Expressions.asNumber(0.0).`as`("cropTemperature"),
-    Expressions.asNumber(0.0).`as`("cropHumidity"),
-)
-
-private val qSensor = QMicroDto(
-    sensor.site.id.`as`("siteSeq"),
-    sensor.createdAt.`as`("regTime"),
-    sensor.temperature.`as`("temperature"),
-    sensor.humidity.`as`("relativeHumidity"),
-    sensor.solarRadiation.`as`("solarRadiation"),
-    sensor.rainfall.`as`("rainfall"),
-    sensor.earthTemperature.`as`("earthTemperature"),
-    sensor.earthHumidity.`as`("earthHumidity"),
-    sensor.windDirection.`as`("windDirection"),
-    sensor.windSpeed.`as`("windSpeed"),
-    sensor.cropTemperature.`as`("cropTemperature"),
-    sensor.cropHumidity.`as`("cropHumidity"),
-)
-
-private val qCo2 = QCo2Dto(
-    co2Logger.site.id.`as`("siteSeq"),
-    co2Logger.regTime,
-    co2Logger.co2.`as`("co2"),
-)
-
-private val qOpening = QOpeningResDto(
-    opening.site.id,
-    opening.rateOfOpening,
-    opening.openSignal,
-    opening.regTime,
-    opening.machineId,
-)

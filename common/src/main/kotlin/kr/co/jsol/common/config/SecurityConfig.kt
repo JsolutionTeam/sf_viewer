@@ -3,6 +3,7 @@ package kr.co.jsol.common.config
 import kr.co.jsol.common.jwt.JwtTokenProvider
 import kr.co.jsol.common.jwt.filter.JwtAuthenticationFilter
 import kr.co.jsol.common.jwt.filter.JwtExceptionFilter
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -31,6 +32,9 @@ class SecurityConfig(
     private val corsFilter: CorsFilter,
 ) : WebSecurityConfigurerAdapter() {
 
+    @Value("\${jwt.paths}")
+    val validPaths: List<String> = listOf()
+
     @Bean // 더블 슬래쉬 허용
     fun defaultHttpFirewall(): HttpFirewall {
         return DefaultHttpFirewall()
@@ -52,6 +56,11 @@ class SecurityConfig(
             .cors().disable()
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+        // application.yml의 jwt.paths에 있는 경로는 인증필요
+        validPaths.forEach { path ->
+            http.authorizeRequests().antMatchers(path).authenticated()
+        }
 
         http.authorizeRequests()
             .antMatchers("/api/auth/login").permitAll()

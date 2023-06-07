@@ -2,15 +2,15 @@ package kr.co.jsol.domain.entity.site
 
 import kr.co.jsol.domain.entity.opening.OpeningService
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
-import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
-import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
+import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
+import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
-class GetSiteService(
+class SiteService(
     private val siteRepository: SiteRepository,
     private val siteQuerydslRepository: SiteQuerydslRepository,
     private val openingService: OpeningService,
@@ -42,7 +42,12 @@ class GetSiteService(
         return siteQuerydslRepository.getDoorSummaryBySearchCondition(condition)
     }
 
-    fun getSiteList(): List<SiteResponse> {
+    fun list(): List<SiteResponse> {
         return siteRepository.findAllByOrderByIdAsc()
+    }
+
+    fun isAbleToSendRda(siteSeq: Long): Boolean {
+        val site = siteRepository.findById(siteSeq).orElseThrow { throw Exception("site not found") }
+        return site.isAbleToSendRda()
     }
 }

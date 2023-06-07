@@ -2,7 +2,6 @@ package kr.co.jsol.domain.entity.user
 
 import kr.co.jsol.common.jwt.JwtTokenProvider
 import kr.co.jsol.common.jwt.dto.JwtToken
-import kr.co.jsol.common.jwt.dto.RefreshTokenDto
 import kr.co.jsol.common.jwt.dto.RefreshTokenRequest
 import kr.co.jsol.domain.entity.user.dto.request.LoginRequest
 import kr.co.jsol.domain.entity.user.dto.response.LoginResponse
@@ -37,7 +36,6 @@ class AuthService(
             ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
 
         try {
-            log.info("username : ${user.username}\npassword : ${loginRequest.password}")
             authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(
                     user.username,
@@ -45,6 +43,7 @@ class AuthService(
                 )
             )
         } catch (e: AuthenticationException) {
+            log.error("[로그인 실패 사용자 정보] username : ${user.username}password : ${loginRequest.password}")
             e.printStackTrace()
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "로그인 실패하셨습니다.")
         } catch (e: LockedException) {

@@ -88,7 +88,7 @@ class SensorDevice(
         this.serialNumber = serialNumber ?: this.serialNumber
     }
 
-    fun updateImage(filePath: String){
+    fun updateImage(filePath: String) {
         this.imgPath = filePath
     }
 
