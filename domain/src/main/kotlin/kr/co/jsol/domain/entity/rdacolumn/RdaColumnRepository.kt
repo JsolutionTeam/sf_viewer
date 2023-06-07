@@ -2,4 +2,6 @@ package kr.co.jsol.domain.entity.rdacolumn
 
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface RdaColumnRepository : JpaRepository<RdaColumn, String>
+interface RdaColumnRepository : JpaRepository<RdaColumn, String> {
+    fun findAllByOrderByNoAsc(): List<RdaColumn>
+}

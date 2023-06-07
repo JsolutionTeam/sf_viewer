@@ -63,4 +63,8 @@ class Site(
         this.ip = ip
         this.siteIpUpdatedAt = LocalDateTime.now()
     }
+
+    fun isAbleToSendRda(): Boolean {
+        return this.apiKey.isNotEmpty()
+    }
 }

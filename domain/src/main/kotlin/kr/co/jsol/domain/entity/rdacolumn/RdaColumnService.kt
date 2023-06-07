@@ -16,10 +16,10 @@ class RdaColumnService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun list(): List<RdaColumnResponse> {
-        return radColumnRepository.findAll().map {
+        return radColumnRepository.findAllByOrderByNoAsc().map {
             RdaColumnResponse(
                 property = it.property,
-                key = it.target,
+                target = it.target,
                 description = it.description,
                 no = it.no,
             )
