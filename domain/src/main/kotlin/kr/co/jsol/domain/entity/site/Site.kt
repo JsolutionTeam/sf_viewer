@@ -28,11 +28,12 @@ class Site(
     @Comment("센서 데이터를 받는 주기(초)")
     var delay: Long = 60L,
 
-    // site ip -> 센서 장비의 네트워크 ip
     @Column(name = "site_ip", nullable = false)
+    @Comment("센서 장비의 네트워크 ip")
     var ip: String = "",
 
     @Column(name = "api_key", nullable = false)
+    @Comment("농촌진흥청 API KEY")
     var apiKey: String = "",
 
     @Id
