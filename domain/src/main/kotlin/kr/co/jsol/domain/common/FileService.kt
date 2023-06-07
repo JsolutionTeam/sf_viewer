@@ -14,10 +14,10 @@ class FileService(
 ) {
     private val log = getLogger(this.javaClass)
 
-    @Value("\${file.uploadDir}")
+    @Value("\${file.uploadDir:}")
     private lateinit var UPLOAD_DIR: String // 파일을 저장할 디렉토리 경로
 
-    @Value("\${file.loadPath}")
+    @Value("\${file.loadPath:}")
     private lateinit var LOAD_PATH: String // 파일을 불러올 경로
 
     /**
@@ -28,6 +28,9 @@ class FileService(
      */
     @Throws(IOException::class)
     fun uploadFile(file: MultipartFile, subDir: String = ""): String {
+        if(UPLOAD_DIR.isBlank()) {
+            return ""
+        }
         val uploadDir = (UPLOAD_DIR + subDir)
             .replace("//", "/")
             .replace("\\", "/") // 업로드될 디렉토리
@@ -87,6 +90,9 @@ class FileService(
 
     fun deleteFile(imgPath: String) {
         try {
+            if(UPLOAD_DIR.isBlank()) {
+                return
+            }
             // imgPath = /api/media/sensorDevice/3/a72fbcf7-12d3-4466-9f3b-cc89ca7e16bf.JPG
             val fileUri = imgPath.replace(LOAD_PATH, "") // /api/media -> ""
             // fileUri = /sensorDevice/3/a72fbcf7-12d3-4466-9f3b-cc89ca7e16bf.JPG

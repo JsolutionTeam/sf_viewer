@@ -12,7 +12,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "tb_site")
 class Site(
-    @Column(name = "site_nm")
+    @Column(name = "site_nm", nullable = false)
     @Comment("농가 이름")
     var name: String,
 
@@ -29,10 +29,10 @@ class Site(
     var delay: Long = 60L,
 
     // site ip -> 센서 장비의 네트워크 ip
-    @Column(name = "site_ip")
+    @Column(name = "site_ip", nullable = false)
     var ip: String = "",
 
-    @Column(name = "api_key")
+    @Column(name = "api_key", nullable = false)
     var apiKey: String = "",
 
     @Id
