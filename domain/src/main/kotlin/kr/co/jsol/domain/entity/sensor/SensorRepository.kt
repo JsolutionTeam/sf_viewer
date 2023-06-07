@@ -3,7 +3,7 @@ package kr.co.jsol.domain.entity.sensor
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
-interface SensorRepository : JpaRepository<Sensor, Long>{
+interface SensorRepository : JpaRepository<Sensor, Long> {
     fun findAllByIsSendIsFalse(): List<Sensor>
 
     @Query("""

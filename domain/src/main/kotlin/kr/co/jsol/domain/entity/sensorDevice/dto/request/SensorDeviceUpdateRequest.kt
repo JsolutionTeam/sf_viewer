@@ -1,14 +1,7 @@
 package kr.co.jsol.domain.entity.sensorDevice.dto.request
 
 import io.swagger.v3.oas.annotations.media.Schema
-import kr.co.jsol.common.util.parseDouble
-import kr.co.jsol.common.util.parseLong
-import kr.co.jsol.domain.entity.sensor.Sensor
-import kr.co.jsol.domain.entity.sensor.enums.SensorProperty
-import kr.co.jsol.domain.entity.sensorDevice.SensorDevice
-import kr.co.jsol.domain.entity.site.Site
 import org.hibernate.validator.constraints.Length
-import javax.validation.constraints.NotBlank
 
 data class SensorDeviceUpdateRequest(
     @Length(max = 20, message = "type은 20자 이하로 입력해주세요.")

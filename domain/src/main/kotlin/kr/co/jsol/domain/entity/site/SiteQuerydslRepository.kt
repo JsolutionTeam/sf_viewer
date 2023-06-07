@@ -178,7 +178,6 @@ class SiteQuerydslRepository(
         val startTime: LocalDateTime = initDto.startTime!!
         val endTime: LocalDateTime = initDto.endTime!!
 
-
         val co2List: List<Co2Dto> = queryFactory
             .select(qCo2)
             .from(co2Logger)
@@ -190,7 +189,6 @@ class SiteQuerydslRepository(
             .orderBy(co2Logger.regTime.desc())
             .fetch()
 
-
         val microDto: List<MicroDto> = queryFactory
             .select(qMicro)
             .from(micro)
@@ -201,7 +199,6 @@ class SiteQuerydslRepository(
             .groupBy(micro.regTime)
             .orderBy(micro.regTime.desc())
             .fetch()
-
 
         val sensor: List<MicroDto> = queryFactory.select(
             qSensor
@@ -229,7 +226,6 @@ class SiteQuerydslRepository(
         val initDto = initTime(condition)
         val startTime: LocalDateTime = initDto.startTime!!
         val endTime: LocalDateTime = initDto.endTime!!
-
 
         return queryFactory.select(qOpening).from(opening)
             .where(

@@ -2,7 +2,6 @@ package kr.co.jsol.domain.entity.user
 
 import kr.co.jsol.common.jwt.JwtTokenProvider
 import kr.co.jsol.common.jwt.dto.JwtToken
-import kr.co.jsol.common.jwt.dto.RefreshTokenDto
 import kr.co.jsol.common.jwt.dto.RefreshTokenRequest
 import kr.co.jsol.domain.entity.user.dto.request.LoginRequest
 import kr.co.jsol.domain.entity.user.dto.response.LoginResponse

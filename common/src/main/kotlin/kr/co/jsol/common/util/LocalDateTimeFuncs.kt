@@ -1,6 +1,5 @@
 package kr.co.jsol.common.util
 
-
 import java.time.LocalDateTime
 
 fun LocalDateTime.removeTime(): LocalDateTime {

@@ -15,10 +15,10 @@ class FileService(
     private val log = getLogger(this.javaClass)
 
     @Value("\${file.uploadDir}")
-    private lateinit var UPLOAD_DIR: String// 파일을 저장할 디렉토리 경로
+    private lateinit var UPLOAD_DIR: String // 파일을 저장할 디렉토리 경로
 
     @Value("\${file.loadPath}")
-    private lateinit var LOAD_PATH: String// 파일을 불러올 경로
+    private lateinit var LOAD_PATH: String // 파일을 불러올 경로
 
     /**
      * 파일 업로드

@@ -8,7 +8,7 @@ class SensorTcpDtoTest {
 
     // make dto test
     @Test
-    fun makeDtoTest(){
+    fun makeDtoTest() {
         val sensorTcpDto = SensorTcpDto(
             listOf(
                 "001",
@@ -28,7 +28,7 @@ class SensorTcpDtoTest {
     }
 
     @Test
-    fun makeDtoAndToEntityTest(){
+    fun makeDtoAndToEntityTest() {
         val sensorTcpDto = SensorTcpDto(
             listOf(
                 "001",
@@ -46,12 +46,13 @@ class SensorTcpDtoTest {
         )
         println(sensorTcpDto)
 
-        val sensor: Sensor = sensorTcpDto.toEntity(Site(
-            name = "test",
-            crop = "test",
-            location = "test",
-        ))
+        val sensor: Sensor = sensorTcpDto.toEntity(
+            Site(
+                name = "test",
+                crop = "test",
+                location = "test",
+            )
+        )
         println(sensor)
     }
-
 }

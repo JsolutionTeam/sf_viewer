@@ -1,7 +1,6 @@
 package kr.co.jsol.domain.entity.rdacolumn
 
 import org.hibernate.annotations.Comment
-import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -9,7 +8,8 @@ import javax.persistence.Index
 import javax.persistence.Table
 
 @Entity
-@Table(name = "tb_rda_column",
+@Table(
+    name = "tb_rda_column",
     indexes = [
         Index(name = "idx_rda_column_no", columnList = "no", unique = true)
     ]
@@ -17,7 +17,7 @@ import javax.persistence.Table
 class RdaColumn(
     @Id
     @Column(name = "property")
-    @Comment("수집 항목 데이터베이스에서 사용하는 컬럼명")
+    @Comment("수집 항목 데이터베이스에서 사용하는 컬럼명, 사용하지 않는 값 일 시 null_번호로 표기")
     val property: String,
 
     @Column(name = "target")

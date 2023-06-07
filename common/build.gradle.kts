@@ -23,9 +23,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
     api("io.jsonwebtoken:jjwt-gson:0.11.5") // implementation을 api로 변경하면 오류가 발생한다??
-    api("io.jsonwebtoken:jjwt-api:0.11.5")// implementation을 api로 변경하면 오류가 발생한다??
-
-
+    api("io.jsonwebtoken:jjwt-api:0.11.5") // implementation을 api로 변경하면 오류가 발생한다??
 }
 
 tasks.withType<Jar> {

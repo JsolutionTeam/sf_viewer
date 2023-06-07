@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service
 class SensorService(
     private val sensorRepository: SensorRepository,
     private val siteRepository: SiteRepository,
-){
+) {
     fun saveSensor(sensorDto: SensorTcpDto, clientIp: String): Site {
         val siteSeq = sensorDto.siteSeq
 
         // siteSeq로 site 정보 가져오기
         val optional = siteRepository.findById(siteSeq)
-        if(optional.isEmpty) {
+        if (optional.isEmpty) {
             throw IllegalArgumentException("존재하지 않는 농장 번호입니다.")
         }
         val site = optional.get()
@@ -27,7 +27,7 @@ class SensorService(
         sensor.create(clientIp)
 
         sensorRepository.save(sensor)
-        if(site.ip != clientIp){
+        if (site.ip != clientIp) {
             site.updateLastSensorIp(ip = clientIp)
             siteRepository.save(site)
         }
