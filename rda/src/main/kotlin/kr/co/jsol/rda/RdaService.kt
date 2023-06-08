@@ -124,7 +124,7 @@ class RdaService(
 
             val uri: URI = newUriContainer.build().toUri()
             log.info("uri : $uri")
-            val responseBody = requestDataToUri(client, uri)
+            val responseBody: String? = requestDataToUri(client, uri)
             log.info("API 요청 결과 : $responseBody")
 
             // resultCode가 빈 문자열로 오는 경우 성공.
@@ -132,7 +132,7 @@ class RdaService(
                 요청에 apiKey가 없는 경우 : E_EMPTY_KEY
                 불가능한 apiKey가 온 경우 : E_INVALID_KEY
              */
-            if (responseBody.contains("\"resultCode\":\"\"")) {
+            if (responseBody != null && responseBody.contains("\"resultCode\":\"\"")) {
                 data.id
             } else {
                 null
@@ -144,7 +144,7 @@ class RdaService(
         }
     }
 
-    private fun requestDataToUri(client: HttpClient, uri: URI): String {
+    private fun requestDataToUri(client: HttpClient, uri: URI): String? {
         val request = HttpRequest.newBuilder()
             .GET()
             .uri(uri)
