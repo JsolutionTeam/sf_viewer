@@ -42,7 +42,7 @@ class RdaService(
 
     // RDA 서버로 데이터 전송을 위한 http client 생성
     private val client: HttpClient = HttpClient.newBuilder()
-        .connectTimeout(Duration.of(10, java.time.temporal.ChronoUnit.SECONDS))
+        .connectTimeout(Duration.of(10, java.time.temporal.ChronoUnit.MINUTES))
         .build()
 
     private var uriContainer: UriComponentsBuilder = UriComponentsBuilder.newInstance()
