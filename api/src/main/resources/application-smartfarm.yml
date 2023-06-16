@@ -5,15 +5,15 @@ spring:
         password: qweR1234@!
         driver-class-name: org.mariadb.jdbc.Driver
         hikari:
-            connection-timeout: 60000 # 커넥션 타임아웃 설정
-            max-lifetime: 580000
+            connection-timeout: 600_000 # 커넥션 타임아웃 설정
+            max-lifetime: 580_000
             maximum-pool-size: 30 # 커넥션 풀 최대 풀 크기 설정
-            idle-timeout: 10000 # 커넥션 풀 유휴 커넥션 설정
-            validation-timeout: 10000
+            idle-timeout: 100_000 # 커넥션 풀 유휴 커넥션 설정
+            validation-timeout: 100_000 # 커넥션 검증 타임아웃 설정
             minimum-idle: 5 # 커넥션 풀 최소 개수 설정
 
 server:
-    port: 15005
+    port: 15006
 
 file:
     uploadDir: C:/jsolution/files/ # 무조건 /로 끝내야 함.
