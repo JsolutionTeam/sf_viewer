@@ -13,7 +13,7 @@ spring:
             minimum-idle: 5 # 커넥션 풀 최소 개수 설정
 
 server:
-    port: 15006
+    port: 15007
 
 file:
     uploadDir: C:/jsolution/files/ # 무조건 /로 끝내야 함.
