@@ -52,10 +52,13 @@ class SensorDevice(
     var imgPath: String = "",
 
     // 농장 정보
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
+    )
     @JoinColumn(
         name = "site_seq",
-        foreignKey = ForeignKey(value = ConstraintMode.NO_CONSTRAINT),
+        foreignKey = ForeignKey(name = "fk_sensor_device_site_seq"),
     )
     @Comment("농가 정보")
     var site: Site? = null,

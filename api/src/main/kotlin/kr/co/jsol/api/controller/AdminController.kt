@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import kr.co.jsol.domain.entity.site.SiteService
 import kr.co.jsol.domain.entity.user.UserService
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
 import kr.co.jsol.domain.entity.user.dto.request.UserSearchCondition
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*
 )
 class AdminController(
     private val userService: UserService,
+    private val siteService: SiteService,
 ) {
 
     @Operation(summary = "계정 생성")
@@ -43,6 +45,16 @@ class AdminController(
     @ResponseStatus(value = HttpStatus.OK)
     fun isExistUsername(@PathVariable id: String): Boolean {
         return userService.isExistUserById(id)
+    }
+
+    @Operation(summary = "사용자 계정 중복 조회")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공"),
+    )
+    @GetMapping("/sites/exist/{siteSeq}")
+    @ResponseStatus(value = HttpStatus.OK)
+    fun isExistSiteSeq(@PathVariable siteSeq: Long): Boolean {
+        return siteService.isExistSiteSeq(siteSeq)
     }
 
     @Operation(summary = "사용자 리스트 조회")

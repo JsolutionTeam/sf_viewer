@@ -19,6 +19,8 @@ class SiteService(
     @Value("\${inGSystem.message.default-delay:60}")
     private val defaultDelay: Long = 60
 
+    fun isExistSiteSeq(siteSeq: Long) = siteRepository.existsById(siteSeq)
+
     fun findByIp(ip: String): Site? {
         return siteRepository.findFirstByIpOrderBySiteIpUpdatedAtDesc(ip)
     }

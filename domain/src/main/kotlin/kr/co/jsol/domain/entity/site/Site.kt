@@ -4,8 +4,6 @@ import org.hibernate.annotations.Comment
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Table
 
@@ -37,9 +35,10 @@ class Site(
     var apiKey: String = "",
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "site_seq", updatable = false)
-    val id: Long? = null,
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "site_seq")
+//    @Column(name = "site_seq", updatable = false)
+    var id: Long,
 ) {
 
     @Column(name = "site_ip_updated_at")
@@ -47,12 +46,14 @@ class Site(
     var siteIpUpdatedAt: LocalDateTime? = null
 
     fun update(
+        id: Long? = null,
         name: String? = null,
         crop: String? = null,
         location: String? = null,
         delay: Long? = null,
         apiKey: String? = null,
     ) {
+        this.id = id ?: this.id
         this.name = name ?: this.name
         this.location = location ?: this.location
         this.crop = crop ?: this.crop

@@ -2,18 +2,7 @@ package kr.co.jsol.domain.entity.opening
 
 import kr.co.jsol.domain.entity.site.Site
 import java.time.LocalDateTime
-import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.ConstraintMode
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.ForeignKey
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "tb_opening")
@@ -43,7 +32,7 @@ class Opening(
     )
     @JoinColumn(
         name = "site_seq",
-        foreignKey = ForeignKey(value = ConstraintMode.NO_CONSTRAINT)
+        foreignKey = ForeignKey(name = "fk_opening_site_seq")
     )
     var site: Site? = null,
 

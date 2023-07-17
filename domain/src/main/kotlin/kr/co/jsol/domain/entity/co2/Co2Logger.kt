@@ -3,14 +3,7 @@ package kr.co.jsol.domain.entity.co2
 import kr.co.jsol.domain.entity.site.Site
 import org.hibernate.annotations.Comment
 import java.time.LocalDateTime
-import javax.persistence.Column
-import javax.persistence.ConstraintMode
-import javax.persistence.Entity
-import javax.persistence.ForeignKey
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "tb_co2_logger")
@@ -38,10 +31,13 @@ class Co2Logger(
     @Comment("농촌진흥청 데이터 전송 여부")
     val isSend: Boolean = false,
 
-    @ManyToOne
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
+    )
     @JoinColumn(
         name = "site_seq",
-        foreignKey = ForeignKey(value = ConstraintMode.NO_CONSTRAINT)
+        foreignKey = ForeignKey(name = "fk_co2_logger_site_seq"),
     )
     val site: Site,
 
