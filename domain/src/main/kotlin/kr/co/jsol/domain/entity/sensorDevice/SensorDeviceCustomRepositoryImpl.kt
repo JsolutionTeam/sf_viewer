@@ -32,12 +32,12 @@ class SensorDeviceCustomRepositoryImpl(
                     ip = sensorDevice.ip,
                     memo = sensorDevice.memo,
                     siteName = site.name,
-                    siteSeq = site.id,
+                    siteSeq = site.seq,
                     imgPath = sensorDevice.imgPath,
                 )
             )
             .from(sensorDevice)
-            .leftJoin(site).on(sensorDevice.site.id.eq(site.id)).fetchJoin()
+            .leftJoin(site).on(sensorDevice.site.seq.eq(site.seq)).fetchJoin()
             .where(
                 search(siteSearchCondition),
             )
@@ -56,8 +56,8 @@ class SensorDeviceCustomRepositoryImpl(
         condition.memo?.let { builder.and(sensorDevice.memo.contains(it)) }
 
         // start과 endTime이 모두 null이 아닐 때만 조건식 추가
-        if (condition.startTime != null && condition.endTime != null) {
-            builder.and(betweenTime(sensorDevice.createdAt, condition.startTime!!, condition.endTime))
+        if (condition.isDateRangeValid) {
+            builder.and(betweenTime(sensorDevice.createdAt, condition.startDateTime, condition.endDateTime))
         }
 
         return builder

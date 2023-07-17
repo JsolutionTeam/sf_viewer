@@ -65,7 +65,7 @@ data class ToSendRDAResponse(
                 ToSendRDAResponse(
                     apiKey = site.apiKey,
                     id = it.id!!,
-                    siteSeq = site.id!!,
+                    siteSeq = site.seq!!,
                     siteName = site.name,
                     microRegTime = it.regTime,
                     temperature = it.temperature,

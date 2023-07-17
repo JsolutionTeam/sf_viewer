@@ -24,7 +24,7 @@ data class SiteResponse(
     val siteIpUpdatedAt: LocalDateTime?,
 ) {
     constructor(site: Site) : this(
-        id = site.id!!,
+        id = site.seq,
         name = site.name,
         crop = site.crop,
         location = site.location,

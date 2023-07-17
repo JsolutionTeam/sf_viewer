@@ -4,9 +4,13 @@ import io.swagger.v3.oas.annotations.media.Schema
 import kr.co.jsol.common.util.ValidEnum
 import kr.co.jsol.domain.entity.user.User
 import kr.co.jsol.domain.entity.user.enums.UserRoleType
+import org.hibernate.validator.constraints.Length
+import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 
 data class UserRequest(
+//    USER
+
     @NotBlank(message = "사용자 아이디는 필수 입력입니다.")
     val username: String,
     @NotBlank(message = "사용자 이름은 필수 입력입니다.")
@@ -22,6 +26,11 @@ data class UserRequest(
     val phone: String,
     @NotBlank(message = "사용자 주소는 필수 입력입니다.")
     val address: String,
+
+//    SITE
+    @Length(min = 0, message = "사용자 농장 번호는 필수 입력입니다.")
+    @Min(value = 0, message = "사용자 농장 번호는 1 이상 입력해주세요.")
+    val siteSeq: Long,
     @NotBlank(message = "사용자 농장 이름은 필수 입력입니다.")
     val siteName: String,
     @NotBlank(message = "사용자 농장 작물은 필수 입력입니다.")

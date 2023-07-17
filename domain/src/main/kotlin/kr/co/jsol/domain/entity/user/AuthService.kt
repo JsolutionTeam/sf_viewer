@@ -58,7 +58,7 @@ class AuthService(
 
         return LoginResponse(
             role = user.role,
-            siteSeq = user.site!!.id!!,
+            siteSeq = user.site!!.seq!!,
             accessToken = jwtTokenProvider.createAccessToken(user.username),
             refreshToken = jwtTokenProvider.createRefreshToken(user.username),
         )

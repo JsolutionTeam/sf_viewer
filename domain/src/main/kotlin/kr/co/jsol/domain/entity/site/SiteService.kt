@@ -1,5 +1,6 @@
 package kr.co.jsol.domain.entity.site
 
+import kr.co.jsol.common.exception.entities.site.SiteNotFoundException
 import kr.co.jsol.domain.entity.opening.OpeningService
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
@@ -43,11 +44,11 @@ class SiteService(
     }
 
     fun list(): List<SiteResponse> {
-        return siteRepository.findAllByOrderByIdAsc()
+        return siteRepository.findAllByOrderBySeqAsc().map { SiteResponse(it) }
     }
 
     fun isAbleToSendRda(siteSeq: Long): Boolean {
-        val site = siteRepository.findById(siteSeq).orElseThrow { throw Exception("site not found") }
+        val site = siteRepository.findBySeq(siteSeq) ?: throw SiteNotFoundException()
         return site.isAbleToSendRda()
     }
 }

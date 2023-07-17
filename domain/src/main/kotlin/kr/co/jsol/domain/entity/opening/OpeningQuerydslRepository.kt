@@ -18,7 +18,7 @@ class OpeningQuerydslRepository(
         return queryFactory
             .select(
                 QOpeningResDto(
-                    opening.site.id,
+                    opening.site.seq,
                     opening.rateOfOpening,
                     opening.openSignal,
                     opening.regTime,
@@ -27,7 +27,7 @@ class OpeningQuerydslRepository(
             )
             .from(opening)
             .where(
-                opening.site.id.eq(siteSeq)
+                opening.site.seq.eq(siteSeq)
             )
             .orderBy(opening.regTime.desc())
             .limit(1)

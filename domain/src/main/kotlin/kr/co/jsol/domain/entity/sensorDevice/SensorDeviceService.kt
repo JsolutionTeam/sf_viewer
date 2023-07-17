@@ -1,5 +1,6 @@
 package kr.co.jsol.domain.entity.sensorDevice
 
+import kr.co.jsol.common.exception.entities.site.SiteNotFoundException
 import kr.co.jsol.domain.common.FileService
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceCreateRequest
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceSearchCondition
@@ -8,6 +9,7 @@ import kr.co.jsol.domain.entity.sensorDevice.dto.response.SensorDeviceResponse
 import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 
 @Service
@@ -18,8 +20,8 @@ class SensorDeviceService(
 ) {
 
     fun saveSensorDevice(sensorDeviceCreateRequest: SensorDeviceCreateRequest): Long {
-        val site = sensorDeviceCreateRequest.siteSeq?.let {
-            siteRepository.findById(it).orElse(null)
+        val site: Site? = sensorDeviceCreateRequest.siteSeq?.let {
+            siteRepository.findBySeq(it)
         }
 
         val sensorDevice: SensorDevice = sensorDeviceCreateRequest.toEntity(site)
@@ -40,6 +42,7 @@ class SensorDeviceService(
         return SensorDeviceResponse(optional.get())
     }
 
+    @Transactional
     fun updateSensorDevice(sensorDeviceId: Long, sensorDeviceUpdateRequest: SensorDeviceUpdateRequest) {
         // sensorDeviceId로 sensorDevice 정보 가져오기
         val optional = sensorDeviceRepository.findById(sensorDeviceId)
@@ -48,9 +51,12 @@ class SensorDeviceService(
         }
         val sensorDevice = optional.get()
 
-        // 농장 정보를 변경한다면,
-        val site: Site? = siteRepository.findById(sensorDeviceUpdateRequest.siteSeq ?: 0).orElse(null)
-        sensorDevice.updateSite(site)
+        // 장비의 농장 정보를 변경한다면,
+        sensorDeviceUpdateRequest.siteSeq?.let{
+            // 존재하지 않다면 null 로 넣는다
+            val site: Site = siteRepository.findBySeq(it) ?: throw SiteNotFoundException()
+            sensorDevice.updateSite(site)
+        }
 
         // 센서 장비 정보 수정
         sensorDevice.updateDeviceInfo(
@@ -91,10 +97,6 @@ class SensorDeviceService(
 
         // 파일도 같이 삭제돼야함.
         fileService.deleteFile(sensorDevice.imgPath)
-
-        // 어차피 실제 이미지 파일도 삭제되기 때문에 하드 딜리트로 변경해도 상관 없을 것 같음.
-//        sensorDevice.softDelete("SMART_FARM") // 관리자만 삭제함
-//        sensorDeviceRepository.save(sensorDevice)
 
         sensorDeviceRepository.delete(sensorDevice)
     }

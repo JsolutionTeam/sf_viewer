@@ -35,13 +35,13 @@ class UserQuerydslRepository(
         val builder = BooleanBuilder()
 
         userSearchCondition.name?.let { builder.and(user.name.contains(it)) }
-        userSearchCondition.siteSeq?.let { builder.and(user.site.id.eq(it)) }
+        userSearchCondition.siteSeq?.let { builder.and(user.site.seq.eq(it)) }
         userSearchCondition.siteCrop?.let { builder.and(user.site.crop.contains(it)) }
         userSearchCondition.siteLocation?.let { builder.and(user.site.location.contains(it)) }
         userSearchCondition.siteName?.let { builder.and(user.site.name.contains(it)) }
 
-        if (userSearchCondition.startTime != null && userSearchCondition.endTime != null) {
-            builder.and(betweenTime(QSensorDevice.sensorDevice.createdAt, userSearchCondition.startTime!!, userSearchCondition.endTime))
+        if (userSearchCondition.isDateRangeValid) {
+            builder.and(betweenTime(QSensorDevice.sensorDevice.createdAt, userSearchCondition.startDateTime, userSearchCondition.endDateTime))
         }
 
         return query

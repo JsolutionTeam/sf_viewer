@@ -1,5 +1,6 @@
 package kr.co.jsol.domain.entity.user
 
+import kr.co.jsol.common.exception.entities.site.SiteSeqConflictException
 import kr.co.jsol.common.exception.entities.user.UserAlreadyExistException
 import kr.co.jsol.common.exception.entities.user.UserDisableException
 import kr.co.jsol.domain.entity.site.Site
@@ -41,7 +42,9 @@ class UserService(
         val existUser = userRepository.findByIdAndLockedIsFalse(userRequest.username)
         if (existUser != null) throw UserAlreadyExistException()
 
+        val toCreateSiteSeq = checkExistSiteSeq(userRequest.siteSeq)
         val site = Site(
+            seq = toCreateSiteSeq,
             name = userRequest.siteName,
             crop = userRequest.siteCrop,
             location = userRequest.siteLocation
@@ -69,7 +72,12 @@ class UserService(
             address = userUpdateRequest.address
         )
         if (user.site != null) {
+            val toUpdateSiteSeq = userUpdateRequest.siteSeq?.let {
+                checkExistSiteSeq(it)
+            }
+
             user.site!!.update(
+                id = toUpdateSiteSeq,
                 name = userUpdateRequest.siteName,
                 crop = userUpdateRequest.siteCrop,
                 location = userUpdateRequest.siteLocation,
@@ -83,10 +91,15 @@ class UserService(
         return UserResponse(user)
     }
 
+    private fun checkExistSiteSeq(it: Long): Long {
+        siteRepository.findBySeq(it)?.let { SiteSeqConflictException() }
+        return it
+    }
+
     @Transactional
     fun deleteUserById(id: String): Boolean {
         val user: User = userRepository.findById(id).orElseThrow { UsernameNotFoundException("해당 사용자를 찾을 수 없습니다.") }
-        user.site?.let { siteRepository.delete(it) }
+//        user.site?.let { siteRepository.delete(it) }
         userRepository.delete(user)
         return true
     }

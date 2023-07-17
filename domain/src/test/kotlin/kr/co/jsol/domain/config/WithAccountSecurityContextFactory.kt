@@ -24,7 +24,7 @@ class WithAccountSecurityContextFactory(
 
         val site001 = siteRepository.save(
             Site(
-                id = 1L,
+                seq = 1L,
                 name = "사이트001",
                 crop = "사이트001",
                 location = "사이트001",

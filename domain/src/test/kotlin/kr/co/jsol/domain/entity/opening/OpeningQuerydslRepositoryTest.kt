@@ -19,7 +19,7 @@ class OpeningQuerydslRepositoryTest @Autowired constructor(
     private val siteRepository: SiteRepository,
 ) {
 
-    private val site = Site(name = "테스트", crop = "양파", location = "테스트")
+    private val site = Site(seq = 1, name = "테스트", crop = "양파", location = "테스트")
 
     @Test
     @DisplayName(value = "사이트 번호로 가장 최신 개폐 데이터가 조회된다.")

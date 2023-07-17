@@ -5,11 +5,10 @@ import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceUpdateReque
 import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -23,7 +22,7 @@ class SensorDeviceServiceTest @Autowired constructor(
 
     private val siteRepository: SiteRepository,
 ) {
-    private val site = Site(name = "양파", crop = "양파", location = "테스트")
+    private val site = Site(seq = 1, name = "양파", crop = "양파", location = "테스트")
 
     @BeforeEach
     fun setUp() {
@@ -43,7 +42,7 @@ class SensorDeviceServiceTest @Autowired constructor(
             serialNumber = "serialNumber",
             ip = "ip",
             memo = "memo",
-            siteSeq = site.id!!,
+            siteSeq = site.seq,
         )
 
         // when
@@ -83,7 +82,7 @@ class SensorDeviceServiceTest @Autowired constructor(
             serialNumber = "serialNumber2",
             ip = "ip2",
             memo = "memo2",
-            siteSeq = site.id!!,
+            siteSeq = site.seq!!,
         )
 
         // when

@@ -20,6 +20,8 @@ data class UserUpdateRequest(
     val role: UserRoleType?,
 
     // 추가 설정 정보
+    @Schema(description = "변경할 농가 번호", required = false)
+    val siteSeq: Long?,
     @Schema(description = "변경할 농가 이름", required = false)
     val siteName: String?,
     @Schema(description = "변경할 농가 작물", required = false)

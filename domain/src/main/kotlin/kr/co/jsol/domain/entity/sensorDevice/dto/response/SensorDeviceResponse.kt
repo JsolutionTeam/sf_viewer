@@ -24,7 +24,7 @@ data class SensorDeviceResponse @QueryProjection constructor(
         ip = sensorDevice.ip,
         memo = sensorDevice.memo,
         siteName = sensorDevice.site?.name,
-        siteSeq = sensorDevice.site?.id,
+        siteSeq = sensorDevice.site?.seq,
         imgPath = sensorDevice.imgPath,
     )
 }

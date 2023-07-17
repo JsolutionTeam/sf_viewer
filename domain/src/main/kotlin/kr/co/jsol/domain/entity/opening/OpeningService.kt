@@ -1,5 +1,7 @@
 package kr.co.jsol.domain.entity.opening
 
+import kr.co.jsol.common.exception.MyEntityNotFoundException
+import kr.co.jsol.common.exception.entities.site.SiteNotFoundException
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
@@ -23,7 +25,7 @@ class OpeningService(
         openSignal: Int,
         clientIp: String? = null,
     ): Site {
-        val site = siteRepository.findById(siteSeq).orElseThrow { RuntimeException("Site not found") }
+        val site = siteRepository.findBySeq(siteSeq) ?: throw SiteNotFoundException()
         try {
             val opening = Opening(
                 rateOfOpening = rateOfOpening,

@@ -80,7 +80,7 @@ class TcpServerThread(
                     // 연결 성공 시 초기화 용 데이터 전송 현재 시간, 지연 시간
                     val site = tcpRequestHandler.findSiteByIp(hostAddress).let {
                         if (it != null) {
-                            socketDelay[it.id!!] = it.delay
+                            socketDelay[it.seq!!] = it.delay
                         }
                         it
                     }
@@ -94,7 +94,7 @@ class TcpServerThread(
 
                     val inProcessThread = InProcessThread(socket)
                     Thread(inProcessThread).start()
-                    val outProcessThread = OutProcessThread(socket, site?.id)
+                    val outProcessThread = OutProcessThread(socket, site?.seq)
                     Thread(outProcessThread).start()
 
                     // 현재 실행중인 스레드 수 표시
@@ -173,7 +173,7 @@ class TcpServerThread(
                         }
                         // 데이터 처리
                         val site = tcpRequestHandler.handle(socket!!, message!!)
-                        socketDelay[site.id!!] = site.delay
+                        socketDelay[site.seq!!] = site.delay
                     }
                 }
 

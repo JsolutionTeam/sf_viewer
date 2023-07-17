@@ -16,6 +16,7 @@ import kr.co.jsol.domain.entity.opening.QOpening.Companion.opening
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.opening.dto.QOpeningResDto
 import kr.co.jsol.domain.entity.sensor.QSensor.Companion.sensor
+import kr.co.jsol.domain.entity.site.QSite.Companion.site
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
 import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
@@ -29,14 +30,13 @@ import java.time.YearMonth
 @Repository
 class SiteQuerydslRepository(
     private val queryFactory: JPAQueryFactory,
-    private val siteRepository: SiteRepository,
 ) {
 
     // JPAQueryFactory를 사용하려면 QueryDslConfig 파일에 Bean 등록 해줘야함.
     private val log = LoggerFactory.getLogger(SiteQuerydslRepository::class.java)
 
     private val qMicro = QMicroDto(
-        micro.site.id.`as`("siteSeq"),
+        micro.site.seq.`as`("siteSeq"),
         micro.regTime.`as`("regTime"),
         micro.temperature.`as`("temperature"),
         micro.relativeHumidity.`as`("relativeHumidity"),
@@ -52,7 +52,7 @@ class SiteQuerydslRepository(
     )
 
     private val qSensor = QMicroDto(
-        sensor.site.id.`as`("siteSeq"),
+        sensor.site.seq.`as`("siteSeq"),
         sensor.createdAt.`as`("regTime"),
         sensor.temperature.`as`("temperature"),
         sensor.humidity.`as`("relativeHumidity"),
@@ -67,13 +67,13 @@ class SiteQuerydslRepository(
     )
 
     private val qCo2 = QCo2Dto(
-        co2Logger.site.id.`as`("siteSeq"),
+        co2Logger.site.seq.`as`("siteSeq"),
         co2Logger.regTime,
         co2Logger.co2.`as`("co2"),
     )
 
     private val qOpening = QOpeningResDto(
-        opening.site.id,
+        opening.site.seq,
         opening.rateOfOpening,
         opening.openSignal,
         opening.regTime,
@@ -88,7 +88,7 @@ class SiteQuerydslRepository(
         val co2Dto = queryFactory
             .select(qCo2)
             .from(co2Logger)
-            .where(co2Logger.site.id.eq(siteSeq))
+            .where(co2Logger.site.seq.eq(siteSeq))
             .orderBy(co2Logger.regTime.desc())
             .limit(1)
             .fetchOne()
@@ -96,7 +96,7 @@ class SiteQuerydslRepository(
         val microDto = queryFactory
             .select(qMicro)
             .from(micro)
-            .where(micro.site.id.eq(siteSeq))
+            .where(micro.site.seq.eq(siteSeq))
             .orderBy(micro.regTime.desc())
             .limit(1)
             .fetchOne()
@@ -104,7 +104,7 @@ class SiteQuerydslRepository(
         val sensorDto = queryFactory
             .select(qSensor)
             .from(sensor)
-            .where(sensor.site.id.eq(siteSeq))
+            .where(sensor.site.seq.eq(siteSeq))
             .orderBy(sensor.createdAt.desc())
             .limit(1)
             .fetchOne()
@@ -121,7 +121,7 @@ class SiteQuerydslRepository(
                 )
             )
             .from(opening)
-            .where(opening.site.id.eq(siteSeq))
+            .where(opening.site.seq.eq(siteSeq))
             .orderBy(opening.regTime.desc())
             .limit(1)
             .fetchOne()
@@ -172,7 +172,7 @@ class SiteQuerydslRepository(
             .select(qCo2)
             .from(co2Logger)
             .where(
-                co2Logger.site.id.eq(siteSeq),
+                co2Logger.site.seq.eq(siteSeq),
                 betweenTime(co2Logger.regTime, startTime, endTime)
             )
             .groupBy(co2Logger.regTime)
@@ -183,7 +183,7 @@ class SiteQuerydslRepository(
             .select(qMicro)
             .from(micro)
             .where(
-                micro.site.id.eq(siteSeq),
+                micro.site.seq.eq(siteSeq),
                 betweenTime(micro.regTime, startTime, endTime)
             )
             .groupBy(micro.regTime)
@@ -193,8 +193,10 @@ class SiteQuerydslRepository(
         val sensor: List<MicroDto> = queryFactory.select(
             qSensor
         ).from(sensor)
+            .innerJoin(sensor.site, site)
+            .on(site.seq.eq(siteSeq))
             .where(
-                sensor.site.id.eq(siteSeq),
+                sensor.site.seq.eq(siteSeq),
                 betweenTime(sensor.createdAt, startTime, endTime)
             )
             .groupBy(sensor.createdAt)
@@ -219,7 +221,7 @@ class SiteQuerydslRepository(
 
         return queryFactory.select(qOpening).from(opening)
             .where(
-                opening.site.id.eq(siteSeq),
+                opening.site.seq.eq(siteSeq),
                 betweenTime(opening.regTime, startTime, endTime)
             )
             .groupBy(inGTime)
