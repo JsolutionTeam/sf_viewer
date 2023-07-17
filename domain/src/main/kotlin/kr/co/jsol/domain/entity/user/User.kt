@@ -35,7 +35,7 @@ class User(
     )
     @JoinColumn(
         name = "site_seq",
-        foreignKey = ForeignKey(value = ConstraintMode.NO_CONSTRAINT),
+        foreignKey = ForeignKey(name = "fk_user_site_seq"),
     )
     var site: Site? = null,
 

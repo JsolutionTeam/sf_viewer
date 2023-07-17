@@ -16,7 +16,7 @@ file:
     loadPath: /api/media
 logging:
     level:
-        root: debug
-        kr.co.jsol: debug
+        root: info
+        kr.co.jsol: info
 
 

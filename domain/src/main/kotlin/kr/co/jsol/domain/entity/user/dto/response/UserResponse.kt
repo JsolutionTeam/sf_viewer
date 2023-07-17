@@ -11,7 +11,7 @@ data class UserResponse(
     val email: String,
     val phone: String,
     val address: String,
-    val site: SiteResponse,
+    val site: SiteResponse?,
 ) {
     constructor(user: User) : this(
         name = user.name,
@@ -20,6 +20,6 @@ data class UserResponse(
         email = user.email,
         phone = user.phone,
         address = user.address,
-        site = SiteResponse(user.site!!),
+        site = user.site?.let { SiteResponse(it) },
     )
 }
