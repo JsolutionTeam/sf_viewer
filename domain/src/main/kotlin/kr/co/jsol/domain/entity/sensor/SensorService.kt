@@ -3,13 +3,18 @@ package kr.co.jsol.domain.entity.sensor
 import kr.co.jsol.domain.entity.sensor.dto.SensorTcpDto
 import kr.co.jsol.domain.entity.site.Site
 import kr.co.jsol.domain.entity.site.SiteRepository
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class SensorService(
     private val sensorRepository: SensorRepository,
     private val siteRepository: SiteRepository,
 ) {
+    private val log = LoggerFactory.getLogger(this.javaClass)
+
+    @Transactional
     fun saveSensor(sensorDto: SensorTcpDto, clientIp: String): Site {
         val siteSeq = sensorDto.siteSeq
 
@@ -28,6 +33,7 @@ class SensorService(
 
         sensorRepository.save(sensor)
         if (site.ip != clientIp) {
+            log.info("ip 변경 감지 기존 ip: ${site.ip} 변경 ip: $clientIp")
             site.updateLastSensorIp(ip = clientIp)
             siteRepository.save(site)
         }
