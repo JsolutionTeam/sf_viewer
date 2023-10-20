@@ -10,6 +10,8 @@ data class UserUpdateRequest(
     val username: String,
     @Schema(description = "변경할 사용자 비밀번호", required = false)
     val password: String?,
+    @Schema(description = "변경할 사용자 이름", required = false)
+    val name: String?,
     @Schema(description = "변경할 사용자 이메일", required = false)
     val email: String?,
     @Schema(description = "변경할 사용자 전화번호", required = false)

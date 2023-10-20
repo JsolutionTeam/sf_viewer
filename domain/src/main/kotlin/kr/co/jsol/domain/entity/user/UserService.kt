@@ -87,6 +87,7 @@ class UserService(
 
         user.updateInfo(
             password = if (userUpdateRequest.password != null) passwordEncoder.encode(userUpdateRequest.password) else null,
+            name = userUpdateRequest.name,
             role = userUpdateRequest.role,
             email = userUpdateRequest.email,
             phone = userUpdateRequest.phone,
