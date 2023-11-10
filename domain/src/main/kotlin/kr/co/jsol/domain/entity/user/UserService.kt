@@ -52,25 +52,23 @@ class UserService(
 
         // 관리자 권한이면 농가를 지정하지 않는다.
         if(userRequest.role == UserRoleType.ROLE_USER) {
-            // 입력받은 농가번호로 조회
+            // 입력받은 농가번호로 조회 없으면 생성하고 있으면 기존것으로 사용한다.
             val siteSeq = userRequest.siteSeq
             var site = siteRepository.findById(siteSeq).orElse(null)
 
-            // 농가번호가 중복된다면 저장하지 않는다.(예외처리)
-            if (site != null) {
-                throw ForbiddenException()
+            // 농가번호가 존재하지 않으면 새로 생성
+            if (site == null) {
+                site = Site(
+                    id = siteSeq,
+                    name = userRequest.siteName,
+                    crop = userRequest.siteCrop,
+                    location = userRequest.siteLocation,
+                    delay = userRequest.siteDelay,
+                    apiKey = userRequest.siteApiKey,
+                )
+                siteRepository.save(site)
             }
 
-            // 농가번호가 중복되지 않는다면 새로 등록한다.
-            site = Site(
-                id = siteSeq,
-                name = userRequest.siteName,
-                crop = userRequest.siteCrop,
-                location = userRequest.siteLocation,
-                delay = userRequest.siteDelay,
-                apiKey = userRequest.siteApiKey,
-            )
-            siteRepository.save(site)
 
             // 사용자 정보에 농가정보를 저장한다.
             user.site = site
@@ -114,10 +112,10 @@ class UserService(
     fun deleteUserById(id: String): Boolean {
         val user: User = userRepository.findById(id).orElseThrow { UsernameNotFoundException("해당 사용자를 찾을 수 없습니다.") }
 
-        // 사용자일 시에만 농가정보를 삭제한다.
-        if (user.role == UserRoleType.ROLE_USER) {
-            user.site?.let { siteRepository.delete(it) }
-        }
+        // 사용자 정보는 삭제하되, 농가 정보는 무슨일이 있어도 생성 후에는 삭제하지 않도록 한다.
+//        if (user.role == UserRoleType.ROLE_USER) {
+//            user.site?.let { siteRepository.delete(it) }
+//        }
         userRepository.delete(user)
         return true
     }
