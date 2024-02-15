@@ -28,7 +28,7 @@ VOLUME ${PWD}/logs:/logs
 EXPOSE 18080
 
 # The application's jar file
-ARG JAR_FILE=./api/build/libs/api.jar
+ARG JAR_FILE=api/build/libs/api.jar
 
 # Add the application's jar to the container
 ADD ${JAR_FILE} /app.jar
