@@ -1,5 +1,6 @@
 package kr.co.jsol.domain.entity.site
 
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.Comment
 import java.time.LocalDateTime
 import javax.persistence.Column
@@ -31,6 +32,7 @@ class Site(
     var ip: String = "",
 
     @Column(name = "api_key", nullable = false)
+    @ColumnDefault("''")
     @Comment("농촌진흥청 API KEY")
     var apiKey: String = "",
 
