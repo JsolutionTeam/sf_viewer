@@ -25,7 +25,7 @@ LABEL maintainer="jsolution"
 VOLUME ${PWD}/logs:/logs
 
 # Make port 18080 available to the world outside this container
-EXPOSE 18080
+EXPOSE 11901
 
 # The application's jar file
 ARG JAR_FILE=api/build/libs/api.jar
