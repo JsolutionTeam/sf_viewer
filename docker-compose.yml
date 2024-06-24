@@ -16,7 +16,7 @@ services:
             - SPRING_PROFILES_ACTIVE=prod
             - SPRING_DATASOURCE_URL=jdbc:mariadb://sfviewer_mariadb:3306/sfviewer?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
             - SPRING_DATASOURCE_USERNAME=sfviewer
-            - SPRING_DATASOURCE_PASSWORD=1234
+            - SPRING_DATASOURCE_PASSWORD=jsolwpdlthffntus750!@
         deploy:
             mode: replicated
             replicas: 1
@@ -33,10 +33,10 @@ services:
         image: mariadb
         restart: always
         environment:
-            MARIADB_ROOT_PASSWORD: 1234
+            MARIADB_ROOT_PASSWORD: jsolwpdlthffntus750!@
             MARIADB_DATABASE: sfviewer
             MARIADB_USER: sfviewer
-            MARIADB_PASSWORD: 1234
+            MARIADB_PASSWORD: jsolwpdlthffntus750!@
 
 volumes:
     sfviewer-prod-server:
