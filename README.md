@@ -14,3 +14,4 @@ gradlew build && gradlew :api:bootRun --args='--spring.profiles.active=prod'
 
 ## 유지보수 시 확인해야 할 사항
 1. 센서 정보가 추가되면 application.yml에 sensors를 수정해야 한다.
+
