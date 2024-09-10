@@ -45,6 +45,12 @@ data class SummaryResponse(
     @Schema(description = "풍속 / 단위 m/s")
     var windSpeed: Double?,
 
+    @Schema(description = "돌풍 속도 / 단위 m/s")
+    var gustSpeed: Double?,
+
+    @Schema(description = "수분 함량 / 단위 %")
+    var moistureContent: Double?,
+
     @Schema(description = "co2 외 데이터 수집시간", format = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     var microRegTime: LocalDateTime?,
@@ -86,6 +92,8 @@ data class SummaryResponse(
                         earthTemperature = microDto?.earthTemperature,
                         windDirection = microDto?.windDirection,
                         windSpeed = microDto?.windSpeed,
+                        gustSpeed = microDto?.gustSpeed,
+                        moistureContent = microDto?.moistureContent,
 
                         // regtime
                         microRegTime = microDto?.regTime?.removeMinute(),

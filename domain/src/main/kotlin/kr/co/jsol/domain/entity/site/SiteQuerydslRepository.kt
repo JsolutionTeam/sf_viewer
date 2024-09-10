@@ -49,6 +49,8 @@ class SiteQuerydslRepository(
         Expressions.asNumber(0.0).`as`("earthHumidity"),
         micro.windDirection.`as`("windDirection"),
         micro.windSpeed.`as`("windSpeed"),
+        micro.gustSpeed.`as`("gustSpeed"),
+        micro.moistureContent.`as`("moistureContent"),
         Expressions.asNumber(0.0).`as`("cropTemperature"),
         Expressions.asNumber(0.0).`as`("cropHumidity"),
     )
@@ -64,6 +66,10 @@ class SiteQuerydslRepository(
         sensor.earthHumidity.`as`("earthHumidity"),
         sensor.windDirection.`as`("windDirection"),
         sensor.windSpeed.`as`("windSpeed"),
+        // null
+        Expressions.asNumber(0.0).`as`("gustSpeed"),
+        // null
+        Expressions.asNumber(0.0).`as`("moistureContent"),
         sensor.cropTemperature.`as`("cropTemperature"),
         sensor.cropHumidity.`as`("cropHumidity"),
     )
