@@ -45,7 +45,10 @@ class SiteService(
     }
 
     fun list(): List<SiteResponse> {
-        return siteRepository.findAllByOrderByIdAsc()
+//        return siteRepository.findAllByOrderByIdAsc()
+        return siteQuerydslRepository.findAll().map {
+            SiteResponse(it)
+        }
     }
 
     fun isAbleToSendRda(siteSeq: Long): Boolean {
