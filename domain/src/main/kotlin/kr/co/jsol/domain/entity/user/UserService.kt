@@ -31,7 +31,8 @@ class UserService(
     }
 
     fun getUsers(userSearchCondition: UserSearchCondition): List<UserResponse> {
-        return userQuerydslRepository.getUsers(userSearchCondition).map { UserResponse(it) }
+        return userQuerydslRepository.getUsers(userSearchCondition)
+            .map { UserResponse(it) }
     }
 
     fun getUser(id: String): UserResponse {
@@ -116,7 +117,13 @@ class UserService(
 //        if (user.role == UserRoleType.ROLE_USER) {
 //            user.site?.let { siteRepository.delete(it) }
 //        }
+
+        // 2024-09-10 변경
+        // 계정과 농가가 1:1로 매핑되는 형식으로 계정을 삭제하면 농가 선택도 불가능하게 되어야 하여
+        // 삭제하는 것으로 변경
+        user.site?.let { siteRepository.delete(it) }
         userRepository.delete(user)
+
         return true
     }
 }
