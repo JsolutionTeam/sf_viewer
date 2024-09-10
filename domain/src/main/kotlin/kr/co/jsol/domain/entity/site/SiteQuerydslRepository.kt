@@ -90,7 +90,7 @@ class SiteQuerydslRepository(
 
     fun findAll(): List<Site> {
         return queryFactory.selectFrom(site)
-            .leftJoin(site).on(
+            .leftJoin(user).on(
                 user.site.id.eq(site.id)
             ).fetchJoin()
             .orderBy(site.id.desc())
