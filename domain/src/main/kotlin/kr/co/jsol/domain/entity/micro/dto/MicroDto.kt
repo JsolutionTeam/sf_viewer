@@ -14,6 +14,8 @@ data class MicroDto @QueryProjection constructor(
     var earthHumidity: Double?, // 대지 습도
     val windDirection: Double, // 풍향
     val windSpeed: Double, // 풍속
+    val gustSpeed: Double, // 돌풍 속도
+    val moistureContent: Double, // 수분 함량
     var cropTemperature: Double?, // 작물 근접 온도 (작물과 가까운 센서에 수집된 온도)
     var cropHumidity: Double?, // 작물 근접 습도 (작물과 가까운 센서에 수집된 습도)
 ) {

@@ -18,11 +18,11 @@ class Co2Logger(
     @Column(name = "relative_humidity", insertable = false, updatable = false)
     val relativeHumidity: Double = 0.0, // 대기 습도
 
-    // 정보 수집 시간
+    // 실제 센서 정보가 수집된 시간
     @Column(name = "reg_dtm", insertable = false, updatable = false)
     val regTime: LocalDateTime,
 
-    // 마크 시간
+    // 데이터베이스에 저장된 시간
     @Column(name = "mark_tm", insertable = false, updatable = false)
     val markTime: LocalDateTime,
 
@@ -39,9 +39,9 @@ class Co2Logger(
         name = "site_seq",
         foreignKey = ForeignKey(name = "fk_co2_logger_site_seq"),
     )
-    val site: Site,
+    val site: Site, // 농가 번호
 
     @Id
     @Column(name = "co2_logger_seq", insertable = false, updatable = false)
-    val id: Long,
+    val id: Long, // PK
 )

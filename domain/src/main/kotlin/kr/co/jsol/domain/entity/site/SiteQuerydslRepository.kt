@@ -16,9 +16,11 @@ import kr.co.jsol.domain.entity.opening.QOpening.Companion.opening
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.opening.dto.QOpeningResDto
 import kr.co.jsol.domain.entity.sensor.QSensor.Companion.sensor
+import kr.co.jsol.domain.entity.site.QSite.Companion.site
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
 import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
+import kr.co.jsol.domain.entity.user.QUser.Companion.user
 import kr.co.jsol.domain.entity.util.formatDateTemplate
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
@@ -47,6 +49,8 @@ class SiteQuerydslRepository(
         Expressions.asNumber(0.0).`as`("earthHumidity"),
         micro.windDirection.`as`("windDirection"),
         micro.windSpeed.`as`("windSpeed"),
+        micro.gustSpeed.`as`("gustSpeed"),
+        micro.moistureContent.`as`("moistureContent"),
         Expressions.asNumber(0.0).`as`("cropTemperature"),
         Expressions.asNumber(0.0).`as`("cropHumidity"),
     )
@@ -62,6 +66,10 @@ class SiteQuerydslRepository(
         sensor.earthHumidity.`as`("earthHumidity"),
         sensor.windDirection.`as`("windDirection"),
         sensor.windSpeed.`as`("windSpeed"),
+        // null
+        Expressions.asNumber(0.0).`as`("gustSpeed"),
+        // null
+        Expressions.asNumber(0.0).`as`("moistureContent"),
         sensor.cropTemperature.`as`("cropTemperature"),
         sensor.cropHumidity.`as`("cropHumidity"),
     )
@@ -79,6 +87,15 @@ class SiteQuerydslRepository(
         opening.regTime,
         opening.machineId,
     )
+
+    fun findAll(): List<Site> {
+        return queryFactory.selectFrom(site)
+            .leftJoin(site).on(
+                user.site.id.eq(site.id)
+            ).fetchJoin()
+            .orderBy(site.id.desc())
+            .fetch()
+    }
 
     fun getRealTime(condition: SiteSearchCondition): RealTimeResponse {
         val (siteSeq) = condition

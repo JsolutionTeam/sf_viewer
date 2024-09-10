@@ -11,7 +11,7 @@ gradlew build && gradlew :api:bootRun --args='--spring.profiles.active=prod'
 
 ---
 # 센서 장치가 추가됨에따라 TCP SERVER 추가
-
+ - TCP 사용하는 센서는 기획되었다가 박사님이 기존에 사용하던 hobo 센서 데이터가 더 필요한게 맞다하여 추가 개발X 
 ## 유지보수 시 확인해야 할 사항
 1. 센서 정보가 추가되면 application.yml에 sensors를 수정해야 한다.
 

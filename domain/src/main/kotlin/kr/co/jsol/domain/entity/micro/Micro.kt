@@ -28,19 +28,27 @@ class Micro(
     @Column(name = "earth_temperature", insertable = false, updatable = false)
     val earthTemperature: Double = 0.0,
 
-    // 풍향
-    @Column(name = "wind_direction", insertable = false, updatable = false)
-    val windDirection: Double = 0.0,
-
     // 풍속
     @Column(name = "wind_speed", insertable = false, updatable = false)
     val windSpeed: Double = 0.0,
 
-    // 정보 수집 시간
+    // 풍향
+    @Column(name = "wind_direction", insertable = false, updatable = false)
+    val windDirection: Double = 0.0,
+
+    // 돌풍 속도
+    @Column(name = "gust_speed", insertable = false, updatable = false)
+    val gustSpeed: Double = 0.0,
+
+    // 수분 함량
+    @Column(name = "moisture_content", insertable = false, updatable = false)
+    val moistureContent: Double = 0.0,
+
+    // 실제 센서 정보가 수집된 시간
     @Column(name = "reg_dtm", insertable = false, updatable = false)
     val regTime: LocalDateTime,
 
-    // 마크 시간
+    // 데이터베이스에 저장된 시간
     @Column(name = "mark_tm", insertable = false, updatable = false)
     val markTime: LocalDateTime,
 
