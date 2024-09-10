@@ -6,6 +6,7 @@ import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
 import kr.co.jsol.domain.entity.site.dto.response.RealTimeResponse
 import kr.co.jsol.domain.entity.site.dto.response.SiteResponse
 import kr.co.jsol.domain.entity.site.dto.response.SummaryResponse
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -15,6 +16,8 @@ class SiteService(
     private val siteQuerydslRepository: SiteQuerydslRepository,
     private val openingService: OpeningService,
 ) {
+    private val log = LoggerFactory.getLogger(SiteService::class.java)
+
     // 기본 delay
     @Value("\${inGSystem.message.default-delay:60}")
     private val defaultDelay: Long = 60
@@ -46,6 +49,7 @@ class SiteService(
 
     fun list(): List<SiteResponse> {
 //        return siteRepository.findAllByOrderByIdAsc()
+        log.info("농가 전체 조회")
         return siteQuerydslRepository.findAll().map {
             SiteResponse(it)
         }

@@ -20,6 +20,7 @@ data class UserResponse(
         email = user.email,
         phone = user.phone,
         address = user.address,
+        //TODO 사용자가 많아지면 속도가 느려질 수 있음. 추후 수정 필요
         site = user.site?.let { SiteResponse(it) },
     )
 }

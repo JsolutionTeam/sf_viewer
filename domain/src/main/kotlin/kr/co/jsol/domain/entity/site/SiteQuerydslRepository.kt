@@ -90,7 +90,8 @@ class SiteQuerydslRepository(
 
     fun findAll(): List<Site> {
         return queryFactory.selectFrom(site)
-            .leftJoin(user).on(
+            //.leftJoin(user).on( // 2024-09-10 변경, 농가:사용자 = 1:1로 변경
+            .innerJoin(user).on(
                 user.site.id.eq(site.id)
             ).fetchJoin()
             .orderBy(site.id.desc())

@@ -31,7 +31,8 @@ class UserService(
     }
 
     fun getUsers(userSearchCondition: UserSearchCondition): List<UserResponse> {
-        return userQuerydslRepository.getUsers(userSearchCondition).map { UserResponse(it) }
+        return userQuerydslRepository.getUsers(userSearchCondition)
+            .map { UserResponse(it) }
     }
 
     fun getUser(id: String): UserResponse {
@@ -112,11 +113,14 @@ class UserService(
     fun deleteUserById(id: String): Boolean {
         val user: User = userRepository.findById(id).orElseThrow { UsernameNotFoundException("해당 사용자를 찾을 수 없습니다.") }
 
-        // 사용자 정보는 삭제하되, 농가 정보는 무슨일이 있어도 생성 후에는 삭제하지 않도록 한다.
+        // site는 co2, micro 등에서 사용하고 있으므로 삭제하지 않는다.
+        // 사용자 정보는 삭제하되, 농가 정보는 무슨일이 있어도 생성 후에는 삭제하지 않도록 한다.  (삭제하지 않고 조회만 안되게)
 //        if (user.role == UserRoleType.ROLE_USER) {
 //            user.site?.let { siteRepository.delete(it) }
 //        }
+
         userRepository.delete(user)
+
         return true
     }
 }

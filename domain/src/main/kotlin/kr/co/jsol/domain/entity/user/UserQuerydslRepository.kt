@@ -29,7 +29,9 @@ class UserQuerydslRepository(
         val query = queryFactory
             .selectFrom(user)
             .from(user)
-            .leftJoin(user.site, site)
+            .leftJoin(site).on(
+                user.site.id.eq(site.id)
+            ).fetchJoin()
             .orderBy(user.id.asc())
 
         val builder = BooleanBuilder()
