@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/sites")
 class SiteController(
     private val siteService: SiteService
 ) {
@@ -27,7 +27,7 @@ class SiteController(
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "성공"),
     )
-    @GetMapping("/site/list")
+    @GetMapping("")
     @ResponseStatus(value = HttpStatus.OK)
     fun getSiteList(): List<SiteResponse> {
         return siteService.list()
@@ -37,7 +37,7 @@ class SiteController(
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "성공"),
     )
-    @GetMapping("/site/{siteSeq}/summary")
+    @GetMapping("/{siteSeq}/summary")
     @ResponseStatus(value = HttpStatus.OK)
     fun getSiteSummary(
         @PathVariable(required = true) siteSeq: Long,
@@ -61,7 +61,7 @@ class SiteController(
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "성공"),
     )
-    @GetMapping("/site/{siteSeq}/summary/door")
+    @GetMapping("/{siteSeq}/summary/door")
     @ResponseStatus(value = HttpStatus.OK)
     fun getSiteSummaryOnlyOpeningData(
         @PathVariable(required = true) siteSeq: Long,
@@ -85,7 +85,7 @@ class SiteController(
         ApiResponse(responseCode = "200", description = "성공"),
     )
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/site/{siteSeq}/realtime")
+    @GetMapping("/{siteSeq}/realtime")
     fun getSiteSummary(
         @PathVariable(required = true) siteSeq: Long,
     ): RealTimeResponse {
