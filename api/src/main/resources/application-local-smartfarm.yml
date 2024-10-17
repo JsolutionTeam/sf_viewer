@@ -1,6 +1,8 @@
 spring:
     datasource:
-        url: jdbc:mariadb://39.112.10.37:23307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+#        url: jdbc:mariadb://39.112.10.37:23307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
+        # 2024-10-17 IP 변경
+        url: jdbc:mariadb://39.116.53.5:23307/faas?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&userSSL=false&zeroDateTimeBehavior=convertToNull&validationQuery="select 1"
         username: faas
         password: qweR1234@!
         driver-class-name: org.mariadb.jdbc.Driver
