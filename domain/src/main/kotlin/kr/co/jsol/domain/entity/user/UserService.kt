@@ -1,6 +1,5 @@
 package kr.co.jsol.domain.entity.user
 
-import kr.co.jsol.common.exception.ForbiddenException
 import kr.co.jsol.common.exception.entities.user.UserAlreadyExistException
 import kr.co.jsol.common.exception.entities.user.UserDisableException
 import kr.co.jsol.domain.entity.site.Site
@@ -52,22 +51,23 @@ class UserService(
         ///////////////////////////////////////////////////////////
 
         // 관리자 권한이면 농가를 지정하지 않는다.
-        if(userRequest.role == UserRoleType.ROLE_USER) {
+        if (userRequest.role == UserRoleType.ROLE_USER) {
             // 입력받은 농가번호로 조회 없으면 생성하고 있으면 기존것으로 사용한다.
             val siteSeq = userRequest.siteSeq
             var site = siteRepository.findById(siteSeq).orElse(null)
 
             // 농가번호가 존재하지 않으면 새로 생성
             if (site == null) {
-                site = Site(
-                    id = siteSeq,
-                    name = userRequest.siteName,
-                    crop = userRequest.siteCrop,
-                    location = userRequest.siteLocation,
-                    delay = userRequest.siteDelay,
-                    apiKey = userRequest.siteApiKey,
+                site = siteRepository.save(
+                    Site(
+                        id = siteSeq,
+                        name = userRequest.siteName,
+                        crop = userRequest.siteCrop,
+                        location = userRequest.siteLocation,
+                        delay = userRequest.siteDelay,
+                        apiKey = userRequest.siteApiKey,
+                    )
                 )
-                siteRepository.save(site)
             }
 
 
