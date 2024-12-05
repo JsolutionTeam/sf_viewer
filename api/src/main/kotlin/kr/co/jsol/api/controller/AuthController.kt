@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.jsol.common.jwt.dto.JwtToken
 import kr.co.jsol.common.jwt.dto.RefreshTokenRequest
 import kr.co.jsol.domain.entity.user.AuthService
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "인증 API", description = "로그인 및 토큰 관리")
 class AuthController(
     private val authService: AuthService
 ) {

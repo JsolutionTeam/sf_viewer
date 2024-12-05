@@ -3,6 +3,7 @@ package kr.co.jsol.api.controller
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.jsol.domain.entity.opening.dto.OpeningResDto
 import kr.co.jsol.domain.entity.site.SiteService
 import kr.co.jsol.domain.entity.site.dto.request.SiteSearchCondition
@@ -17,6 +18,7 @@ import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/v1/sites")
+@Tag(name = "농장 API", description = "농장 정보 및 농장별 센서 데이터 조회")
 class SiteController(
     private val siteService: SiteService
 ) {

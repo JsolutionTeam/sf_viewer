@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.jsol.domain.entity.site.SiteService
 import kr.co.jsol.domain.entity.user.UserService
 import kr.co.jsol.domain.entity.user.dto.request.UserRequest
@@ -17,9 +18,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/admin")
-@Schema(
-    description = "관리자 API",
-)
+@Tag(name = "관리자 API", description = "계정 관리를 위한 API")
 class AdminController(
     private val userService: UserService,
     private val siteService: SiteService,

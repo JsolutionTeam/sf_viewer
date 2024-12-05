@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.jsol.domain.entity.sensorDevice.SensorDeviceService
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceCreateRequest
 import kr.co.jsol.domain.entity.sensorDevice.dto.request.SensorDeviceSearchCondition
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api/v1")
+@Tag(name = "센서 기기 관리 API", description = "센서 기기 정보 관리")
 class SensorDeviceController(
     private val sensorDeviceService: SensorDeviceService,
 ) {
