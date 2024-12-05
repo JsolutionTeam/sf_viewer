@@ -53,7 +53,7 @@ class AdminController(
         return userService.isExistUserById(id)
     }
 
-    @Operation(summary = "사용자 계정 중복 조회")
+    @Operation(summary = "사이트 번호 중복 조회")
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "성공"),
     )
